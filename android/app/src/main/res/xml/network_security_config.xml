@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Los equipos LAN (Roku ECP en :8060, descriptores UPnP, hubs IR) sólo hablan HTTP plano
+  y sus IPs no se conocen en build, por lo que el texto claro se permite globalmente.
+  Los certificados autofirmados de los TV NO se aceptan aquí: se validan por TOFU en el
+  X509TrustManager de cada adaptador TLS.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

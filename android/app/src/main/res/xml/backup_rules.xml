@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tokens de emparejamiento y huellas TLS no deben restaurarse en otro dispositivo. -->
+<full-backup-content>
+    <exclude domain="database" path="remote.db" />
+    <exclude domain="database" path="remote.db-wal" />
+    <exclude domain="database" path="remote.db-shm" />
+</full-backup-content>
