@@ -174,6 +174,16 @@ class RemoteViewModel @Inject constructor(
         _events.emit(RemoteUiEvent.DeviceAdded(profile))
     }
 
+    /** Alta manual por IP cuando el descubrimiento no encuentra el TV (redes con multicast filtrado). */
+    fun addManualDevice(host: String, kind: DeviceKind) {
+        val trimmed = host.trim()
+        if (trimmed.isEmpty()) {
+            emitError(RemoteError.Protocol("Escribe la IP del TV (Ajustes › Red en el propio TV)"))
+            return
+        }
+        addDiscoveredDevice(DiscoveredDevice(host = trimmed, name = "${kind.displayName()} ($trimmed)", kind = kind, port = null))
+    }
+
     // ------------------------------------------------------------------ IR: prueba por descarte
 
     fun loadIrBrands(category: IrDeviceCategory) = launchCatching {
@@ -297,6 +307,15 @@ class RemoteViewModel @Inject constructor(
         IrDeviceCategory.PROJECTOR -> "Proyector"
         IrDeviceCategory.AUDIO -> "Audio"
         IrDeviceCategory.OTHER -> "IR"
+    }
+
+    private fun DeviceKind.displayName(): String = when (this) {
+        DeviceKind.ROKU -> "Roku"
+        DeviceKind.ANDROID_TV -> "Android TV"
+        DeviceKind.LG_WEBOS -> "LG webOS"
+        DeviceKind.SAMSUNG_TIZEN -> "Samsung"
+        DeviceKind.INFRARED -> "IR"
+        DeviceKind.BLUETOOTH_HID -> "Bluetooth"
     }
 
     private companion object {

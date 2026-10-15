@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.universalremote.domain.model.ConnectionState
+import com.universalremote.domain.model.DeviceKind
+import com.universalremote.domain.model.PairingRequest
 import com.universalremote.domain.model.RemoteCapability
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.presentation.RemoteUiEvent
@@ -83,12 +85,13 @@ private fun RemoteScreen(vm: RemoteViewModel = hiltViewModel()) {
             Text("Universal Remote", style = MaterialTheme.typography.headlineSmall)
             DevicesSection(state, vm)
             DiscoverySection(state, vm)
+            ManualAddSection(vm)
             if (state.activeDevice != null) RemotePad(state) { vm.onCommandTriggered(it) }
         }
     }
 
     (state.connection as? ConnectionState.AwaitingPairing)?.let { pairing ->
-        PairingDialog(pairing.request.message, onSubmit = vm::submitPairingCode)
+        PairingDialog(pairing.request, onSubmit = vm::submitPairingCode)
     }
     keyboardText?.let { initial ->
         TextInputDialog(initial, onDismiss = { keyboardText = null }) {
@@ -152,6 +155,28 @@ private fun DiscoverySection(state: RemoteUiState, vm: RemoteViewModel) {
 }
 
 @Composable
+private fun ManualAddSection(vm: RemoteViewModel) {
+    var host by remember { mutableStateOf("") }
+    Card(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Añadir por IP", style = MaterialTheme.typography.titleMedium)
+            Text("Si la búsqueda no encuentra tu TV, escribe su IP y elige la marca.")
+            OutlinedTextField(host, { host = it }, label = { Text("IP del TV (p. ej. 192.168.1.40)") }, singleLine = true)
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                listOf(
+                    "Android/Google TV" to DeviceKind.ANDROID_TV,
+                    "LG" to DeviceKind.LG_WEBOS,
+                    "Samsung" to DeviceKind.SAMSUNG_TIZEN,
+                    "Roku" to DeviceKind.ROKU,
+                ).forEach { (label, kind) ->
+                    OutlinedButton(onClick = { vm.addManualDevice(host, kind) }) { Text(label, style = MaterialTheme.typography.labelSmall) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun RemotePad(state: RemoteUiState, send: (RemoteCommand) -> Unit) {
     val caps = state.capabilities
     val all = caps.isEmpty()
@@ -196,18 +221,22 @@ private fun KeyRow(vararg keys: Pair<String, RemoteCommand>, send: (RemoteComman
 }
 
 @Composable
-private fun PairingDialog(message: String, onSubmit: (String) -> Unit) {
+private fun PairingDialog(request: PairingRequest, onSubmit: (String) -> Unit) {
     var code by remember { mutableStateOf("") }
+    val needsCode = request.method is PairingRequest.Method.Pin
     AlertDialog(
         onDismissRequest = {},
         title = { Text("Emparejar") },
         text = {
             Column {
-                Text(message)
-                OutlinedTextField(code, { code = it }, label = { Text("Código") })
+                Text(request.message)
+                if (needsCode) OutlinedTextField(code, { code = it.uppercase() }, label = { Text("Código") }, singleLine = true)
             }
         },
-        confirmButton = { TextButton(onClick = { onSubmit(code) }) { Text("Enviar") } },
+        // En "confirmar en el TV" el adaptador pasa a Conectado solo; el diálogo desaparece entonces.
+        confirmButton = {
+            if (needsCode) TextButton(onClick = { onSubmit(code) }) { Text("Enviar") }
+        },
     )
 }
 
