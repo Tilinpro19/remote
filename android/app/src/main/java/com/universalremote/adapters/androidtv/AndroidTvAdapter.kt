@@ -17,7 +17,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import java.io.EOFException
+import java.io.IOException
 import java.net.InetSocketAddress
+import java.net.Socket
 import java.security.interfaces.RSAPublicKey
 import javax.net.ssl.KeyManager
 import javax.net.ssl.SSLException
@@ -106,12 +108,27 @@ class AndroidTvAdapter @AssistedInject constructor(
             wake()
             if (_state.value != ConnectionState.Connected) return@withLock
         }
+        // Reconexión transparente si la sesión persistente se cayó (TV en reposo, Wi-Fi que parpadea…).
+        if (_state.value != ConnectionState.Connected && _state.value !is ConnectionState.AwaitingPairing) {
+            _state.value = ConnectionState.Idle
+            connectLocked()
+        }
         if (_state.value != ConnectionState.Connected) throw RemoteError.NotConnected()
         // KEYCODE_POWER alterna: se omite si el TV ya está en el estado pedido.
         if (command == RemoteCommand.PowerOn && isOn) return@withLock
         if (command == RemoteCommand.PowerOff && !isOn) return@withLock
         val key = AndroidTvKeys.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName)
-        write(AndroidTvProtocol.keyInject(key))
+        val bytes = AndroidTvProtocol.keyInject(key)
+        try {
+            write(bytes)
+        } catch (e: RemoteError) {
+            // Socket medio cerrado: un único reintento con sesión nueva antes de rendirse.
+            closeRemote()
+            _state.value = ConnectionState.Idle
+            connectLocked()
+            if (_state.value != ConnectionState.Connected) throw e
+            write(bytes)
+        }
     }
 
     override suspend fun submitPairingCode(code: String) = mutex.withLock {
@@ -138,7 +155,9 @@ class AndroidTvAdapter @AssistedInject constructor(
         closePairing()
         when (status) {
             AndroidTvProtocol.STATUS_OK -> {
-                updateProfile(profile.copy(pairingToken = identity.fingerprint()))
+                // Tras re-emparejar (p. ej. TV restablecido) el certificado del TV puede ser otro:
+                // se vuelve a aprender en la próxima conexión de control.
+                updateProfile(profile.copy(pairingToken = identity.fingerprint(), pinnedCertificateSha256 = null))
                 _state.value = ConnectionState.Idle
                 connectLocked()
             }
@@ -167,13 +186,15 @@ class AndroidTvAdapter @AssistedInject constructor(
                 startPairing()
                 return
             }
+            probe(lan.port)
             try {
                 openRemote()
             } catch (e: CancellationException) {
                 throw e
             } catch (t: Throwable) {
-                // Un rechazo TLS o un cierre inmediato significa que el TV ya no reconoce el certificado.
-                if (t is SSLException || t is EOFException) {
+                // El TCP respondió (sonda previa): un rechazo TLS o un cierre inmediato significa que
+                // el TV ya no reconoce el certificado → se pide el PIN en vez de mostrar el error.
+                if (t is SSLException || t is EOFException || t is SessionRejected) {
                     closeRemote()
                     startPairing()
                     return
@@ -199,7 +220,12 @@ class AndroidTvAdapter @AssistedInject constructor(
         socket = s
         val ready = CompletableDeferred<Unit>()
         readerJob = scope.launch { readLoop(s, ready) }
-        withTimeout(READY_TIMEOUT_MS) { ready.await() }
+        try {
+            withTimeout(READY_TIMEOUT_MS) { ready.await() }
+        } catch (e: IOException) {
+            // Handshake completo pero el TV corta la sesión antes de configurarla: certificado no autorizado.
+            throw SessionRejected(e)
+        }
         if (profile.pinnedCertificateSha256 == null) {
             trust.seenFingerprint?.let { updateProfile(profile.copy(pinnedCertificateSha256 = it)) }
         }
@@ -231,6 +257,9 @@ class AndroidTvAdapter @AssistedInject constructor(
         withContext(Dispatchers.IO) {
             val s = trust.sslContext(keyManagers).socketFactory.createSocket() as SSLSocket
             try {
+                // TLS 1.3 obliga a firmar con RSA-PSS, que varios TVs (y algunos Conscrypt) no
+                // negocian bien: se fija TLS 1.2, el que usa la app oficial.
+                s.enabledProtocols = arrayOf(TLS_PROTOCOL)
                 s.connect(InetSocketAddress(lan.host, port), CONNECT_TIMEOUT_MS)
                 s.soTimeout = READ_TIMEOUT_MS
                 s.startHandshake()
@@ -240,6 +269,13 @@ class AndroidTvAdapter @AssistedInject constructor(
                 throw t
             }
         }
+
+    /** Prueba TCP real (no ICMP): distingue "TV apagada/IP cambiada" de un fallo TLS posterior. */
+    private suspend fun probe(port: Int) = withContext(Dispatchers.IO) {
+        Socket().use { it.connect(InetSocketAddress(lan.host, port), CONNECT_TIMEOUT_MS) }
+    }
+
+    private class SessionRejected(cause: Throwable) : IOException(cause)
 
     private fun readLoop(s: SSLSocket, ready: CompletableDeferred<Unit>) {
         try {
@@ -340,7 +376,8 @@ class AndroidTvAdapter @AssistedInject constructor(
     }
 
     private companion object {
-        const val CONNECT_TIMEOUT_MS = 3_000
+        const val CONNECT_TIMEOUT_MS = 2_500
+        const val TLS_PROTOCOL = "TLSv1.2"
         /** El TV envía un ping cada ~5 s; sin tráfico en 20 s la sesión se da por caída. */
         const val READ_TIMEOUT_MS = 20_000
         const val READY_TIMEOUT_MS = 5_000L

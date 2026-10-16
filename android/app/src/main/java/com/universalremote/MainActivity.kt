@@ -6,7 +6,23 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.FastRewind
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material3.Icon
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.universalremote.domain.model.RemoteError
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -78,11 +94,11 @@ private fun RemoteScreen(vm: RemoteViewModel = hiltViewModel()) {
     }
 
     Scaffold(snackbarHost = { SnackbarHost(snackbar) }) { padding ->
+        // El título ya lo muestra la barra de la actividad: no se repite aquí.
         Column(
-            Modifier.fillMaxSize().padding(padding).padding(16.dp).verticalScroll(rememberScrollState()),
+            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text("Universal Remote", style = MaterialTheme.typography.headlineSmall)
             DevicesSection(state, vm)
             DiscoverySection(state, vm)
             ManualAddSection(vm)
@@ -118,11 +134,19 @@ private fun DevicesSection(state: RemoteUiState, vm: RemoteViewModel) {
                     TextButton(onClick = { vm.removeDevice(device.id) }) { Text("Quitar") }
                 }
             }
-            state.activeDevice?.let {
+            state.activeDevice?.let { device ->
+                val failed = state.connection as? ConnectionState.Failed
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Estado: ${state.connection.label()}", Modifier.weight(1f))
-                    if (state.connection is ConnectionState.Failed) {
+                    Text(
+                        state.connection.label(),
+                        Modifier.weight(1f),
+                        color = if (failed != null) MaterialTheme.colorScheme.error else Color.Unspecified,
+                    )
+                    if (failed != null) {
                         TextButton(onClick = vm::reconnect) { Text("Reintentar") }
+                        if (failed.error is RemoteError.Tls && device.kind == DeviceKind.ANDROID_TV) {
+                            TextButton(onClick = vm::resetPairing) { Text("Vincular") }
+                        }
                     }
                 }
             }
@@ -144,7 +168,7 @@ private fun DiscoverySection(state: RemoteUiState, vm: RemoteViewModel) {
             }
             state.discovery.devices.forEach { device ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("${device.name}\n${device.kind?.name ?: "?"} · ${device.host}", Modifier.weight(1f))
+                    Text("${device.name}\n${device.kind?.label() ?: "Sin control compatible"} · ${device.host}", Modifier.weight(1f))
                     TextButton(onClick = { vm.addDiscoveredDevice(device) }, enabled = device.kind != null) {
                         Text("Añadir")
                     }
@@ -184,38 +208,68 @@ private fun RemotePad(state: RemoteUiState, send: (RemoteCommand) -> Unit) {
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         if (has(RemoteCapability.POWER)) {
-            Button(onClick = { send(RemoteCommand.Power) }, Modifier.fillMaxWidth()) { Text("⏻ Encender / Apagar") }
+            Button(onClick = { send(RemoteCommand.Power) }, Modifier.fillMaxWidth()) {
+                Icon(Icons.Default.PowerSettingsNew, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Encender / Apagar")
+            }
         }
         if (has(RemoteCapability.NAVIGATION)) {
-            KeyRow("Atrás" to RemoteCommand.Back, "Inicio" to RemoteCommand.Home, "Menú" to RemoteCommand.Menu, send = send)
-            KeyRow("▲" to RemoteCommand.DpadUp, send = send)
-            KeyRow("◀" to RemoteCommand.DpadLeft, "OK" to RemoteCommand.DpadCenter, "▶" to RemoteCommand.DpadRight, send = send)
-            KeyRow("▼" to RemoteCommand.DpadDown, send = send)
+            KeyRow(Key("Atrás", RemoteCommand.Back), Key("Inicio", RemoteCommand.Home), Key("Menú", RemoteCommand.Menu), send = send)
+            KeyRow(Key("Arriba", RemoteCommand.DpadUp, Icons.Default.KeyboardArrowUp), send = send)
+            KeyRow(
+                Key("Izquierda", RemoteCommand.DpadLeft, Icons.AutoMirrored.Filled.KeyboardArrowLeft),
+                Key("OK", RemoteCommand.DpadCenter),
+                Key("Derecha", RemoteCommand.DpadRight, Icons.AutoMirrored.Filled.KeyboardArrowRight),
+                send = send,
+            )
+            KeyRow(Key("Abajo", RemoteCommand.DpadDown, Icons.Default.KeyboardArrowDown), send = send)
         }
         if (has(RemoteCapability.VOLUME)) {
-            KeyRow("Vol −" to RemoteCommand.VolumeDown, "Silencio" to RemoteCommand.Mute, "Vol +" to RemoteCommand.VolumeUp, send = send)
+            KeyRow(Key("Vol −", RemoteCommand.VolumeDown), Key("Silencio", RemoteCommand.Mute), Key("Vol +", RemoteCommand.VolumeUp), send = send)
         }
         if (has(RemoteCapability.CHANNELS)) {
-            KeyRow("Canal −" to RemoteCommand.ChannelDown, "Canal +" to RemoteCommand.ChannelUp, send = send)
+            KeyRow(Key("Canal −", RemoteCommand.ChannelDown), Key("Canal +", RemoteCommand.ChannelUp), send = send)
         }
         if (has(RemoteCapability.MEDIA)) {
-            KeyRow("⏪" to RemoteCommand.Rewind, "⏯" to RemoteCommand.PlayPause, "⏩" to RemoteCommand.FastForward, send = send)
+            KeyRow(
+                Key("Rebobinar", RemoteCommand.Rewind, Icons.Default.FastRewind),
+                Key("Reproducir / Pausa", RemoteCommand.PlayPause, Icons.Default.PlayArrow, Icons.Default.Pause),
+                Key("Avanzar", RemoteCommand.FastForward, Icons.Default.FastForward),
+                send = send,
+            )
         }
         if (has(RemoteCapability.DIGITS)) {
             (1..9).chunked(3).forEach { row ->
-                KeyRow(*row.map { "$it" to RemoteCommand.Digit(it) }.toTypedArray(), send = send)
+                KeyRow(*row.map { Key("$it", RemoteCommand.Digit(it)) }.toTypedArray(), send = send)
             }
-            KeyRow("0" to RemoteCommand.Digit(0), send = send)
+            KeyRow(Key("0", RemoteCommand.Digit(0)), send = send)
         }
-        Spacer(Modifier.height(24.dp))
+        // Margen para poder desplazar la última fila por encima del Snackbar.
+        Spacer(Modifier.height(88.dp))
     }
 }
 
+/** Tecla con texto o, si tiene iconos, sólo iconos vectoriales ([label] queda como descripción accesible). */
+private class Key(val label: String, val command: RemoteCommand, vararg val icons: ImageVector)
+
 @Composable
-private fun KeyRow(vararg keys: Pair<String, RemoteCommand>, send: (RemoteCommand) -> Unit) {
+private fun KeyRow(vararg keys: Key, send: (RemoteCommand) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        keys.forEach { (label, cmd) ->
-            FilledTonalButton(onClick = { send(cmd) }, Modifier.size(width = 100.dp, height = 52.dp)) { Text(label) }
+        keys.forEach { key ->
+            FilledTonalButton(
+                onClick = { send(key.command) },
+                Modifier.size(width = 100.dp, height = 48.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp),
+            ) {
+                if (key.icons.isEmpty()) {
+                    Text(key.label, maxLines = 1, softWrap = false)
+                } else {
+                    key.icons.forEachIndexed { i, icon ->
+                        Icon(icon, contentDescription = if (i == 0) key.label else null)
+                    }
+                }
+            }
         }
     }
 }
@@ -253,11 +307,21 @@ private fun TextInputDialog(initial: String, onDismiss: () -> Unit, onSend: (Str
 }
 
 private fun ConnectionState.label(): String = when (this) {
-    ConnectionState.Idle -> "Inactivo"
-    ConnectionState.Connecting -> "Conectando…"
-    ConnectionState.Waking -> "Despertando…"
-    is ConnectionState.AwaitingPairing -> "Esperando emparejamiento"
-    ConnectionState.Connected -> "Conectado"
-    is ConnectionState.Reconnecting -> "Reconectando (intento $attempt)"
-    is ConnectionState.Failed -> "Error: ${error.message}"
+    ConnectionState.Idle -> "Estado: Inactivo"
+    ConnectionState.Connecting -> "Estado: Conectando…"
+    ConnectionState.Waking -> "Estado: Despertando…"
+    is ConnectionState.AwaitingPairing -> "Requiere vinculación (introduce el PIN)"
+    ConnectionState.Connected -> "Estado: Conectado"
+    is ConnectionState.Reconnecting -> "Estado: Reconectando (intento $attempt)"
+    // El mensaje de RemoteError ya es una frase completa: sin prefijos "Error:" encadenados.
+    is ConnectionState.Failed -> error.message ?: "Error de conexión"
+}
+
+private fun DeviceKind.label(): String = when (this) {
+    DeviceKind.ROKU -> "Roku"
+    DeviceKind.ANDROID_TV -> "Android TV"
+    DeviceKind.LG_WEBOS -> "LG webOS"
+    DeviceKind.SAMSUNG_TIZEN -> "Samsung"
+    DeviceKind.INFRARED -> "IR"
+    DeviceKind.BLUETOOTH_HID -> "Bluetooth"
 }

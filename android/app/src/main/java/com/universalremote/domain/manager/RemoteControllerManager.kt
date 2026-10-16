@@ -6,6 +6,7 @@ import com.universalremote.domain.adapter.RemoteAdapter
 import com.universalremote.domain.adapter.RemoteAdapterFactory
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceProfile
+import com.universalremote.domain.model.DeviceTransport
 import com.universalremote.domain.model.RemoteCapability
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.domain.model.RemoteError
@@ -120,6 +121,31 @@ class RemoteControllerManager @Inject constructor(
                 preferences.setActiveDeviceId(null)
             }
             deviceRepository.delete(profileId)
+        }
+    }
+
+    /**
+     * El equipo cambió de IP (DHCP): se persiste la nueva y, si es el activo, se recrea su adaptador
+     * (el host se fija al construirlo) y se reconecta.
+     */
+    suspend fun relocate(profileId: String, host: String) {
+        sessionMutex.withLock {
+            val profile = deviceRepository.get(profileId) ?: return
+            val lan = profile.transport as? DeviceTransport.Lan ?: return
+            if (lan.host == host) return
+            val updated = profile.copy(transport = lan.copy(host = host))
+            deviceRepository.upsert(updated)
+            if (_activeDevice.value?.id == profileId) switchTo(updated)
+        }
+    }
+
+    /** Olvida el emparejamiento del equipo activo para pedir de nuevo el PIN/aceptación en el TV. */
+    suspend fun resetPairing() {
+        sessionMutex.withLock {
+            val current = _activeDevice.value ?: return
+            val updated = current.copy(pairingToken = null, pinnedCertificateSha256 = null)
+            deviceRepository.upsert(updated)
+            switchTo(updated)
         }
     }
 
@@ -249,9 +275,11 @@ class RemoteControllerManager @Inject constructor(
         try {
             val state = adapter.state.value
             if (!state.isConnected && !state.isBusy && !command.canWakeDevice) {
-                withTimeout(CONNECT_TIMEOUT_MS) { adapter.connect() }
+                // Reconexión antes de despachar; acotada para no dejar la cola bloqueada.
+                withTimeout(RECONNECT_TIMEOUT_MS) { adapter.connect() }
             }
-            adapter.send(command)
+            // Encender puede incluir Wake-on-LAN y sondeo: no se le aplica el límite corto.
+            if (command.canWakeDevice) adapter.send(command) else withTimeout(COMMAND_TIMEOUT_MS) { adapter.send(command) }
         } catch (e: CancellationException) {
             if (e !is kotlinx.coroutines.TimeoutCancellationException) throw e
             _events.emit(ControllerEvent.CommandFailed(command, RemoteError.Timeout(e)))
@@ -269,5 +297,7 @@ class RemoteControllerManager @Inject constructor(
     private companion object {
         const val QUEUE_CAPACITY = 32
         const val CONNECT_TIMEOUT_MS = 10_000L
+        const val RECONNECT_TIMEOUT_MS = 6_000L
+        const val COMMAND_TIMEOUT_MS = 2_000L
     }
 }

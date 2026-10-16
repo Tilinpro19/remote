@@ -22,6 +22,7 @@ import com.universalremote.hardware.ir.IrHardwareManager
 import com.universalremote.network.discovery.LanDiscoveryManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -97,7 +98,10 @@ class RemoteViewModel @Inject constructor(
                         haptics.performError()
                         _events.emit(RemoteUiEvent.ShowError(event.error, event.command))
                     }
-                    is ControllerEvent.ConnectionFailed -> _events.emit(RemoteUiEvent.ShowError(event.error))
+                    is ControllerEvent.ConnectionFailed -> {
+                        _events.emit(RemoteUiEvent.ShowError(event.error))
+                        if (event.error is RemoteError.Unreachable || event.error is RemoteError.Timeout) relocateSilently()
+                    }
                     is ControllerEvent.KeyboardRequested -> _events.emit(RemoteUiEvent.OpenKeyboard(event.initialText))
                     ControllerEvent.KeyboardDismissed -> _events.emit(RemoteUiEvent.CloseKeyboard)
                 }
@@ -133,6 +137,8 @@ class RemoteViewModel @Inject constructor(
 
     fun reconnect() = manager.reconnect()
 
+    fun resetPairing() = launchCatching { manager.resetPairing() }
+
     fun submitPairingCode(code: String) = launchCatching { manager.submitPairingCode(code.trim()) }
 
     // ------------------------------------------------------------------ descubrimiento LAN
@@ -144,7 +150,10 @@ class RemoteViewModel @Inject constructor(
             discovery.scan()
                 .catch { emitError(RemoteError.from(it)) }
                 .onCompletion { discoveryState.update { it.copy(isScanning = false) } }
-                .collect { found -> discoveryState.update { it.copy(devices = found) } }
+                .collect { found ->
+                    discoveryState.update { it.copy(devices = found.curated()) }
+                    relocateSavedDevices(found)
+                }
         }
     }
 
@@ -153,13 +162,54 @@ class RemoteViewModel @Inject constructor(
         scanJob = null
     }
 
+    private var relocateJob: Job? = null
+
+    /** Tras un "no se alcanza", busca en segundo plano por si el TV sólo cambió de IP. */
+    private fun relocateSilently() {
+        if (relocateJob?.isActive == true || scanJob?.isActive == true) return
+        relocateJob = viewModelScope.launch {
+            runCatching { discovery.scan(RELOCATE_WINDOW).collect { relocateSavedDevices(it) } }
+                .onFailure { if (it is CancellationException) throw it }
+        }
+    }
+
+    /** Un equipo guardado reaparece con el mismo nombre y tipo en otra IP: se actualiza su perfil. */
+    private suspend fun relocateSavedDevices(found: List<DiscoveredDevice>) {
+        val saved = deviceRepository.observeDevices().first()
+        val unmatched = found.filter { d -> d.kind != null && saved.none { it.kind == d.kind && it.lanHost == d.host } }
+        for (device in unmatched) {
+            val kind = device.kind ?: continue
+            val sameKind = saved.filter { it.kind == kind && it.lanHost != null }
+            val match = sameKind.singleOrNull { it.name.equals(device.name, ignoreCase = true) }
+                // Alta manual ("Android TV (IP)"): sólo si es inequívoco, un único candidato de cada lado.
+                ?: sameKind.singleOrNull { it.name.endsWith("(${it.lanHost})") }
+                    ?.takeIf { unmatched.count { d -> d.kind == kind } == 1 && found.none { d -> d.host == it.lanHost } }
+                ?: continue
+            manager.relocate(match.id, device.host)
+        }
+    }
+
+    /**
+     * Un mismo TV suele anunciarse por varios canales (Android TV + Cast, IPv4/IPv6): se descartan las
+     * entradas sin tipo que repiten el nombre de una reconocida y se priorizan las de mDNS.
+     */
+    private fun List<DiscoveredDevice>.curated(): List<DiscoveredDevice> {
+        val knownNames = filter { it.kind != null }.mapTo(HashSet()) { it.name.lowercase() }
+        return filter { it.kind != null || it.name.lowercase() !in knownNames }
+            .sortedWith(compareBy({ it.kind == null }, { DiscoveredDevice.Source.MDNS !in it.sources }))
+            .distinctBy { "${it.kind}|${it.name.lowercase()}" }
+    }
+
     /** Persiste un equipo descubierto (o reutiliza el perfil existente del mismo host) y lo activa. */
     fun addDiscoveredDevice(device: DiscoveredDevice) = launchCatching {
         val kind = device.kind ?: throw RemoteError.UnsupportedDevice("desconocido (${device.host})")
         val port = device.port ?: kind.defaultControlPort ?: throw RemoteError.UnsupportedDevice(kind.name)
-        val existing = deviceRepository.observeDevices().first()
-            .firstOrNull { it.kind == kind && it.lanHost == device.host }
+        val saved = deviceRepository.observeDevices().first()
+        val existing = saved.firstOrNull { it.kind == kind && it.lanHost == device.host }
+            ?: saved.firstOrNull { it.kind == kind && it.lanHost != null && it.name.equals(device.name, ignoreCase = true) }
         if (existing != null) {
+            // Mismo TV con otra IP: se actualiza el perfil en lugar de duplicarlo.
+            if (existing.lanHost != device.host) manager.relocate(existing.id, device.host)
             manager.selectDevice(existing.id)
             return@launchCatching
         }
@@ -321,5 +371,6 @@ class RemoteViewModel @Inject constructor(
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L
         const val TRIAL_PROFILE_ID = "ir-trial"
+        val RELOCATE_WINDOW = 5.seconds
     }
 }

@@ -5,6 +5,7 @@ import java.net.ConnectException
 import java.net.NoRouteToHostException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.net.ssl.SSLException
 import kotlinx.coroutines.CancellationException
 
 /** Errores tipados que la capa de presentación puede mostrar sin inspeccionar excepciones de plataforma. */
@@ -16,9 +17,12 @@ sealed class RemoteError(message: String, cause: Throwable? = null) : Exception(
     class HardwareUnavailable(reason: String) : RemoteError(reason)
     class PermissionDenied(val permission: String, cause: Throwable? = null) :
         RemoteError("Permiso requerido: $permission", cause)
-    class Timeout(cause: Throwable? = null) : RemoteError("El dispositivo no respondió a tiempo", cause)
-    class Unreachable(host: String, cause: Throwable? = null) : RemoteError("No se alcanza $host", cause)
-    class Network(cause: Throwable) : RemoteError("Error de red: ${cause.message ?: cause.javaClass.simpleName}", cause)
+    // Los mensajes van tal cual a la UI: breves, accionables y sin el texto crudo de la excepción
+    // (los de OpenSSL/Conscrypt son ilegibles); la causa queda en `cause` para logs.
+    class Timeout(cause: Throwable? = null) : RemoteError("Tiempo de espera agotado", cause)
+    class Unreachable(val host: String, cause: Throwable? = null) : RemoteError("TV apagada o fuera de red", cause)
+    class Network(cause: Throwable) : RemoteError("Se perdió la conexión con el TV", cause)
+    class Tls(cause: Throwable) : RemoteError("Error de vinculación SSL (toca Reintentar o vuelve a vincular)", cause)
     class Protocol(message: String, cause: Throwable? = null) : RemoteError(message, cause)
     class InvalidCode(message: String) : RemoteError(message)
     class PairingRejected : RemoteError("El dispositivo rechazó el emparejamiento")
@@ -30,10 +34,11 @@ sealed class RemoteError(message: String, cause: Throwable? = null) : Exception(
             is RemoteError -> t
             is SocketTimeoutException -> Timeout(t)
             is ConnectException, is NoRouteToHostException, is UnknownHostException ->
-                Unreachable(host ?: t.message.orEmpty(), t)
+                Unreachable(host.orEmpty(), t)
+            is SSLException -> Tls(t)
             is IOException -> Network(t)
             is SecurityException -> PermissionDenied(t.message ?: "desconocido", t)
-            else -> Protocol(t.message ?: t.javaClass.simpleName, t)
+            else -> Protocol("Respuesta inesperada del dispositivo", t)
         }
     }
 }
