@@ -6,8 +6,10 @@ import com.universalremote.data.irdb.IrdbCatalogImporter
 import com.universalremote.data.irdb.IrdbFunctionMapper
 import com.universalremote.domain.model.DeviceKind
 import com.universalremote.domain.model.IrProtocol
+import com.universalremote.domain.model.KeyColor
 import com.universalremote.domain.model.MacAddress
 import com.universalremote.domain.model.RemoteCommand
+import com.universalremote.domain.model.StreamingApp
 import com.universalremote.network.discovery.Ssdp
 import com.universalremote.network.wol.WakeOnLanSender
 import org.junit.Assert.assertEquals
@@ -20,11 +22,19 @@ class RemoteCommandTest {
     fun `wire names round-trip`() {
         listOf(
             RemoteCommand.Power, RemoteCommand.VolumeUp, RemoteCommand.DpadCenter, RemoteCommand.Digit(7),
-            RemoteCommand.Raw("InputHDMI1"),
+            RemoteCommand.Raw("InputHDMI1"), RemoteCommand.ColorKey(KeyColor.BLUE),
+            RemoteCommand.LaunchApp(StreamingApp.DISNEY_PLUS),
         ).forEach { assertEquals(it, RemoteCommand.fromWireName(it.wireName)) }
         assertEquals(RemoteCommand.TouchDelta(3f, -2f), RemoteCommand.fromWireName("CMD_TOUCH_DELTA", 3f, -2f))
         assertNull(RemoteCommand.fromWireName("CMD_DIGIT_12"))
         assertNull(RemoteCommand.fromWireName("CMD_TEXT", text = ""))
+        assertNull(RemoteCommand.fromWireName("CMD_APP_NOPE"))
+    }
+
+    @Test
+    fun `color keys and apps are not sent as raw Roku keypresses`() {
+        assertNull(RokuKey.of(RemoteCommand.ColorKey(KeyColor.RED)))
+        assertNull(RokuKey.of(RemoteCommand.LaunchApp(StreamingApp.NETFLIX)))
     }
 }
 

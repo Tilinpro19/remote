@@ -90,6 +90,7 @@ internal object AndroidTvProtocol {
     const val FIELD_PING_REQUEST = 8
     const val FIELD_IME_SHOW = 22
     const val FIELD_START = 40
+    private const val FIELD_APP_LINK_LAUNCH = 90
 
     private const val FEATURES = 622
     private const val DIRECTION_SHORT = 3
@@ -110,6 +111,8 @@ internal object AndroidTvProtocol {
     fun setActive(): ByteArray = ProtoWriter().message(FIELD_SET_ACTIVE) { int(1, FEATURES) }.toByteArray()
 
     fun pingResponse(value: Long): ByteArray = ProtoWriter().message(9) { int(1, value) }.toByteArray()
+
+    fun appLinkLaunch(link: String): ByteArray = ProtoWriter().message(FIELD_APP_LINK_LAUNCH) { string(1, link) }.toByteArray()
 
     fun keyInject(keyCode: Int): ByteArray = ProtoWriter().message(10) {
         int(1, keyCode)

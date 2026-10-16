@@ -2,6 +2,7 @@ package com.universalremote.data.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -30,7 +31,17 @@ class DataStoreSessionPreferences @Inject constructor(
         }
     }
 
+    override val hapticsEnabled: Flow<Boolean> = dataStore.data
+        .catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }
+        .map { it[HAPTICS_ENABLED] ?: true }
+        .distinctUntilChanged()
+
+    override suspend fun setHapticsEnabled(enabled: Boolean) {
+        dataStore.edit { it[HAPTICS_ENABLED] = enabled }
+    }
+
     private companion object {
         val ACTIVE_DEVICE_ID = stringPreferencesKey("active_device_id")
+        val HAPTICS_ENABLED = booleanPreferencesKey("haptics_enabled")
     }
 }

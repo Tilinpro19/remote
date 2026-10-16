@@ -17,16 +17,19 @@ import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.domain.model.RemoteError
 import com.universalremote.domain.repository.DeviceRepository
 import com.universalremote.domain.repository.IrCodeRepository
+import com.universalremote.domain.repository.SessionPreferences
 import com.universalremote.hardware.haptics.HapticFeedbackManager
 import com.universalremote.hardware.ir.IrHardwareManager
 import com.universalremote.network.discovery.LanDiscoveryManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +56,7 @@ class RemoteViewModel @Inject constructor(
     private val discovery: LanDiscoveryManager,
     private val adapterFactory: RemoteAdapterFactory,
     private val haptics: HapticFeedbackManager,
+    private val preferences: SessionPreferences,
     irHardware: IrHardwareManager,
     @ApplicationScope private val appScope: CoroutineScope,
 ) : ViewModel() {
@@ -60,17 +64,18 @@ class RemoteViewModel @Inject constructor(
     private val discoveryState = MutableStateFlow(DiscoveryUiState())
     private val irSetupState = MutableStateFlow<IrSetupState>(IrSetupState.Idle)
     private val hasIrEmitter = irHardware.hasIrEmitter()
+    private val sleepTimer = MutableStateFlow<Int?>(null)
 
     private val _events = MutableSharedFlow<RemoteUiEvent>(extraBufferCapacity = 16, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val events: SharedFlow<RemoteUiEvent> = _events.asSharedFlow()
 
     val uiState: StateFlow<RemoteUiState> = combine(
-        deviceRepository.observeDevices(),
-        manager.activeDevice,
-        manager.connectionState,
+        combine(deviceRepository.observeDevices(), manager.activeDevice, manager.connectionState, ::Triple),
         discoveryState,
         irSetupState,
-    ) { devices, active, connection, discovered, irSetup ->
+        preferences.hapticsEnabled,
+        sleepTimer,
+    ) { (devices, active, connection), discovered, irSetup, hapticsOn, sleepMinutes ->
         RemoteUiState(
             devices = devices,
             activeDevice = active,
@@ -79,6 +84,8 @@ class RemoteViewModel @Inject constructor(
             discovery = discovered,
             irSetup = irSetup,
             hasIrEmitter = hasIrEmitter,
+            hapticsEnabled = hapticsOn,
+            sleepTimerMinutes = sleepMinutes,
         )
     }
         .catch { emitError(RemoteError.from(it)) }
@@ -91,6 +98,7 @@ class RemoteViewModel @Inject constructor(
     private var trialAdapter: RemoteAdapter? = null
 
     init {
+        viewModelScope.launch { preferences.hapticsEnabled.collect { haptics.enabled = it } }
         viewModelScope.launch {
             manager.events.collect { event ->
                 when (event) {
@@ -128,6 +136,37 @@ class RemoteViewModel @Inject constructor(
     }
 
     fun isSupported(command: RemoteCommand): Boolean = manager.supports(command)
+
+    /** Mete los dígitos y confirma: el TV sólo recibe el canal completo, no cada pulsación suelta. */
+    fun tuneChannel(digits: String) {
+        val numbers = digits.filter(Char::isDigit)
+        if (numbers.isEmpty()) return
+        numbers.forEach { onCommandTriggered(RemoteCommand.Digit(it.digitToInt())) }
+        onCommandTriggered(RemoteCommand.Enter)
+    }
+
+    fun setHapticsEnabled(enabled: Boolean) = launchCatching { preferences.setHapticsEnabled(enabled) }
+
+    // ------------------------------------------------------------------ temporizador de apagado
+
+    /** En el scope de la app: sigue contando aunque se cambie de pestaña o se cierre la pantalla. */
+    private var sleepJob: Job? = null
+
+    fun startSleepTimer(minutes: Int) {
+        sleepJob?.cancel()
+        sleepTimer.value = minutes
+        sleepJob = appScope.launch {
+            delay(minutes.minutes)
+            manager.dispatch(RemoteCommand.PowerOff)
+            sleepTimer.value = null
+        }
+    }
+
+    fun cancelSleepTimer() {
+        sleepJob?.cancel()
+        sleepJob = null
+        sleepTimer.value = null
+    }
 
     // ------------------------------------------------------------------ dispositivos
 

@@ -61,6 +61,13 @@ sealed class RemoteCommand(val wireName: String) {
     data object Backspace : RemoteCommand("CMD_BACKSPACE")
     data object Enter : RemoteCommand("CMD_ENTER")
 
+    // Atajos
+    /** Botón de color (teletexto, guía, apps HbbTV). */
+    data class ColorKey(val color: KeyColor) : RemoteCommand("$COLOR_PREFIX${color.name}")
+
+    /** Abre una app de streaming; cada adaptador la traduce a su identificador propio. */
+    data class LaunchApp(val app: StreamingApp) : RemoteCommand("$APP_PREFIX${app.name}")
+
     /** Tecla específica del dispositivo (p. ej. `InputHDMI1` en Roku o una función IR no estándar). */
     data class Raw(val key: String) : RemoteCommand("CMD_RAW_$key") {
         init {
@@ -75,7 +82,7 @@ sealed class RemoteCommand(val wireName: String) {
             ChannelUp, ChannelDown -> RemoteCapability.CHANNELS
             is Digit -> RemoteCapability.DIGITS
             DpadUp, DpadDown, DpadLeft, DpadRight, DpadCenter,
-            Back, Home, Menu, Info, Input, Search, is Raw -> RemoteCapability.NAVIGATION
+            Back, Home, Menu, Info, Input, Search, is Raw, is ColorKey, is LaunchApp -> RemoteCapability.NAVIGATION
             PlayPause, Play, Pause, Stop, Rewind, FastForward, Next, Previous -> RemoteCapability.MEDIA
             is TouchDelta, TouchTap, is Scroll -> RemoteCapability.POINTER
             is Text, Backspace, Enter -> RemoteCapability.KEYBOARD
@@ -88,7 +95,7 @@ sealed class RemoteCommand(val wireName: String) {
             VolumeUp, VolumeDown, ChannelUp, ChannelDown, is Digit,
             DpadUp, DpadDown, DpadLeft, DpadRight,
             PlayPause, Play, Pause, Stop, Rewind, FastForward, Next, Previous -> HapticWeight.LIGHT
-            Menu, Info, Search, Backspace, is Text, is Raw -> HapticWeight.SELECTION
+            Menu, Info, Search, Backspace, is Text, is Raw, is ColorKey, is LaunchApp -> HapticWeight.SELECTION
             is TouchDelta, is Scroll -> HapticWeight.NONE
         }
 
@@ -114,6 +121,8 @@ sealed class RemoteCommand(val wireName: String) {
 
         private const val DIGIT_PREFIX = "CMD_DIGIT_"
         private const val RAW_PREFIX = "CMD_RAW_"
+        private const val COLOR_PREFIX = "CMD_COLOR_"
+        private const val APP_PREFIX = "CMD_APP_"
 
         /**
          * Construye un comando a partir del identificador emitido por la UI.
@@ -127,6 +136,10 @@ sealed class RemoteCommand(val wireName: String) {
                 wireName == "CMD_TEXT" -> text?.takeIf { it.isNotEmpty() }?.let(::Text)
                 wireName.startsWith(DIGIT_PREFIX) ->
                     wireName.removePrefix(DIGIT_PREFIX).toIntOrNull()?.takeIf { it in 0..9 }?.let(::Digit)
+                wireName.startsWith(COLOR_PREFIX) ->
+                    KeyColor.entries.firstOrNull { it.name == wireName.removePrefix(COLOR_PREFIX) }?.let(::ColorKey)
+                wireName.startsWith(APP_PREFIX) ->
+                    StreamingApp.entries.firstOrNull { it.name == wireName.removePrefix(APP_PREFIX) }?.let(::LaunchApp)
                 wireName.startsWith(RAW_PREFIX) ->
                     wireName.removePrefix(RAW_PREFIX).takeIf { it.isNotBlank() }?.let(::Raw)
                 else -> null
@@ -134,6 +147,10 @@ sealed class RemoteCommand(val wireName: String) {
         }
     }
 }
+
+enum class KeyColor { RED, GREEN, YELLOW, BLUE }
+
+enum class StreamingApp { NETFLIX, YOUTUBE, PRIME_VIDEO, DISNEY_PLUS, SPOTIFY, APPLE_TV, BROWSER, ROKU_CHANNEL, SAMSUNG_TV_PLUS, LG_CHANNELS }
 
 /** Familia funcional de un comando; los adaptadores la declaran como capacidad. */
 enum class RemoteCapability { POWER, VOLUME, CHANNELS, DIGITS, NAVIGATION, MEDIA, POINTER, KEYBOARD }

@@ -74,6 +74,7 @@ class RokuEcpAdapter @AssistedInject constructor(
 
     override fun supports(command: RemoteCommand): Boolean = when (command) {
         is RemoteCommand.TouchDelta, is RemoteCommand.Scroll, is RemoteCommand.Text -> true
+        is RemoteCommand.LaunchApp -> RokuApps.id(command.app) != null
         else -> command.capability in capabilities && RokuKey.of(command) != null
     }
 
@@ -102,6 +103,8 @@ class RokuEcpAdapter @AssistedInject constructor(
                 pointer.accumulate(command.dx, command.dy).forEach { keypress(RokuKey.of(it)) }
             is RemoteCommand.Scroll ->
                 pointer.accumulate(0f, command.dy).forEach { keypress(RokuKey.of(it)) }
+            is RemoteCommand.LaunchApp ->
+                post("launch", RokuApps.id(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName))
             else -> keypress(RokuKey.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName))
         }
     }
@@ -198,10 +201,12 @@ class RokuEcpAdapter @AssistedInject constructor(
         }
     }
 
-    private suspend fun keypress(key: RokuKey) {
+    private suspend fun keypress(key: RokuKey) = post("keypress", key.path)
+
+    private suspend fun post(action: String, encodedPath: String) {
         val url = baseUrl.newBuilder()
-            .addPathSegment("keypress")
-            .addEncodedPathSegment(key.path)
+            .addPathSegment(action)
+            .addEncodedPathSegment(encodedPath)
             .build()
         val request = Request.Builder().url(url).post(EMPTY_BODY).build()
         try {
@@ -212,7 +217,7 @@ class RokuEcpAdapter @AssistedInject constructor(
                         "Roku rechazó el comando: activa Ajustes › Sistema › Configuración avanzada › " +
                             "Control por aplicaciones móviles › Acceso a la red: Predeterminado",
                     )
-                    else -> throw RemoteError.Protocol("keypress/$key respondió HTTP ${response.code}")
+                    else -> throw RemoteError.Protocol("$action/$encodedPath respondió HTTP ${response.code}")
                 }
             }
         } catch (e: CancellationException) {

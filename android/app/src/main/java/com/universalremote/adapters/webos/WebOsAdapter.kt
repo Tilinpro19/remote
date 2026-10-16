@@ -85,6 +85,7 @@ class WebOsAdapter @AssistedInject constructor(
 
     override fun supports(command: RemoteCommand): Boolean = when (command) {
         RemoteCommand.Search, RemoteCommand.Next, RemoteCommand.Previous -> false
+        is RemoteCommand.LaunchApp -> WebOsApps.id(command.app) != null
         else -> command.capability in capabilities
     }
 
@@ -117,6 +118,10 @@ class WebOsAdapter @AssistedInject constructor(
             RemoteCommand.Rewind -> media("rewind")
             RemoteCommand.FastForward -> media("fastForward")
             RemoteCommand.Input -> request("ssap://system.launcher/launch", JSONObject().put("id", "com.webos.app.inputpicker"))
+            is RemoteCommand.LaunchApp -> request(
+                "ssap://system.launcher/launch",
+                JSONObject().put("id", WebOsApps.id(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName)),
+            )
             is RemoteCommand.Text ->
                 request("ssap://com.webos.service.ime/insertText", JSONObject().put("text", command.text).put("replace", 0))
             RemoteCommand.Backspace -> request("ssap://com.webos.service.ime/deleteCharacters", JSONObject().put("count", 1))

@@ -79,6 +79,7 @@ class TizenAdapter @AssistedInject constructor(
     override fun supports(command: RemoteCommand): Boolean = when (command) {
         is RemoteCommand.Text, is RemoteCommand.TouchDelta, RemoteCommand.TouchTap -> true
         RemoteCommand.PowerOn -> true
+        is RemoteCommand.LaunchApp -> TizenApps.id(command.app) != null
         else -> TizenKeys.of(command) != null
     }
 
@@ -119,6 +120,15 @@ class TizenAdapter @AssistedInject constructor(
                     .put("TypeOfRemote", "ProcessMouseDevice"),
             )
             RemoteCommand.TouchTap -> control(JSONObject().put("Cmd", "LeftClick").put("TypeOfRemote", "ProcessMouseDevice"))
+            is RemoteCommand.LaunchApp -> {
+                val appId = TizenApps.id(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName)
+                // Las apps nativas (navegador) usan NATIVE_LAUNCH; las de la tienda, DEEP_LINK.
+                val actionType = if ('.' in appId) "NATIVE_LAUNCH" else "DEEP_LINK"
+                emit(
+                    JSONObject().put("event", "ed.apps.launch").put("to", "host")
+                        .put("data", JSONObject().put("appId", appId).put("action_type", actionType).put("metaTag", "")),
+                )
+            }
             else -> {
                 val key = TizenKeys.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName)
                 control(
@@ -248,9 +258,13 @@ class TizenAdapter @AssistedInject constructor(
         throw RemoteError.Timeout()
     }
 
-    private fun control(params: JSONObject) {
+    private fun control(params: JSONObject) = sendMethod("ms.remote.control", params)
+
+    private fun emit(params: JSONObject) = sendMethod("ms.channel.emit", params)
+
+    private fun sendMethod(method: String, params: JSONObject) {
         val ws = socket ?: throw RemoteError.NotConnected()
-        ws.send(JSONObject().put("method", "ms.remote.control").put("params", params).toString())
+        ws.send(JSONObject().put("method", method).put("params", params).toString())
     }
 
     @AssistedFactory

@@ -2,6 +2,7 @@ package com.universalremote.adapters.roku
 
 import com.universalremote.adapters.common.PointerAccumulator
 import com.universalremote.domain.model.RemoteCommand
+import com.universalremote.domain.model.StreamingApp
 import java.net.URLEncoder
 
 /** Tecla ECP (`POST /keypress/{path}`). [path] ya está codificado para URL. */
@@ -83,7 +84,22 @@ value class RokuKey private constructor(val path: String) {
             RemoteCommand.Backspace -> BACKSPACE
             RemoteCommand.Enter -> ENTER
             is RemoteCommand.Raw -> raw(command.key)
-            RemoteCommand.Stop, is RemoteCommand.TouchDelta, is RemoteCommand.Scroll, is RemoteCommand.Text -> null
+            RemoteCommand.Stop, is RemoteCommand.TouchDelta, is RemoteCommand.Scroll, is RemoteCommand.Text,
+            is RemoteCommand.ColorKey, is RemoteCommand.LaunchApp -> null
         }
+    }
+}
+
+/** Identificadores de canal ECP (`POST /launch/{id}`). */
+internal object RokuApps {
+    fun id(app: StreamingApp): String? = when (app) {
+        StreamingApp.NETFLIX -> "12"
+        StreamingApp.YOUTUBE -> "837"
+        StreamingApp.PRIME_VIDEO -> "13"
+        StreamingApp.DISNEY_PLUS -> "291097"
+        StreamingApp.SPOTIFY -> "22297"
+        StreamingApp.APPLE_TV -> "551012"
+        StreamingApp.ROKU_CHANNEL -> "151908"
+        StreamingApp.BROWSER, StreamingApp.SAMSUNG_TV_PLUS, StreamingApp.LG_CHANNELS -> null
     }
 }

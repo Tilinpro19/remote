@@ -169,6 +169,7 @@ class IrRemoteAdapter @AssistedInject constructor(
             RemoteCommand.TouchTap -> listOf(RemoteCommand.DpadCenter.wireName, RemoteCommand.Enter.wireName)
             RemoteCommand.Enter -> listOf(command.wireName, RemoteCommand.DpadCenter.wireName)
             RemoteCommand.Home -> listOf(command.wireName, RemoteCommand.Menu.wireName)
+            is RemoteCommand.ColorKey -> listOf(command.wireName, RemoteCommand.Raw(command.color.name).wireName)
             else -> listOf(command.wireName)
         }
     }

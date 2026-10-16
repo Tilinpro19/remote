@@ -1,6 +1,8 @@
 package com.universalremote.adapters.tizen
 
+import com.universalremote.domain.model.KeyColor
 import com.universalremote.domain.model.RemoteCommand
+import com.universalremote.domain.model.StreamingApp
 
 /** Códigos `KEY_*` del canal `samsung.remote.control`. */
 internal object TizenKeys {
@@ -28,7 +30,28 @@ internal object TizenKeys {
         RemoteCommand.Rewind -> "KEY_REWIND"
         RemoteCommand.FastForward -> "KEY_FF"
         RemoteCommand.Backspace -> "KEY_BACKSPACE"
+        is RemoteCommand.ColorKey -> when (command.color) {
+            KeyColor.RED -> "KEY_RED"
+            KeyColor.GREEN -> "KEY_GREEN"
+            KeyColor.YELLOW -> "KEY_YELLOW"
+            KeyColor.BLUE -> "KEY_CYAN"
+        }
         is RemoteCommand.Raw -> command.key
         else -> null
+    }
+}
+
+/** appId de Smart Hub para el evento `ed.apps.launch`. */
+internal object TizenApps {
+    fun id(app: StreamingApp): String? = when (app) {
+        StreamingApp.NETFLIX -> "3201907018807"
+        StreamingApp.YOUTUBE -> "111299001912"
+        StreamingApp.PRIME_VIDEO -> "3201910019365"
+        StreamingApp.DISNEY_PLUS -> "3201901017640"
+        StreamingApp.SPOTIFY -> "3201606009684"
+        StreamingApp.APPLE_TV -> "3201807016597"
+        StreamingApp.SAMSUNG_TV_PLUS -> "3201710015037"
+        StreamingApp.BROWSER -> "org.tizen.browser"
+        StreamingApp.ROKU_CHANNEL, StreamingApp.LG_CHANNELS -> null
     }
 }

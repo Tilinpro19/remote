@@ -17,6 +17,8 @@ interface DeviceRepository {
 interface SessionPreferences {
     val activeDeviceId: Flow<String?>
     suspend fun setActiveDeviceId(id: String?)
+    val hapticsEnabled: Flow<Boolean>
+    suspend fun setHapticsEnabled(enabled: Boolean)
 }
 
 data class BrandPopularity(val brand: String, val popularity: Int)

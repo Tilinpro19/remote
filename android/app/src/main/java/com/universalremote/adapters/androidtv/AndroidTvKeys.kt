@@ -1,7 +1,9 @@
 package com.universalremote.adapters.androidtv
 
 import android.view.KeyEvent
+import com.universalremote.domain.model.KeyColor
 import com.universalremote.domain.model.RemoteCommand
+import com.universalremote.domain.model.StreamingApp
 
 /** Android TV inyecta `KeyEvent.KEYCODE_*` estándar. */
 internal object AndroidTvKeys {
@@ -34,6 +36,25 @@ internal object AndroidTvKeys {
         RemoteCommand.Previous -> KeyEvent.KEYCODE_MEDIA_PREVIOUS
         RemoteCommand.Backspace -> KeyEvent.KEYCODE_DEL
         RemoteCommand.Enter -> KeyEvent.KEYCODE_ENTER
+        is RemoteCommand.ColorKey -> when (command.color) {
+            KeyColor.RED -> KeyEvent.KEYCODE_PROG_RED
+            KeyColor.GREEN -> KeyEvent.KEYCODE_PROG_GREEN
+            KeyColor.YELLOW -> KeyEvent.KEYCODE_PROG_YELLOW
+            KeyColor.BLUE -> KeyEvent.KEYCODE_PROG_BLUE
+        }
         else -> null
+    }
+}
+
+/** Enlaces que el TV resuelve a la app instalada (`remote_app_link_launch_request`). */
+internal object AndroidTvApps {
+    fun link(app: StreamingApp): String? = when (app) {
+        StreamingApp.NETFLIX -> "https://www.netflix.com/title"
+        StreamingApp.YOUTUBE -> "https://www.youtube.com"
+        StreamingApp.PRIME_VIDEO -> "https://app.primevideo.com"
+        StreamingApp.DISNEY_PLUS -> "https://www.disneyplus.com"
+        StreamingApp.SPOTIFY -> "spotify://"
+        StreamingApp.APPLE_TV -> "https://tv.apple.com"
+        StreamingApp.BROWSER, StreamingApp.ROKU_CHANNEL, StreamingApp.SAMSUNG_TV_PLUS, StreamingApp.LG_CHANNELS -> null
     }
 }

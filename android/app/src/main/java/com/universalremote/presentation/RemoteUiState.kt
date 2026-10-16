@@ -20,6 +20,9 @@ data class RemoteUiState(
     val discovery: DiscoveryUiState = DiscoveryUiState(),
     val irSetup: IrSetupState = IrSetupState.Idle,
     val hasIrEmitter: Boolean = false,
+    val hapticsEnabled: Boolean = true,
+    /** Minutos programados del temporizador de apagado; `null` si no hay ninguno activo. */
+    val sleepTimerMinutes: Int? = null,
 )
 
 data class DiscoveryUiState(

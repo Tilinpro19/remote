@@ -88,7 +88,8 @@ class AndroidTvAdapter @AssistedInject constructor(
 
     private class PairingSession(val socket: SSLSocket, val trust: TofuTrustManager)
 
-    override fun supports(command: RemoteCommand): Boolean = AndroidTvKeys.of(command) != null
+    override fun supports(command: RemoteCommand): Boolean =
+        if (command is RemoteCommand.LaunchApp) AndroidTvApps.link(command.app) != null else AndroidTvKeys.of(command) != null
 
     override suspend fun connect() = mutex.withLock { connectLocked() }
 
@@ -117,8 +118,11 @@ class AndroidTvAdapter @AssistedInject constructor(
         // KEYCODE_POWER alterna: se omite si el TV ya está en el estado pedido.
         if (command == RemoteCommand.PowerOn && isOn) return@withLock
         if (command == RemoteCommand.PowerOff && !isOn) return@withLock
-        val key = AndroidTvKeys.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName)
-        val bytes = AndroidTvProtocol.keyInject(key)
+        val bytes = if (command is RemoteCommand.LaunchApp) {
+            AndroidTvProtocol.appLinkLaunch(AndroidTvApps.link(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName))
+        } else {
+            AndroidTvProtocol.keyInject(AndroidTvKeys.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName))
+        }
         try {
             write(bytes)
         } catch (e: RemoteError) {
