@@ -41,7 +41,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,8 +62,6 @@ fun LgMagicRemoteView(
     onCommand: (RemoteCommand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var volume by remember { mutableIntStateOf(18) }
-    var channel by remember { mutableIntStateOf(5) }
     var showNumericPad by remember { mutableStateOf(false) }
 
     Surface(
@@ -227,13 +224,11 @@ fun LgMagicRemoteView(
                 // Columna Volumen
                 LgRockerCapsule(
                     label = "VOL",
-                    value = "$volume",
+                    value = "",
                     onUp = {
-                        volume = (volume + 1).coerceAtMost(100)
                         onCommand(RemoteCommand.VolumeUp)
                     },
                     onDown = {
-                        volume = (volume - 1).coerceAtLeast(0)
                         onCommand(RemoteCommand.VolumeDown)
                     },
                 )
@@ -254,13 +249,11 @@ fun LgMagicRemoteView(
                 // Columna Canal
                 LgRockerCapsule(
                     label = "CH",
-                    value = "$channel",
+                    value = "",
                     onUp = {
-                        channel += 1
                         onCommand(RemoteCommand.ChannelUp)
                     },
                     onDown = {
-                        if (channel > 1) channel -= 1
                         onCommand(RemoteCommand.ChannelDown)
                     },
                 )
@@ -429,7 +422,7 @@ private fun LgRockerCapsule(
 
             Column(modifier = Modifier.padding(vertical = 6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = CyberColors.Secondary)
-                Text(value, fontSize = 12.sp, color = CyberColors.OnSurfaceVariant)
+                if (value.isNotEmpty()) Text(value, fontSize = 12.sp, color = CyberColors.OnSurfaceVariant)
             }
 
             Box(

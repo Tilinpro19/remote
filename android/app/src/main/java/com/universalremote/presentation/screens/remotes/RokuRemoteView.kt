@@ -39,7 +39,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,7 +62,6 @@ fun RokuRemoteView(
     onCommand: (RemoteCommand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var volume by remember { mutableIntStateOf(20) }
 
     Surface(
         color = CyberColors.SurfaceContainerLowest,
@@ -202,7 +200,6 @@ fun RokuRemoteView(
                             .clip(RoundedCornerShape(8.dp))
                             .background(CyberColors.SurfaceContainerHigh)
                             .clickable {
-                                if (volume > 0) volume -= 1
                                 onCommand(RemoteCommand.VolumeDown)
                             },
                         contentAlignment = Alignment.Center,
@@ -211,7 +208,7 @@ fun RokuRemoteView(
                     }
 
                     Text(
-                        text = "VOL $volume",
+                        text = "VOL",
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
@@ -224,7 +221,6 @@ fun RokuRemoteView(
                             .clip(RoundedCornerShape(8.dp))
                             .background(CyberColors.SurfaceContainerHigh)
                             .clickable {
-                                volume = (volume + 1).coerceAtMost(100)
                                 onCommand(RemoteCommand.VolumeUp)
                             },
                         contentAlignment = Alignment.Center,

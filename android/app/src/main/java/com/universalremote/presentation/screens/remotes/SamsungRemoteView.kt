@@ -35,7 +35,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,8 +55,6 @@ fun SamsungRemoteView(
     onCommand: (RemoteCommand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var volume by remember { mutableIntStateOf(24) }
-    var channel by remember { mutableIntStateOf(12) }
 
     Surface(
         color = CyberColors.SurfaceContainerLowest,
@@ -179,13 +176,11 @@ fun SamsungRemoteView(
             ) {
                 SamsungRockerSwitch(
                     label = "VOL",
-                    valueText = "$volume",
+                    valueText = "",
                     onUp = {
-                        volume = (volume + 1).coerceAtMost(100)
                         onCommand(RemoteCommand.VolumeUp)
                     },
                     onDown = {
-                        volume = (volume - 1).coerceAtLeast(0)
                         onCommand(RemoteCommand.VolumeDown)
                     },
                     onPressCenter = { onCommand(RemoteCommand.Mute) },
@@ -193,13 +188,11 @@ fun SamsungRemoteView(
 
                 SamsungRockerSwitch(
                     label = "CH",
-                    valueText = "$channel",
+                    valueText = "",
                     onUp = {
-                        channel += 1
                         onCommand(RemoteCommand.ChannelUp)
                     },
                     onDown = {
-                        if (channel > 1) channel -= 1
                         onCommand(RemoteCommand.ChannelDown)
                     },
                     onPressCenter = { onCommand(RemoteCommand.Info) },
@@ -384,7 +377,7 @@ private fun SamsungRockerSwitch(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = label, fontFamily = FontFamily.SansSerif, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = CyberColors.LaserCyan)
-                    Text(text = valueText, fontFamily = FontFamily.SansSerif, fontSize = 9.sp, color = CyberColors.OnSurfaceVariant)
+                    if (valueText.isNotEmpty()) Text(text = valueText, fontFamily = FontFamily.SansSerif, fontSize = 9.sp, color = CyberColors.OnSurfaceVariant)
                 }
             }
 

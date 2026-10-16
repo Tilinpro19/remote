@@ -40,6 +40,8 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:label="Universal Remote"
+        android:icon="@drawable/ic_app_logo"
+        android:roundIcon="@drawable/ic_app_logo"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         tools:targetApi="36">

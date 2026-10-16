@@ -40,7 +40,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -60,8 +59,6 @@ fun ClassicIrRemoteView(
     onCommand: (RemoteCommand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var volume by remember { mutableIntStateOf(25) }
-    var channel by remember { mutableIntStateOf(1) }
 
     Surface(
         color = CyberColors.SurfaceContainerLowest,
@@ -223,13 +220,11 @@ fun ClassicIrRemoteView(
                 // Vol
                 ClassicRocker(
                     label = "VOL",
-                    value = "$volume",
+                    value = "",
                     onUp = {
-                        volume = (volume + 1).coerceAtMost(100)
                         onCommand(RemoteCommand.VolumeUp)
                     },
                     onDown = {
-                        volume = (volume - 1).coerceAtLeast(0)
                         onCommand(RemoteCommand.VolumeDown)
                     },
                 )
@@ -265,13 +260,11 @@ fun ClassicIrRemoteView(
                 // CH
                 ClassicRocker(
                     label = "CH",
-                    value = "$channel",
+                    value = "",
                     onUp = {
-                        channel += 1
                         onCommand(RemoteCommand.ChannelUp)
                     },
                     onDown = {
-                        if (channel > 1) channel -= 1
                         onCommand(RemoteCommand.ChannelDown)
                     },
                 )
@@ -463,7 +456,7 @@ private fun ClassicRocker(
 
             Column(modifier = Modifier.padding(vertical = 6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = CyberColors.OnSurface)
-                Text(value, fontSize = 11.sp, color = CyberColors.OnSurfaceVariant)
+                if (value.isNotEmpty()) Text(value, fontSize = 11.sp, color = CyberColors.OnSurfaceVariant)
             }
 
             Box(

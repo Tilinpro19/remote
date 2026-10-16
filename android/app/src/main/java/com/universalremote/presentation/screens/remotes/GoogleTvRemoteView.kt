@@ -38,7 +38,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,7 +57,6 @@ fun GoogleTvRemoteView(
     onCommand: (RemoteCommand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var volume by remember { mutableIntStateOf(22) }
 
     Surface(
         color = CyberColors.SurfaceContainerLowest,
@@ -161,7 +159,6 @@ fun GoogleTvRemoteView(
                                 .size(34.dp)
                                 .clip(CircleShape)
                                 .clickable {
-                                    if (volume > 0) volume -= 1
                                     onCommand(RemoteCommand.VolumeDown)
                                 },
                             contentAlignment = Alignment.Center,
@@ -170,7 +167,7 @@ fun GoogleTvRemoteView(
                         }
 
                         Text(
-                            text = "$volume",
+                            text = "VOL",
                             fontFamily = FontFamily.SansSerif,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
@@ -182,7 +179,6 @@ fun GoogleTvRemoteView(
                                 .size(34.dp)
                                 .clip(CircleShape)
                                 .clickable {
-                                    volume = (volume + 1).coerceAtMost(100)
                                     onCommand(RemoteCommand.VolumeUp)
                                 },
                             contentAlignment = Alignment.Center,

@@ -8,6 +8,7 @@ import com.universalremote.domain.adapter.RemoteAdapter
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.DeviceTransport
+import com.universalremote.domain.model.MacAddress
 import com.universalremote.domain.model.PairingRequest
 import com.universalremote.domain.model.RemoteCapability
 import com.universalremote.domain.model.RemoteCommand
@@ -117,7 +118,7 @@ class WebOsAdapter @AssistedInject constructor(
             RemoteCommand.Stop -> media("stop")
             RemoteCommand.Rewind -> media("rewind")
             RemoteCommand.FastForward -> media("fastForward")
-            RemoteCommand.Input -> request("ssap://system.launcher/launch", JSONObject().put("id", "com.webos.app.inputpicker"))
+            RemoteCommand.Input -> launchInputPicker()
             is RemoteCommand.LaunchApp -> request(
                 "ssap://system.launcher/launch",
                 JSONObject().put("id", WebOsApps.id(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName)),
@@ -196,6 +197,7 @@ class WebOsAdapter @AssistedInject constructor(
                 registered.complete(Unit)
                 subscribeKeyboard()
                 pointerClient = client
+                if (profile.macAddress == null) scope.launch { learnMacAddress() }
             }
             id == REGISTER_ID && type == "error" -> {
                 val error = RemoteError.PairingRejected()
@@ -216,6 +218,20 @@ class WebOsAdapter @AssistedInject constructor(
     }
 
     private var pointerClient: OkHttpClient? = null
+
+    /** Lee la MAC del TV (cable preferido, si no Wi-Fi) para poder enviar Wake-on-LAN estando apagado. */
+    private suspend fun learnMacAddress() {
+        val info = runCatching { request("ssap://com.webos.service.connectionmanager/getinfo") }.getOrNull() ?: return
+        val wired = info.optJSONObject("wiredInfo")
+        val wifi = info.optJSONObject("wifiInfo")
+        val wiredUp = info.optJSONObject("wired")?.optString("state") == "connected"
+        val raw = listOfNotNull(wired, wifi)
+            .let { if (wiredUp) it else it.reversed() }
+            .firstNotNullOfOrNull { it.optString("macAddress").takeIf(String::isNotEmpty) }
+            ?: return
+        val mac = MacAddress.parse(raw) ?: return
+        updateProfile(profile.copy(macAddress = mac))
+    }
 
     private fun subscribeKeyboard() {
         val msg = JSONObject().put("type", "subscribe").put("id", KEYBOARD_ID)
@@ -279,6 +295,34 @@ class WebOsAdapter @AssistedInject constructor(
             throw RemoteError.Protocol("El TV LG rechazó $uri: ${response.optString("error")}")
         }
         return response.optJSONObject("payload") ?: JSONObject()
+    }
+
+    private suspend fun launchInputPicker() {
+        val candidates = listOf(
+            "com.webos.app.inputpicker",
+            "com.webos.app.inputmgr",
+            "com.webos.app.homeconnect",
+            "com.webos.app.homedashboard",
+        )
+        for (appId in candidates) {
+            try {
+                request("ssap://system.launcher/launch", JSONObject().put("id", appId))
+                return
+            } catch (_: RemoteError.Protocol) {
+                // TV rechazó este id (ej. 500 Application error); probar siguiente candidato
+            }
+        }
+        try {
+            request("ssap://tv/switchInput")
+            return
+        } catch (_: Throwable) {
+            // Intentar tecla de puntero
+        }
+        try {
+            pointer("type:button\nname:INPUT\n\n")
+        } catch (_: Throwable) {
+            throw RemoteError.Protocol("El modelo de TV LG no admite abrir el selector de entradas por red")
+        }
     }
 
     private suspend fun media(action: String) {
