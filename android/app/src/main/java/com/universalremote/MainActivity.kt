@@ -114,6 +114,8 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                             onNavigateToDevices = { currentTab = CyberTab.DEVICES },
                             onStartSleepTimer = vm::startSleepTimer,
                             onCancelSleepTimer = vm::cancelSleepTimer,
+                            onOpenKeyboard = { keyboardText = "" },
+                            isSupported = { state.activeDevice == null || vm.isSupported(it) },
                         )
                     }
                     CyberTab.APPS -> {

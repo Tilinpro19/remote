@@ -24,7 +24,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Input
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
+import androidx.compose.material.icons.filled.Backspace
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer
@@ -55,6 +59,7 @@ import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceKind
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.presentation.RemoteUiState
+import com.universalremote.presentation.components.TouchpadCard
 import com.universalremote.presentation.screens.remotes.ClassicIrRemoteView
 import com.universalremote.presentation.screens.remotes.GoogleTvRemoteView
 import com.universalremote.presentation.screens.remotes.LgMagicRemoteView
@@ -78,8 +83,11 @@ fun RemoteProScreen(
     onNavigateToDevices: () -> Unit,
     onStartSleepTimer: (Int) -> Unit,
     onCancelSleepTimer: () -> Unit,
+    onOpenKeyboard: () -> Unit,
+    isSupported: (RemoteCommand) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
+    var showTouchpad by remember { mutableStateOf(false) }
     var selectedSkin by remember { mutableStateOf(RemoteSkin.AUTO) }
     var showSleepTimer by remember { mutableStateOf(false) }
     // Vive en el ViewModel: sobrevive al cambio de pestaña y realmente apaga el TV al terminar.
@@ -138,6 +146,24 @@ fun RemoteProScreen(
                 onSendCommand(RemoteCommand.Menu)
             }
         }
+
+        // Teclado y touchpad: sólo si el TV activo los admite.
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            UtilityQuickButton("Teclado", Icons.Default.Keyboard, CyberColors.LaserCyan, Modifier.weight(1f)) {
+                if (isSupported(RemoteCommand.Text("a"))) onOpenKeyboard() else onSendCommand(RemoteCommand.Text("a"))
+            }
+            UtilityQuickButton(
+                "Touchpad", Icons.Default.TouchApp,
+                if (showTouchpad) CyberColors.Tertiary else CyberColors.OnSurface, Modifier.weight(1f),
+            ) { showTouchpad = !showTouchpad }
+            UtilityQuickButton("Borrar", Icons.Default.Backspace, CyberColors.OnSurfaceVariant, Modifier.weight(1f)) {
+                onSendCommand(RemoteCommand.Backspace)
+            }
+            UtilityQuickButton("Enter", Icons.AutoMirrored.Filled.KeyboardReturn, CyberColors.OnSurfaceVariant, Modifier.weight(1f)) {
+                onSendCommand(RemoteCommand.Enter)
+            }
+        }
+        AnimatedVisibility(visible = showTouchpad) { TouchpadCard(onCommand = onSendCommand) }
 
         // Desplegable de Temporizador de Apagado
         AnimatedVisibility(visible = showSleepTimer) {

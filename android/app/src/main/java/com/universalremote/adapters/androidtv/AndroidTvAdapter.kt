@@ -2,6 +2,7 @@ package com.universalremote.adapters.androidtv
 
 import android.os.Build
 import com.universalremote.BuildConfig
+import com.universalremote.adapters.common.PointerAccumulator
 import com.universalremote.adapters.common.TofuTrustManager
 import com.universalremote.domain.adapter.AdapterEvent
 import com.universalremote.domain.adapter.RemoteAdapter
@@ -88,8 +89,15 @@ class AndroidTvAdapter @AssistedInject constructor(
 
     private class PairingSession(val socket: SSLSocket, val trust: TofuTrustManager)
 
-    override fun supports(command: RemoteCommand): Boolean =
-        if (command is RemoteCommand.LaunchApp) AndroidTvApps.link(command.app) != null else AndroidTvKeys.of(command) != null
+    /** Sin puntero nativo en el protocolo: el touchpad se traduce a pasos de D-pad. */
+    private val pointer = PointerAccumulator()
+
+    override fun supports(command: RemoteCommand): Boolean = when (command) {
+        is RemoteCommand.LaunchApp -> AndroidTvApps.link(command.app) != null
+        is RemoteCommand.Text -> AndroidTvKeys.text(command.text).isNotEmpty()
+        is RemoteCommand.TouchDelta, is RemoteCommand.Scroll -> true
+        else -> AndroidTvKeys.of(command) != null
+    }
 
     override suspend fun connect() = mutex.withLock { connectLocked() }
 
@@ -118,20 +126,27 @@ class AndroidTvAdapter @AssistedInject constructor(
         // KEYCODE_POWER alterna: se omite si el TV ya está en el estado pedido.
         if (command == RemoteCommand.PowerOn && isOn) return@withLock
         if (command == RemoteCommand.PowerOff && !isOn) return@withLock
-        val bytes = if (command is RemoteCommand.LaunchApp) {
-            AndroidTvProtocol.appLinkLaunch(AndroidTvApps.link(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName))
-        } else {
-            AndroidTvProtocol.keyInject(AndroidTvKeys.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName))
+        val frames: List<ByteArray> = when (command) {
+            is RemoteCommand.LaunchApp ->
+                listOf(AndroidTvProtocol.appLinkLaunch(AndroidTvApps.link(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName)))
+            is RemoteCommand.Text ->
+                AndroidTvKeys.text(command.text).map(AndroidTvProtocol::keyInject)
+            is RemoteCommand.TouchDelta ->
+                pointer.accumulate(command.dx, command.dy).map { AndroidTvProtocol.keyInject(AndroidTvKeys.of(it)) }
+            is RemoteCommand.Scroll ->
+                pointer.accumulate(0f, command.dy).map { AndroidTvProtocol.keyInject(AndroidTvKeys.of(it)) }
+            else -> listOf(AndroidTvProtocol.keyInject(AndroidTvKeys.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName)))
         }
+        if (frames.isEmpty()) return@withLock
         try {
-            write(bytes)
+            for (frame in frames) write(frame)
         } catch (e: RemoteError) {
             // Socket medio cerrado: un único reintento con sesión nueva antes de rendirse.
             closeRemote()
             _state.value = ConnectionState.Idle
             connectLocked()
             if (_state.value != ConnectionState.Connected) throw e
-            write(bytes)
+            for (frame in frames) write(frame)
         }
     }
 

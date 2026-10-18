@@ -1,6 +1,7 @@
 package com.universalremote.adapters.androidtv
 
 import android.view.KeyEvent
+import com.universalremote.adapters.common.PointerAccumulator
 import com.universalremote.domain.model.KeyColor
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.domain.model.StreamingApp
@@ -19,7 +20,7 @@ internal object AndroidTvKeys {
         RemoteCommand.DpadDown -> KeyEvent.KEYCODE_DPAD_DOWN
         RemoteCommand.DpadLeft -> KeyEvent.KEYCODE_DPAD_LEFT
         RemoteCommand.DpadRight -> KeyEvent.KEYCODE_DPAD_RIGHT
-        RemoteCommand.DpadCenter -> KeyEvent.KEYCODE_DPAD_CENTER
+        RemoteCommand.DpadCenter, RemoteCommand.TouchTap -> KeyEvent.KEYCODE_DPAD_CENTER
         RemoteCommand.Back -> KeyEvent.KEYCODE_BACK
         RemoteCommand.Home -> KeyEvent.KEYCODE_HOME
         RemoteCommand.Menu -> KeyEvent.KEYCODE_MENU
@@ -43,6 +44,29 @@ internal object AndroidTvKeys {
             KeyColor.BLUE -> KeyEvent.KEYCODE_PROG_BLUE
         }
         else -> null
+    }
+
+    fun of(step: PointerAccumulator.Step): Int = when (step) {
+        PointerAccumulator.Step.UP -> KeyEvent.KEYCODE_DPAD_UP
+        PointerAccumulator.Step.DOWN -> KeyEvent.KEYCODE_DPAD_DOWN
+        PointerAccumulator.Step.LEFT -> KeyEvent.KEYCODE_DPAD_LEFT
+        PointerAccumulator.Step.RIGHT -> KeyEvent.KEYCODE_DPAD_RIGHT
+    }
+
+    /** Teclas para escribir [text] (el protocolo v2 no tiene "insertar texto"); omite lo que no mapea. */
+    fun text(text: String): List<Int> = text.mapNotNull { ch ->
+        when (ch) {
+            in 'a'..'z' -> KeyEvent.KEYCODE_A + (ch - 'a')
+            in 'A'..'Z' -> KeyEvent.KEYCODE_A + (ch - 'A')
+            in '0'..'9' -> KeyEvent.KEYCODE_0 + (ch - '0')
+            ' ' -> KeyEvent.KEYCODE_SPACE
+            '.' -> KeyEvent.KEYCODE_PERIOD
+            ',' -> KeyEvent.KEYCODE_COMMA
+            '-' -> KeyEvent.KEYCODE_MINUS
+            '@' -> KeyEvent.KEYCODE_AT
+            '/' -> KeyEvent.KEYCODE_SLASH
+            else -> null
+        }
     }
 }
 
