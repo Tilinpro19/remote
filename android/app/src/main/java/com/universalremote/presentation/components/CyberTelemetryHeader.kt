@@ -31,6 +31,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,8 +60,11 @@ fun CyberTelemetryHeader(
     activeDevice: DeviceProfile?,
     connectionState: ConnectionState,
     poweredOn: Boolean? = null,
+    devices: List<DeviceProfile> = emptyList(),
+    onSelectDevice: (String) -> Unit = {},
     onDeviceClick: () -> Unit = {},
 ) {
+    var menuOpen by remember { mutableStateOf(false) }
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseAlpha by infiniteTransition.animateFloat(
         initialValue = 0.4f,
@@ -162,36 +170,61 @@ fun CyberTelemetryHeader(
 
                 Spacer(modifier = Modifier.width(10.dp))
 
-                // Chip accesible del equipo actual (tocar para cambiar de TV)
-                Surface(
-                    color = if (isConnected) CyberColors.LaserCyan.copy(alpha = 0.12f) else CyberColors.SurfaceContainerHigh,
-                    shape = RoundedCornerShape(20.dp),
-                    border = BorderStroke(
-                        1.dp,
-                        if (isConnected) CyberColors.LaserCyan.copy(alpha = 0.4f) else CyberColors.OutlineVariant.copy(alpha = 0.3f),
-                    ),
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .clickable { onDeviceClick() },
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                // Chip accesible del equipo actual: con varios TVs abre el selector rápido.
+                Box {
+                    Surface(
+                        color = if (isConnected) CyberColors.LaserCyan.copy(alpha = 0.12f) else CyberColors.SurfaceContainerHigh,
+                        shape = RoundedCornerShape(20.dp),
+                        border = BorderStroke(
+                            1.dp,
+                            if (isConnected) CyberColors.LaserCyan.copy(alpha = 0.4f) else CyberColors.OutlineVariant.copy(alpha = 0.3f),
+                        ),
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .clickable { if (devices.size > 1) menuOpen = true else onDeviceClick() },
                     ) {
-                        Icon(
-                            imageVector = if (isConnected) Icons.Default.Wifi else Icons.Default.Tv,
-                            contentDescription = null,
-                            tint = if (isConnected) CyberColors.LaserCyan else CyberColors.OnSurfaceVariant,
-                            modifier = Modifier.size(15.dp),
-                        )
-                        Text(
-                            text = activeDevice?.name?.take(13) ?: "Elegir TV",
-                            fontFamily = FontFamily.SansSerif,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (isConnected) CyberColors.Primary else CyberColors.OnSurface,
-                            maxLines = 1,
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (isConnected) Icons.Default.Wifi else Icons.Default.Tv,
+                                contentDescription = null,
+                                tint = if (isConnected) CyberColors.LaserCyan else CyberColors.OnSurfaceVariant,
+                                modifier = Modifier.size(15.dp),
+                            )
+                            Text(
+                                text = activeDevice?.name?.take(13) ?: "Elegir TV",
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (isConnected) CyberColors.Primary else CyberColors.OnSurface,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                    DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        devices.forEach { device ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = device.name,
+                                        fontWeight = if (device.id == activeDevice?.id) FontWeight.Bold else FontWeight.Normal,
+                                    )
+                                },
+                                onClick = {
+                                    menuOpen = false
+                                    if (device.id != activeDevice?.id) onSelectDevice(device.id)
+                                },
+                            )
+                        }
+                        DropdownMenuItem(
+                            text = { Text("Gestionar televisores…") },
+                            onClick = {
+                                menuOpen = false
+                                onDeviceClick()
+                            },
                         )
                     }
                 }

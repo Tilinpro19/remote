@@ -131,6 +131,8 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                 activeDevice = state.activeDevice,
                 connectionState = state.connection,
                 poweredOn = state.poweredOn,
+                devices = state.devices,
+                onSelectDevice = vm::selectDevice,
                 onDeviceClick = {
                     currentTab = CyberTab.DEVICES
                 },
