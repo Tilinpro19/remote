@@ -42,6 +42,7 @@
         android:label="Universal Remote"
         android:icon="@drawable/ic_app_logo"
         android:roundIcon="@drawable/ic_app_logo"
+        android:theme="@style/Theme.UniversalRemote"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         tools:targetApi="36">

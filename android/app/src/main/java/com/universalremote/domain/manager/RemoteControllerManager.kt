@@ -215,8 +215,8 @@ class RemoteControllerManager @Inject constructor(
         launch {
             adapter.state.collect { state ->
                 if (state == ConnectionState.Connected) {
-                    val current = _activeDevice.value ?: return@collect
-                    persistProfile(adapter, current.copy(lastConnectedAt = System.currentTimeMillis()))
+                    // El perfil del adaptador ya lleva el token recién emparejado; _activeDevice puede ir atrasado.
+                    persistProfile(adapter, adapter.profile.copy(lastConnectedAt = System.currentTimeMillis()))
                 }
             }
         }

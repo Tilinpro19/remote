@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema Cyber Dark sin ActionBar para permitir Compose Edge-To-Edge completo -->
+    <style name="Theme.UniversalRemote" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">#0F131C</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
