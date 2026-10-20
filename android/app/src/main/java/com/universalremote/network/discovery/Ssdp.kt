@@ -25,6 +25,7 @@ data class SsdpResponse(
         return when {
             st == "roku:ecp" || id.contains("roku:ecp") || srv.contains("roku") -> DeviceKind.ROKU
             st.contains("lge-com") || srv.contains("webos") -> DeviceKind.LG_WEBOS
+            srv.contains("hisense") || srv.contains("vidaa") -> DeviceKind.HISENSE_VIDAA
             srv.contains("philips") -> DeviceKind.PHILIPS_JOINTSPACE
             srv.contains("vizio") || id.contains("vizio") -> DeviceKind.VIZIO
             st.contains("sony-com") || srv.contains("bravia") -> DeviceKind.SONY_BRAVIA

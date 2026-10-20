@@ -374,6 +374,7 @@ class LanDiscoveryManager @Inject constructor(
         DeviceKind.VIZIO -> "Vizio ($host)"
         DeviceKind.PHILIPS_JOINTSPACE -> "Philips ($host)"
         DeviceKind.FIRE_TV -> "Fire TV ($host)"
+        DeviceKind.HISENSE_VIDAA -> "Hisense ($host)"
         DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> host
     }
 

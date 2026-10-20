@@ -7,6 +7,7 @@ import com.universalremote.adapters.philips.PhilipsJointSpaceAdapter
 import com.universalremote.adapters.roku.RokuEcpAdapter
 import com.universalremote.adapters.sony.SonyBraviaAdapter
 import com.universalremote.adapters.tizen.TizenAdapter
+import com.universalremote.adapters.vidaa.VidaaAdapter
 import com.universalremote.adapters.vizio.VizioAdapter
 import com.universalremote.adapters.webos.WebOsAdapter
 import com.universalremote.domain.adapter.RemoteAdapter
@@ -29,6 +30,7 @@ class DefaultRemoteAdapterFactory @Inject constructor(
     private val vizioFactory: VizioAdapter.Factory,
     private val philipsFactory: PhilipsJointSpaceAdapter.Factory,
     private val fireTvFactory: FireTvAdapter.Factory,
+    private val vidaaFactory: VidaaAdapter.Factory,
 ) : RemoteAdapterFactory {
 
     override fun create(profile: DeviceProfile): RemoteAdapter = when (profile.kind) {
@@ -41,6 +43,7 @@ class DefaultRemoteAdapterFactory @Inject constructor(
         DeviceKind.VIZIO -> vizioFactory.create(profile)
         DeviceKind.PHILIPS_JOINTSPACE -> philipsFactory.create(profile)
         DeviceKind.FIRE_TV -> fireTvFactory.create(profile)
+        DeviceKind.HISENSE_VIDAA -> vidaaFactory.create(profile)
         DeviceKind.BLUETOOTH_HID -> throw RemoteError.UnsupportedDevice(profile.kind.name)
     }
 }

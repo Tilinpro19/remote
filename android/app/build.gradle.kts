@@ -79,6 +79,8 @@ dependencies {
 
     // Red
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // MQTT para Hisense VIDAA (control remoto por broker en el TV, puerto 36669).
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
 
     // Persistencia
     implementation("androidx.room:room-runtime:2.7.2")

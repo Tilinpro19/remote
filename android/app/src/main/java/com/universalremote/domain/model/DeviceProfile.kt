@@ -26,6 +26,9 @@ enum class DeviceKind(
 
     /** Fire OS por ADB en red; exige activar "Depuración ADB" en el Fire TV. */
     FIRE_TV(5555),
+
+    /** Broker MQTT sobre TLS del propio TV; código de 4 dígitos en pantalla. */
+    HISENSE_VIDAA(36669),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }
