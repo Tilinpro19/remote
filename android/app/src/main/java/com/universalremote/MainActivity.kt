@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.PairingRequest
 import com.universalremote.domain.model.RemoteCommand
+import com.universalremote.presentation.MacrosViewModel
 import com.universalremote.presentation.RemoteUiEvent
 import com.universalremote.presentation.RemoteUiState
 import com.universalremote.presentation.RemoteViewModel
@@ -40,6 +41,7 @@ import com.universalremote.presentation.components.CyberBottomNav
 import com.universalremote.presentation.components.CyberTab
 import com.universalremote.presentation.components.CyberTelemetryHeader
 import com.universalremote.presentation.screens.AppsAndChannelsScreen
+import com.universalremote.presentation.screens.MacrosScreen
 import com.universalremote.presentation.screens.DevicesScreen
 import com.universalremote.presentation.screens.RemoteProScreen
 import com.universalremote.presentation.screens.SettingsScreen
@@ -116,6 +118,7 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
     val subtitle = when (currentTab) {
         CyberTab.REMOTE -> "Mando a Distancia"
         CyberTab.APPS -> "Canales & Apps"
+        CyberTab.MACROS -> "Macros y Escenas"
         CyberTab.DEVICES -> "Mis Televisores"
         CyberTab.SETTINGS -> "Ajustes de la App"
     }
@@ -164,6 +167,19 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                             onTuneChannel = vm::tuneChannel,
                             // Sin TV activo se muestra todo: al pulsar, el aviso guía a elegir uno.
                             isSupported = { state.activeDevice == null || vm.isSupported(it) },
+                        )
+                    }
+                    CyberTab.MACROS -> {
+                        val macrosVm: MacrosViewModel = hiltViewModel()
+                        val macros by macrosVm.uiState.collectAsStateWithLifecycle()
+                        MacrosScreen(
+                            state = macros,
+                            onStartRecording = macrosVm::startRecording,
+                            onCancelRecording = macrosVm::cancelRecording,
+                            onSaveRecording = macrosVm::saveRecording,
+                            onRun = macrosVm::run,
+                            onStop = macrosVm::stop,
+                            onDelete = macrosVm::delete,
                         )
                     }
                     CyberTab.DEVICES -> {

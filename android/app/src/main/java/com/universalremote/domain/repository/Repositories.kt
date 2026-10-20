@@ -4,12 +4,19 @@ import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.IrCode
 import com.universalremote.domain.model.IrCodeset
 import com.universalremote.domain.model.IrDeviceCategory
+import com.universalremote.domain.model.Macro
 import kotlinx.coroutines.flow.Flow
 
 interface DeviceRepository {
     fun observeDevices(): Flow<List<DeviceProfile>>
     suspend fun get(id: String): DeviceProfile?
     suspend fun upsert(profile: DeviceProfile)
+    suspend fun delete(id: String)
+}
+
+interface MacroRepository {
+    fun observeForDevice(deviceId: String): Flow<List<Macro>>
+    suspend fun save(macro: Macro)
     suspend fun delete(id: String)
 }
 

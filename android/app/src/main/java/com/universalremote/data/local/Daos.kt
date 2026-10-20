@@ -72,3 +72,15 @@ interface IrCodeDao {
         insertCodes(codes(id))
     }
 }
+
+@Dao
+interface MacroDao {
+    @Query("SELECT * FROM macros WHERE device_id = :deviceId ORDER BY created_at ASC")
+    fun observeForDevice(deviceId: String): Flow<List<MacroEntity>>
+
+    @Upsert
+    suspend fun upsert(macro: MacroEntity)
+
+    @Query("DELETE FROM macros WHERE id = :id")
+    suspend fun delete(id: String)
+}

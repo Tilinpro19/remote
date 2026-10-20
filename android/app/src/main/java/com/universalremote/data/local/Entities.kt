@@ -72,3 +72,24 @@ data class BrandPopularityRow(
     val brand: String,
     val popularity: Int,
 )
+
+@Entity(
+    tableName = "macros",
+    foreignKeys = [
+        ForeignKey(
+            entity = DeviceEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["device_id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [Index(value = ["device_id"])],
+)
+data class MacroEntity(
+    @PrimaryKey val id: String,
+    @ColumnInfo(name = "device_id") val deviceId: String,
+    val name: String,
+    /** Pasos en JSON; ver [MacroStepsCodec]. */
+    @ColumnInfo(name = "steps_json") val stepsJson: String,
+    @ColumnInfo(name = "created_at") val createdAt: Long,
+)

@@ -10,12 +10,15 @@ import com.universalremote.adapters.DefaultRemoteAdapterFactory
 import com.universalremote.data.local.AppDatabase
 import com.universalremote.data.local.DeviceDao
 import com.universalremote.data.local.IrCodeDao
+import com.universalremote.data.local.MacroDao
 import com.universalremote.data.preferences.DataStoreSessionPreferences
 import com.universalremote.data.repository.DeviceRepositoryImpl
 import com.universalremote.data.repository.IrCodeRepositoryImpl
+import com.universalremote.data.repository.MacroRepositoryImpl
 import com.universalremote.domain.adapter.RemoteAdapterFactory
 import com.universalremote.domain.repository.DeviceRepository
 import com.universalremote.domain.repository.IrCodeRepository
+import com.universalremote.domain.repository.MacroRepository
 import com.universalremote.domain.repository.SessionPreferences
 import dagger.Binds
 import dagger.Module
@@ -64,13 +67,18 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME).build()
+        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+            .addMigrations(AppDatabase.MIGRATION_1_2)
+            .build()
 
     @Provides
     fun provideDeviceDao(db: AppDatabase): DeviceDao = db.deviceDao()
 
     @Provides
     fun provideIrCodeDao(db: AppDatabase): IrCodeDao = db.irCodeDao()
+
+    @Provides
+    fun provideMacroDao(db: AppDatabase): MacroDao = db.macroDao()
 
     @Provides
     @Singleton
@@ -86,6 +94,9 @@ abstract class BindingsModule {
 
     @Binds
     abstract fun bindIrCodeRepository(impl: IrCodeRepositoryImpl): IrCodeRepository
+
+    @Binds
+    abstract fun bindMacroRepository(impl: MacroRepositoryImpl): MacroRepository
 
     @Binds
     abstract fun bindSessionPreferences(impl: DataStoreSessionPreferences): SessionPreferences

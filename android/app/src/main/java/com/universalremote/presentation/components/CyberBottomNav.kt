@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SmartDisplay
 import androidx.compose.material.icons.filled.SportsEsports
@@ -40,6 +41,7 @@ enum class CyberTab(
 ) {
     REMOTE("Mando", Icons.Default.SportsEsports),
     APPS("Canales & Apps", Icons.Default.SmartDisplay),
+    MACROS("Macros", Icons.AutoMirrored.Filled.PlaylistPlay),
     DEVICES("Dispositivos", Icons.Default.Tv),
     SETTINGS("Ajustes", Icons.Default.Settings),
 }

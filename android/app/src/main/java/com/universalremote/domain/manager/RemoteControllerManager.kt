@@ -263,15 +263,20 @@ class RemoteControllerManager @Inject constructor(
     }
 
     private suspend fun execute(command: RemoteCommand) {
-        val adapter = activeAdapter.value
-        if (adapter == null) {
-            _events.emit(ControllerEvent.CommandFailed(command, RemoteError.NoActiveDevice()))
-            return
+        try {
+            sendAndAwait(command)
+        } catch (e: RemoteError) {
+            _events.emit(ControllerEvent.CommandFailed(command, e))
         }
-        if (!adapter.supports(command)) {
-            _events.emit(ControllerEvent.CommandFailed(command, RemoteError.UnsupportedCommand(command.wireName)))
-            return
-        }
+    }
+
+    /**
+     * Envía sin pasar por la cola y espera el resultado; lanza [RemoteError] si falla.
+     * Lo usan las macros para abortar en el paso que falló en lugar de seguir a ciegas.
+     */
+    suspend fun sendAndAwait(command: RemoteCommand) {
+        val adapter = activeAdapter.value ?: throw RemoteError.NoActiveDevice()
+        if (!adapter.supports(command)) throw RemoteError.UnsupportedCommand(command.wireName)
         try {
             val state = adapter.state.value
             if (!state.isConnected && !state.isBusy && !command.canWakeDevice) {
@@ -282,9 +287,9 @@ class RemoteControllerManager @Inject constructor(
             if (command.canWakeDevice) adapter.send(command) else withTimeout(COMMAND_TIMEOUT_MS) { adapter.send(command) }
         } catch (e: CancellationException) {
             if (e !is kotlinx.coroutines.TimeoutCancellationException) throw e
-            _events.emit(ControllerEvent.CommandFailed(command, RemoteError.Timeout(e)))
+            throw RemoteError.Timeout(e)
         } catch (t: Throwable) {
-            _events.emit(ControllerEvent.CommandFailed(command, RemoteError.from(t, adapter.profile.lanHost)))
+            throw RemoteError.from(t, adapter.profile.lanHost)
         }
     }
 

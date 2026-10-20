@@ -1,6 +1,7 @@
 package com.universalremote.presentation
 
 import com.universalremote.domain.model.DeviceKind
+import com.universalremote.domain.model.RemoteCommand
 
 /** Cómo se vincula cada marca la primera vez; la UI lo muestra al darla de alta. */
 enum class PairingHint(val description: String) {
@@ -39,4 +40,12 @@ fun DeviceKind.pairingHint(): PairingHint = when (this) {
     // Kodi sólo la pide si su servidor web tiene usuario y contraseña.
     DeviceKind.SONY_BRAVIA, DeviceKind.KODI -> PairingHint.PASSPHRASE
     DeviceKind.LG_WEBOS, DeviceKind.SAMSUNG_TIZEN, DeviceKind.FIRE_TV -> PairingHint.CONFIRM_ON_TV
+}
+
+/** Nombre legible de un comando para listas (pasos de macro): `CMD_VOL_UP` → `Vol up`. */
+fun RemoteCommand.label(): String = when (this) {
+    is RemoteCommand.Text -> "Texto «$text»"
+    is RemoteCommand.LaunchApp -> app.name.lowercase().replace('_', ' ').replaceFirstChar(Char::uppercase)
+    is RemoteCommand.Digit -> "Dígito $value"
+    else -> wireName.removePrefix("CMD_").lowercase().replace('_', ' ').replaceFirstChar(Char::uppercase)
 }

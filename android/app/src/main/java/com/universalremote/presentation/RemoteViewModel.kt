@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.universalremote.core.di.ApplicationScope
 import com.universalremote.domain.adapter.RemoteAdapter
 import com.universalremote.domain.adapter.RemoteAdapterFactory
+import com.universalremote.domain.macro.MacroRecorder
 import com.universalremote.domain.manager.ControllerEvent
 import com.universalremote.domain.manager.RemoteControllerManager
 import com.universalremote.domain.model.DeviceKind
@@ -57,6 +58,7 @@ class RemoteViewModel @Inject constructor(
     private val adapterFactory: RemoteAdapterFactory,
     private val haptics: HapticFeedbackManager,
     private val preferences: SessionPreferences,
+    private val macroRecorder: MacroRecorder,
     irHardware: IrHardwareManager,
     @ApplicationScope private val appScope: CoroutineScope,
 ) : ViewModel() {
@@ -123,6 +125,7 @@ class RemoteViewModel @Inject constructor(
     /** Único punto de entrada de los botones de la UI. No bloquea: háptica inmediata y encolado. */
     fun onCommandTriggered(command: RemoteCommand) {
         haptics.perform(command.hapticWeight)
+        macroRecorder.record(command)
         manager.dispatch(command)
     }
 

@@ -34,6 +34,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    // Esquemas exportados de Room para MigrationTestHelper (Robolectric lee los assets de la variante;
+    // sólo van al APK debug, nunca al release).
+    sourceSets.getByName("debug").assets.srcDir("$projectDir/schemas")
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -41,6 +45,8 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        // Robolectric necesita los recursos y assets fusionados (esquemas de Room para las migraciones).
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
@@ -96,4 +102,8 @@ dependencies {
     testImplementation("com.squareup.okhttp3:okhttp-tls:4.12.0")
     // org.json real en la JVM: el de android.jar es un stub que devuelve valores por defecto.
     testImplementation("org.json:json:20240303")
+    // Room real en la JVM: migraciones contra el esquema exportado y DAOs en memoria.
+    testImplementation("org.robolectric:robolectric:4.15.1")
+    testImplementation("androidx.room:room-testing:2.7.2")
+    testImplementation("androidx.test:core:1.6.1")
 }
