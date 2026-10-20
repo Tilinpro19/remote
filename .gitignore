@@ -1,0 +1,19 @@
+# Respaldo y carpetas locales
+respaldo_telefono/
+UniversalRemote-apk/
+UniversalRemote/
+stitch_universal_smart_remote_control/
+app_logo.jpg
+app_logo.png
+*.apk
+
+# Android / Gradle / IDE
+.gradle/
+build/
+android/build/
+android/.gradle/
+android/app/build/
+android/local.properties
+.idea/
+*.iml
+.DS_Store
