@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Universal Remote busca y controla televisores y reproductores en tu red Wi-Fi local.</string>
+
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_googlecast._tcp</string>
+        <string>_androidtvremote2._tcp</string>
+        <string>_airplay._tcp</string>
+        <string>_webostv._tcp</string>
+        <string>_samsungtv._tcp</string>
+        <!-- Servicio propio usado solo para disparar y verificar el permiso de red local. -->
+        <string>_urpreflight._tcp</string>
+    </array>
+
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Universal Remote usa Bluetooth para emparejarse con TVs, proyectores y barras de sonido.</string>
+
+    <!-- Roku ECP y otras APIs REST locales usan HTTP sin TLS hacia IPs privadas. -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+    </dict>
+</dict>
+</plist>

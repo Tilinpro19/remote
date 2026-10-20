@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0f131c;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-container": "#006645", "surface-container-high": "#262a33", "primary-fixed-dim": "#00daf3", "outline": "#849396", "surface-container-low": "#181c24", "on-primary-fixed": "#001f24", "tertiary-container": "#5be9ad", "on-secondary-fixed-variant": "#5516be", "on-tertiary-fixed-variant": "#005236", "on-surface-variant": "#bac9cc", "tertiary-fixed-dim": "#4edea3", "on-surface": "#dfe2ee", "primary-container": "#00e5ff", "surface-variant": "#31353e", "error-container": "#93000a", "on-primary": "#00363d", "secondary-fixed": "#e9ddff", "on-error": "#690005", "on-error-container": "#ffdad6", "surface-dim": "#0f131c", "on-secondary-container": "#c4abff", "inverse-primary": "#006875", "error": "#ffb4ab", "primary-fixed": "#9cf0ff", "background": "#0f131c", "on-primary-container": "#00626e", "surface": "#0f131c", "on-tertiary": "#003824", "outline-variant": "#3b494c", "inverse-on-surface": "#2c3039", "surface-container-lowest": "#0a0e16", "tertiary": "#a8ffd2", "secondary-fixed-dim": "#d0bcff", "on-background": "#dfe2ee", "surface-container": "#1c2028", "surface-container-highest": "#31353e", "surface-bright": "#353942", "tertiary-fixed": "#6ffbbe", "surface-tint": "#00daf3", "on-secondary": "#3c0091", "secondary": "#d0bcff", "secondary-container": "#571bc1", "primary": "#c3f5ff", "inverse-surface": "#dfe2ee", "on-primary-fixed-variant": "#004f58", "on-tertiary-fixed": "#002113", "on-secondary-fixed": "#23005c" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-sm": "0.5rem", "gutter-sm": "0.5rem", "space-lg": "1.25rem", "margin-tablet": "1.5rem", "space-xs": "0.25rem", "margin": "1rem", "space-xl": "2rem", "space-md": "0.75rem" }, fontFamily: { "label-code-sm": ["JetBrains Mono"], "body-sm": ["Inter"], "body-lg": ["Inter"], "display-lg-mobile": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "label-code-lg": ["JetBrains Mono"], "headline-sm": ["Space Grotesk"], "display-lg": ["Space Grotesk"], "body-md": ["Inter"] }, fontSize: { "label-code-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "display-lg-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-code-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }</script></head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)] pt-safe"><div class="h-28 px-margin flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="OmniRemote Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdu5JJBqxcACelcVmv4BzvDd2_2iX89cE4Qd9UCGy4FJFzJON4qDCNaGVfowKxcWEJcl34Si7bAMtQCw21b1KIMe8jENJ1Tpz7_Wp8mVv4wEzdHT_YrBAGIuPvH3CZ9HZlIPK0yYN6fLIVzwYe0az9GXl1vi7HAJLRQmvsH4etix_-6s2tZ_eZ7uDOp7jCxd3mXvY_0GsRXfgXTg8eZYZgbASXW8EJfdAVhPEHH2dXNyjli1NMnaYq"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none uppercase">OmniRemote</span><span class="font-label-code-sm text-label-code-sm text-on-surface-variant leading-none mt-space-xs tracking-wider uppercase">Emparejamiento</span></div></div><div class="flex items-center gap-space-sm"><button aria-label="Transmisión Rápida IR" class="w-11 h-11 rounded-lg bg-surface-container-high hover:bg-surface-variant active:scale-95 transition-all flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[20px]">sensors</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div><div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-space-xs"><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span><span class="font-label-code-sm text-label-code-sm text-on-surface">IR READY</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span><span class="font-label-code-sm text-label-code-sm text-on-surface">M-CAST LOCK</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="material-symbols-outlined text-primary-fixed-dim text-[12px]">wifi</span><span class="font-label-code-sm text-label-code-sm text-primary-fixed-dim">5GHz</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="material-symbols-outlined text-secondary-fixed text-[12px]">bluetooth</span><span class="font-label-code-sm text-label-code-sm text-secondary-fixed">BLE 5.2</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="font-label-code-sm text-label-code-sm text-tertiary">4ms</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-28 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full px-margin pb-space-xl gap-space-lg">
+<!-- Stepper de Progreso Técnico de Enlace -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col gap-space-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+<span class="font-label-code-sm text-label-code-sm text-primary uppercase">Handshake Activo</span>
+</div>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">FASE 3 / 4</span>
+</div>
+<!-- Pistas y Nodos del Proceso -->
+<div class="grid grid-cols-4 gap-space-xs items-center pt-space-xs">
+<div class="flex flex-col gap-1 items-center">
+<div class="w-full h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,229,255,0.4)]"></div>
+<span class="font-label-code-sm text-label-code-sm text-on-surface truncate text-center">1. Detect</span>
+</div>
+<div class="flex flex-col gap-1 items-center">
+<div class="w-full h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,229,255,0.4)]"></div>
+<span class="font-label-code-sm text-label-code-sm text-on-surface truncate text-center">2. Capa Red</span>
+</div>
+<div class="flex flex-col gap-1 items-center">
+<div class="w-full h-1.5 rounded-full bg-primary-container shadow-[0_0_10px_rgba(0,229,255,0.8)] animate-pulse"></div>
+<span class="font-label-code-sm text-label-code-sm text-primary font-bold truncate text-center">3. Handshake</span>
+</div>
+<div class="flex flex-col gap-1 items-center">
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest"></div>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant truncate text-center">4. Activo</span>
+</div>
+</div>
+</div>
+<!-- Tarjeta de Dispositivo Objetivo -->
+<div class="w-full bg-surface-container rounded-xl p-space-md shadow-lg flex flex-col gap-space-md relative overflow-hidden">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0 shadow-inner">
+<span class="material-symbols-outlined text-primary text-[28px]">tv</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-code-sm text-label-code-sm text-tertiary">EN LÍNEA</span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Samsung Neo QLED 65"</span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">QN65QN90B // MAC: 34:2D:0D:F8:1C:89</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+<!-- Mini Telemetría & Perfil de Conexión -->
+<div class="flex flex-wrap gap-space-xs">
+<span class="px-space-sm py-1 rounded bg-surface-container-high font-label-code-sm text-label-code-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">wifi</span> Wi-Fi 5GHz (CH 44)
+      </span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high font-label-code-sm text-label-code-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">memory</span> Tizen OS 7.0
+      </span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high font-label-code-sm text-label-code-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span> Puerto 8002 wss://
+      </span>
+</div>
+</div>
+<!-- Módulo de Handshake de Seguridad Criptográfica -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary-fixed-dim text-[20px]">encrypted</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Validación Criptográfica</span>
+</div>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant px-space-xs py-0.5 rounded bg-surface-container-highest">ECDH-P256</span>
+</div>
+<div class="bg-surface-container-high/60 rounded-lg p-space-sm flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary-fixed-dim text-[20px] mt-0.5 shrink-0">info</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Confirma la solicitud de enlace en la pantalla del televisor o digita el PIN temporal de autorización desplegado.
+      </span>
+</div>
+<!-- Entrada Visual de PIN con Glow Neón -->
+<div class="flex flex-col gap-space-xs items-center my-space-xs">
+<div class="grid grid-cols-4 gap-space-sm w-full max-w-[280px]">
+<div class="aspect-square bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.25)]">
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary font-bold">8</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.25)]">
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary font-bold">4</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.25)]">
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary font-bold">2</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-[0_0_16px_rgba(0,229,255,0.45)] animate-pulse">
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary font-bold">9</span>
+</div>
+</div>
+<span class="font-label-code-sm text-label-code-sm text-primary mt-space-xs tracking-wider">PIN SINCRONIZADO // TOKEN REUTILIZABLE</span>
+</div>
+<!-- Indicador de Estado Criptográfico -->
+<div class="w-full bg-surface-container-highest rounded-lg p-space-sm flex flex-col gap-1">
+<div class="flex items-center gap-space-xs text-tertiary">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-code-sm text-label-code-sm font-semibold">TÚNEL SEGURO ESTABLECIDO</span>
+</div>
+<p class="font-label-code-sm text-label-code-sm text-on-surface-variant pl-5">
+        Autenticación TLS 1.3 establecida. Intercambio de claves simétricas AES-128 completado sin anomalías de paquetes.
+      </p>
+</div>
+</div>
+<!-- Diagnóstico de Capas de Sistema de Hardware -->
+<div class="w-full bg-surface-container rounded-xl p-space-md shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Capas de Sistema</span>
+<span class="font-label-code-sm text-label-code-sm text-tertiary bg-surface-container-high px-space-xs py-0.5 rounded">KERNEL OK</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<!-- Item 1: MulticastLock -->
+<div class="flex items-center justify-between p-space-xs rounded bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span class="font-body-sm text-body-sm text-on-surface">MulticastLock (WifiManager)</span>
+</div>
+<span class="font-label-code-sm text-label-code-sm text-tertiary">Retenido [Activo]</span>
+</div>
+<!-- Item 2: Socket Persistente -->
+<div class="flex items-center justify-between p-space-xs rounded bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Socket Persistente wss://</span>
+</div>
+<span class="font-label-code-sm text-label-code-sm text-tertiary">Hilo Secundario Safe</span>
+</div>
+<!-- Item 3: Perfil Háptico -->
+<div class="flex items-center justify-between p-space-xs rounded bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>
+<span class="font-body-sm text-body-sm text-on-surface">VibrationEffect / Háptico</span>
+</div>
+<span class="font-label-code-sm text-label-code-sm text-secondary-fixed">Perfil Dinámico</span>
+</div>
+</div>
+</div>
+<!-- Sección Alternativa: Asistente IR por Descarte -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md shadow-md flex flex-col gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-error text-[18px]">sensors</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Bypass Infrarrojos (IRDB)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Para equipos analógicos o sin red (Sony, Daikin, LG Clásico)</span>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high font-label-code-sm text-label-code-sm text-on-surface-variant">LIRC DB</span>
+</div>
+<!-- Selector de Conjuntos de Códigos -->
+<div class="w-full bg-surface-container-high rounded-lg p-space-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-code-sm text-label-code-sm text-primary">PERFIL HEX SELECCIONADO</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Set 1 de 18 (Pronto Hex NEC 38kHz)</span>
+</div>
+<button class="px-space-sm py-1 rounded bg-surface-variant hover:bg-surface-bright active:scale-95 transition-all text-on-surface font-label-code-sm text-label-code-sm shrink-0" id="ir-cycle-btn">
+        Rotar Set
+      </button>
+</div>
+<!-- Botón de Pulso IR Interactivo -->
+<button class="w-full py-space-md rounded-lg bg-surface-container-high hover:bg-surface-variant active:scale-95 transition-all flex items-center justify-center gap-space-sm shadow-md" id="ir-pulse-btn">
+<span class="material-symbols-outlined text-error text-[22px]" id="ir-pulse-icon">bolt</span>
+<span class="font-label-code-lg text-label-code-lg text-on-surface uppercase tracking-wider">Emitir Ráfaga (CMD_POWER)</span>
+</button>
+<!-- Verificación Rápida de Respuesta -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase text-center">¿Encendió o reaccionó el equipo?</span>
+<div class="grid grid-cols-2 gap-space-sm">
+<button class="py-space-sm px-space-md rounded-lg bg-surface-container-highest hover:bg-surface-bright active:scale-95 transition-all flex items-center justify-center gap-1 text-on-surface font-label-code-sm text-label-code-sm" id="ir-next-code-btn">
+<span class="material-symbols-outlined text-[16px]">skip_next</span> Probar Siguiente
+        </button>
+<button class="py-space-sm px-space-md rounded-lg bg-on-tertiary-container hover:bg-tertiary-container hover:text-on-tertiary-container active:scale-95 transition-all flex items-center justify-center gap-1 text-tertiary-container font-label-code-sm text-label-code-sm font-semibold" id="ir-confirm-btn">
+<span class="material-symbols-outlined text-[16px]">check</span> Sí, Enlazar IR
+        </button>
+</div>
+</div>
+</div>
+<!-- Botón Principal de Salida al Mando Pro -->
+<div class="w-full pt-space-xs flex flex-col gap-space-xs">
+<button class="w-full h-14 rounded-xl bg-primary-container text-on-primary-container font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-space-sm shadow-[0_0_24px_rgba(0,229,255,0.4)] hover:shadow-[0_0_32px_rgba(0,229,255,0.6)] active:scale-[0.98] transition-all uppercase tracking-wide" id="launch-remote-btn">
+<span class="material-symbols-outlined text-[24px]">power_settings_new</span>
+<span>Autorizar y Abrir Mando Pro</span>
+</button>
+<div class="flex items-center justify-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px] text-tertiary">lock_reset</span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">Conexión encriptada punto a punto en LAN local</span>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const irPulseBtn = document.getElementById('ir-pulse-btn');
+    const irPulseIcon = document.getElementById('ir-pulse-icon');
+    const irNextCodeBtn = document.getElementById('ir-next-code-btn');
+    const irConfirmBtn = document.getElementById('ir-confirm-btn');
+    const launchRemoteBtn = document.getElementById('launch-remote-btn');
+
+    if (irPulseBtn && irPulseIcon) {
+      irPulseBtn.addEventListener('click', () => {
+        irPulseIcon.classList.add('text-primary', 'animate-ping');
+        irPulseBtn.classList.add('bg-surface-variant');
+        if (navigator.vibrate) {
+          navigator.vibrate([40, 30, 40]);
+        }
+        setTimeout(() => {
+          irPulseIcon.classList.remove('text-primary', 'animate-ping');
+          irPulseBtn.classList.remove('bg-surface-variant');
+        }, 600);
+      });
+    }
+
+    if (irNextCodeBtn) {
+      irNextCodeBtn.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate(25);
+        irNextCodeBtn.classList.add('bg-surface-bright');
+        setTimeout(() => irNextCodeBtn.classList.remove('bg-surface-bright'), 200);
+      });
+    }
+
+    if (irConfirmBtn) {
+      irConfirmBtn.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate([50, 50, 80]);
+        irConfirmBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">done_all</span> IR Guardado';
+      });
+    }
+
+    if (launchRemoteBtn) {
+      launchRemoteBtn.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate(60);
+        launchRemoteBtn.classList.add('brightness-125');
+        setTimeout(() => launchRemoteBtn.classList.remove('brightness-125'), 300);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-primary font-semibold shadow-[0_0_16px_rgba(0,229,255,0.25)] bg-surface-container/70"><div class="flex justify-around items-center h-20 px-gutter-sm"><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="dispositivos" href="#"><span class="material-symbols-outlined text-[22px]">devices</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Equipos</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl transition-all active:scale-95 text-primary font-semibold shadow-[0_0_16px_rgba(0,229,255,0.25)] bg-surface-container/70" data-path="emparejamiento" href="#"><span class="material-symbols-outlined text-[22px]">sync_alt</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Enlace</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="mando-pro" href="#"><span class="material-symbols-outlined text-[24px]">gamepad</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Mando Pro</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="protocolos-&amp;-wol" href="#"><span class="material-symbols-outlined text-[22px]">terminal</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Protocolos</span></a></div></nav></body></html>

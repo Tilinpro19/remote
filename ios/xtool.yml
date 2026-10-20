@@ -1,0 +1,12 @@
+version: 1
+bundleID: com.thiagofrias.universalremote
+product: UniversalRemote
+
+# Claves fusionadas en el Info.plist generado: red local, Bonjour, BLE y ATS local.
+infoPath: Resources/Info.plist
+
+# SSDP (multicast 239.255.255.250:1900) y Wake-on-LAN por broadcast exigen en iOS 14+
+# el entitlement com.apple.developer.networking.multicast, que Apple concede bajo
+# solicitud y solo a cuentas de pago. Descomenta cuando el App ID lo tenga asignado;
+# si se activa sin él, la firma con `xtool dev` falla.
+# entitlementsPath: Resources/UniversalRemote.entitlements

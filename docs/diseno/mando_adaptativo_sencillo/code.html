@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0f131c;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-container": "#006645", "surface-container-high": "#262a33", "primary-fixed-dim": "#00daf3", "outline": "#849396", "surface-container-low": "#181c24", "on-primary-fixed": "#001f24", "tertiary-container": "#5be9ad", "on-secondary-fixed-variant": "#5516be", "on-tertiary-fixed-variant": "#005236", "on-surface-variant": "#bac9cc", "tertiary-fixed-dim": "#4edea3", "on-surface": "#dfe2ee", "primary-container": "#00e5ff", "surface-variant": "#31353e", "error-container": "#93000a", "on-primary": "#00363d", "secondary-fixed": "#e9ddff", "on-error": "#690005", "on-error-container": "#ffdad6", "surface-dim": "#0f131c", "on-secondary-container": "#c4abff", "inverse-primary": "#006875", "error": "#ffb4ab", "primary-fixed": "#9cf0ff", "background": "#0f131c", "on-primary-container": "#00626e", "surface": "#0f131c", "on-tertiary": "#003824", "outline-variant": "#3b494c", "inverse-on-surface": "#2c3039", "surface-container-lowest": "#0a0e16", "tertiary": "#a8ffd2", "secondary-fixed-dim": "#d0bcff", "on-background": "#dfe2ee", "surface-container": "#1c2028", "surface-container-highest": "#31353e", "surface-bright": "#353942", "tertiary-fixed": "#6ffbbe", "surface-tint": "#00daf3", "on-secondary": "#3c0091", "secondary": "#d0bcff", "secondary-container": "#571bc1", "primary": "#c3f5ff", "inverse-surface": "#dfe2ee", "on-primary-fixed-variant": "#004f58", "on-tertiary-fixed": "#002113", "on-secondary-fixed": "#23005c" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-sm": "0.5rem", "gutter-sm": "0.5rem", "space-lg": "1.25rem", "margin-tablet": "1.5rem", "space-xs": "0.25rem", "margin": "1rem", "space-xl": "2rem", "space-md": "0.75rem" }, fontFamily: { "label-code-sm": ["JetBrains Mono"], "body-sm": ["Inter"], "body-lg": ["Inter"], "display-lg-mobile": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "label-code-lg": ["JetBrains Mono"], "headline-sm": ["Space Grotesk"], "display-lg": ["Space Grotesk"], "body-md": ["Inter"] }, fontSize: { "label-code-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "display-lg-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-code-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)] pt-safe"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-xl bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-primary shadow-sm"><span class="material-symbols-outlined text-[22px]">settings_remote</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none uppercase">OmniRemote</span><span class="font-label-code-sm text-label-code-sm text-tertiary leading-none mt-1 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Conectado</span></div></div><div class="flex items-center gap-space-sm"><button aria-label="Estado de señal" class="h-9 px-2.5 rounded-lg bg-surface-container-high hover:bg-surface-variant flex items-center gap-1.5 text-on-surface-variant active:scale-95 transition-all text-label-code-sm" id="header-info-btn"><span class="material-symbols-outlined text-primary text-[18px]">wifi</span><span>Online</span></button><button aria-label="Perfil de usuario" class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.3)] active:scale-95 transition-all"><span class="material-symbols-outlined text-on-primary text-[20px]">person</span></button></div></div></header><main class="flex-1 flex flex-col relative w-full pb-24 bg-surface min-h-screen pt-20"><div class="flex flex-col w-full px-margin pb-space-lg select-none"><!-- Friendly Device Selector Header with Dropdown Modal Trigger -->
+<div class="relative mb-3">
+<div class="flex items-center justify-between p-3 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-md">
+<button class="flex items-center gap-3 min-w-0 flex-1 text-left active:opacity-80 transition-opacity" id="device-selector-btn">
+<div class="w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary-container shadow-inner shrink-0" id="current-device-icon-wrap">
+<span class="material-symbols-outlined text-[24px]" id="current-device-icon">tv</span>
+</div>
+<div class="flex flex-col min-w-0 pr-2">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-[16px] text-on-surface font-semibold truncate" id="current-device-name">Smart TV (Salón)</span>
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">expand_more</span>
+</div>
+<span class="text-body-sm text-[12px] text-tertiary flex items-center gap-1 mt-0.5" id="current-device-subtitle">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Samsung 65" • Listo para usar</span>
+</span>
+</div>
+</button>
+<button aria-label="Encendido rápido" class="w-11 h-11 rounded-xl bg-surface-container-high hover:bg-surface-variant flex items-center justify-center text-error active:scale-95 transition-all shadow-md shrink-0 border border-error/20 active:bg-error-container active:text-on-error-container" id="master-power-btn">
+<span class="material-symbols-outlined text-[22px]">power_settings_new</span>
+</button>
+</div>
+<!-- Quick Mode Tabs / Selector for Fast Switching -->
+<div class="grid grid-cols-3 gap-1.5 mt-2.5 p-1 rounded-xl bg-surface-container-lowest border border-outline-variant/20 shadow-inner">
+<button class="py-2 px-1 rounded-lg text-body-sm font-semibold flex items-center justify-center gap-1.5 transition-all bg-surface-container-high text-primary shadow-sm" id="tab-tv">
+<span class="material-symbols-outlined text-[16px]">tv</span>
+<span class="truncate">Smart TV</span>
+</button>
+<button class="py-2 px-1 rounded-lg text-body-sm font-semibold flex items-center justify-center gap-1.5 transition-all text-on-surface-variant hover:text-on-surface" id="tab-ac">
+<span class="material-symbols-outlined text-[16px]">ac_unit</span>
+<span class="truncate">Aire Acond.</span>
+</button>
+<button class="py-2 px-1 rounded-lg text-body-sm font-semibold flex items-center justify-center gap-1.5 transition-all text-on-surface-variant hover:text-on-surface" id="tab-basic">
+<span class="material-symbols-outlined text-[16px]">settings_remote</span>
+<span class="truncate">TV Clásica</span>
+</button>
+</div>
+</div>
+<!-- ============================================== -->
+<!-- VIEW 1: SMART TV (Salón)                      -->
+<!-- ============================================== -->
+<div class="flex flex-col gap-3 transition-opacity duration-200" id="view-smart-tv">
+<!-- Quick Access Top Bar -->
+<div class="grid grid-cols-4 gap-2">
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex flex-col items-center justify-center text-on-surface active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">input</span>
+<span class="text-[10px] text-on-surface-variant font-medium mt-0.5 uppercase">Entrada</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex flex-col items-center justify-center text-on-surface active:scale-95 transition-all shadow-sm" id="tv-mute-btn">
+<span class="material-symbols-outlined text-on-surface text-[20px]">volume_off</span>
+<span class="text-[10px] text-on-surface-variant font-medium mt-0.5 uppercase">Silencio</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex flex-col items-center justify-center text-on-surface active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-tertiary text-[20px]">menu_book</span>
+<span class="text-[10px] text-on-surface-variant font-medium mt-0.5 uppercase">Guía</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex flex-col items-center justify-center text-on-surface active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">settings</span>
+<span class="text-[10px] text-on-surface-variant font-medium mt-0.5 uppercase">Ajustes</span>
+</button>
+</div>
+<!-- Main Ergonomic Controller Layout: Vol Rocker, D-Pad Circle, Ch Rocker -->
+<div class="grid grid-cols-12 gap-2 items-center my-1">
+<!-- Left: Volume Tactile Capsule -->
+<div class="col-span-3 flex flex-col items-center">
+<div class="w-full flex flex-col items-center rounded-2xl bg-surface-container-low p-1.5 shadow-md border border-outline-variant/20">
+<button aria-label="Subir volumen" class="w-full h-14 rounded-xl bg-surface-container flex flex-col items-center justify-center text-on-surface hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-90 transition-all shadow-sm" id="smart-vol-up">
+<span class="material-symbols-outlined text-[22px]">add</span>
+<span class="text-[9px] font-bold tracking-wider">VOL</span>
+</button>
+<div class="my-2 flex flex-col items-center">
+<span class="font-headline-sm text-[18px] text-primary font-bold" id="smart-vol-val">24</span>
+<span class="text-[9px] text-on-surface-variant uppercase font-medium">Nivel</span>
+</div>
+<button aria-label="Bajar volumen" class="w-full h-14 rounded-xl bg-surface-container flex flex-col items-center justify-center text-on-surface hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-90 transition-all shadow-sm" id="smart-vol-down">
+<span class="material-symbols-outlined text-[22px]">remove</span>
+<span class="text-[9px] font-bold tracking-wider">VOL</span>
+</button>
+</div>
+</div>
+<!-- Center: Physical Circular D-Pad + Return/Home Orbit -->
+<div class="col-span-6 flex flex-col items-center justify-center">
+<!-- Top Satellite: Back & Info -->
+<div class="w-full flex justify-between px-3 mb-1.5">
+<button aria-label="Atrás" class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface active:scale-90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<button aria-label="Info" class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface active:scale-90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</button>
+</div>
+<!-- Tactile Radial Wheel Assembly -->
+<div class="relative w-48 h-48 rounded-full bg-surface-container-lowest p-2 shadow-xl flex items-center justify-center border border-outline-variant/30">
+<button aria-label="Arriba" class="absolute top-2 w-16 h-12 rounded-t-full bg-surface-container hover:bg-surface-container-high active:bg-primary-container text-on-surface active:text-on-primary-container flex items-center justify-center transition-all pt-1 shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[22px]">keyboard_arrow_up</span>
+</button>
+<button aria-label="Derecha" class="absolute right-2 w-12 h-16 rounded-r-full bg-surface-container hover:bg-surface-container-high active:bg-primary-container text-on-surface active:text-on-primary-container flex items-center justify-center transition-all pr-1 shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[22px]">keyboard_arrow_right</span>
+</button>
+<button aria-label="Abajo" class="absolute bottom-2 w-16 h-12 rounded-b-full bg-surface-container hover:bg-surface-container-high active:bg-primary-container text-on-surface active:text-on-primary-container flex items-center justify-center transition-all pb-1 shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[22px]">keyboard_arrow_down</span>
+</button>
+<button aria-label="Izquierda" class="absolute left-2 w-12 h-16 rounded-l-full bg-surface-container hover:bg-surface-container-high active:bg-primary-container text-on-surface active:text-on-primary-container flex items-center justify-center transition-all pl-1 shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[22px]">keyboard_arrow_left</span>
+</button>
+<!-- OK Center -->
+<button aria-label="OK Confirmar" class="relative z-10 w-16 h-16 rounded-full bg-surface-container-high text-primary flex flex-col items-center justify-center shadow-lg active:scale-90 active:bg-primary-container active:text-on-primary-container transition-all border border-primary/20">
+<span class="font-headline-sm text-[16px] tracking-wider font-bold">OK</span>
+</button>
+</div>
+<!-- Home Satellite Center Below Wheel -->
+<div class="mt-1.5 flex items-center justify-center">
+<button aria-label="Inicio Smart Hub" class="w-11 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-primary-container shadow-sm active:scale-90 transition-all border border-outline-variant/20">
+<span class="material-symbols-outlined text-[22px]">home</span>
+</button>
+</div>
+</div>
+<!-- Right: Channel Tactile Capsule -->
+<div class="col-span-3 flex flex-col items-center">
+<div class="w-full flex flex-col items-center rounded-2xl bg-surface-container-low p-1.5 shadow-md border border-outline-variant/20">
+<button aria-label="Canal arriba" class="w-full h-14 rounded-xl bg-surface-container flex flex-col items-center justify-center text-on-surface hover:bg-surface-container-high active:bg-secondary-container active:text-on-secondary-container active:scale-90 transition-all shadow-sm" id="smart-ch-up">
+<span class="material-symbols-outlined text-[22px]">expand_less</span>
+<span class="text-[9px] font-bold tracking-wider">CH</span>
+</button>
+<div class="my-2 flex flex-col items-center">
+<span class="font-headline-sm text-[18px] text-secondary font-bold" id="smart-ch-val">12</span>
+<span class="text-[9px] text-on-surface-variant uppercase font-medium">Canal</span>
+</div>
+<button aria-label="Canal abajo" class="w-full h-14 rounded-xl bg-surface-container flex flex-col items-center justify-center text-on-surface hover:bg-surface-container-high active:bg-secondary-container active:text-on-secondary-container active:scale-90 transition-all shadow-sm" id="smart-ch-down">
+<span class="material-symbols-outlined text-[22px]">expand_more</span>
+<span class="text-[9px] font-bold tracking-wider">CH</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Streaming Direct App Launchers -->
+<div class="mt-1">
+<div class="flex items-center justify-between mb-1.5 px-1">
+<span class="text-body-sm text-[12px] text-on-surface-variant font-medium">Acceso Rápido a Streaming</span>
+<span class="text-[11px] text-primary font-semibold flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">touch_app</span> Un toque</span>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm border border-outline-variant/20">
+<span class="font-bold text-error text-[18px]">N</span>
+<span class="text-[11px] font-semibold text-on-surface">Netflix</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm border border-outline-variant/20">
+<span class="material-symbols-outlined text-error text-[18px]">smart_display</span>
+<span class="text-[11px] font-semibold text-on-surface">YouTube</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary text-[18px]">movie</span>
+<span class="text-[11px] font-semibold text-on-surface">Prime</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">auto_awesome</span>
+<span class="text-[11px] font-semibold text-on-surface">Disney+</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ============================================== -->
+<!-- VIEW 2: AIRE ACONDICIONADO (Daikin)           -->
+<!-- ============================================== -->
+<div class="hidden flex-col gap-3 transition-opacity duration-200" id="view-air-conditioner">
+<!-- Digital Big Temp Display & Quick Adjust -->
+<div class="flex flex-col items-center justify-center p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-md relative overflow-hidden">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">air</span>
+<span class="text-body-sm text-[13px] text-on-surface-variant font-medium">Temperatura Deseada</span>
+</div>
+<div class="flex items-center justify-center gap-6 my-2">
+<button aria-label="Disminuir temperatura" class="w-14 h-14 rounded-2xl bg-surface-container hover:bg-surface-container-high text-primary flex items-center justify-center active:scale-90 transition-all shadow-md active:bg-primary-container active:text-on-primary-container" id="ac-temp-down">
+<span class="material-symbols-outlined text-[30px]">remove</span>
+</button>
+<div class="flex items-start justify-center">
+<span class="font-headline-lg text-[64px] font-bold text-on-surface leading-none tracking-tight" id="ac-temp-val">23</span>
+<span class="text-headline-sm text-[26px] text-primary font-bold mt-1 ml-0.5">°C</span>
+</div>
+<button aria-label="Aumentar temperatura" class="w-14 h-14 rounded-2xl bg-surface-container hover:bg-surface-container-high text-primary flex items-center justify-center active:scale-90 transition-all shadow-md active:bg-primary-container active:text-on-primary-container" id="ac-temp-up">
+<span class="material-symbols-outlined text-[30px]">add</span>
+</button>
+</div>
+<div class="flex items-center gap-4 text-body-sm text-on-surface-variant mt-1 text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-tertiary">thermostat</span> Ambiente: 26°C</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">water_drop</span> Humedad: 48%</span>
+</div>
+</div>
+<!-- Climate Operating Modes -->
+<div class="flex flex-col gap-1.5">
+<span class="text-body-sm text-[12px] text-on-surface-variant font-medium px-1">Modo de Climatización</span>
+<div class="grid grid-cols-4 gap-2">
+<button class="py-3 rounded-xl bg-primary text-on-primary font-semibold flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all" id="ac-mode-cool">
+<span class="material-symbols-outlined text-[20px]">ac_unit</span>
+<span class="text-[11px]">Frío</span>
+</button>
+<button class="py-3 rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface flex flex-col items-center justify-center gap-1 active:scale-95 transition-all" id="ac-mode-heat">
+<span class="material-symbols-outlined text-[20px]">sunny</span>
+<span class="text-[11px]">Calor</span>
+</button>
+<button class="py-3 rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface flex flex-col items-center justify-center gap-1 active:scale-95 transition-all" id="ac-mode-eco">
+<span class="material-symbols-outlined text-[20px]">eco</span>
+<span class="text-[11px]">Eco</span>
+</button>
+<button class="py-3 rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface flex flex-col items-center justify-center gap-1 active:scale-95 transition-all" id="ac-mode-fan">
+<span class="material-symbols-outlined text-[20px]">mode_fan</span>
+<span class="text-[11px]">Ventilador</span>
+</button>
+</div>
+</div>
+<!-- Fan Speed & Swing Oscillation -->
+<div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/20 flex flex-col gap-3 shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">cyclone</span>
+<span class="text-body-sm text-[13px] text-on-surface font-semibold">Velocidad del Ventilador</span>
+</div>
+<span class="text-label-code-sm text-tertiary font-bold" id="fan-speed-label">Auto</span>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<button class="fan-btn py-2 rounded-lg bg-surface-container text-on-surface-variant text-[12px] font-medium hover:text-on-surface active:scale-95">Baja</button>
+<button class="fan-btn py-2 rounded-lg bg-surface-container text-on-surface-variant text-[12px] font-medium hover:text-on-surface active:scale-95">Media</button>
+<button class="fan-btn py-2 rounded-lg bg-surface-container text-on-surface-variant text-[12px] font-medium hover:text-on-surface active:scale-95">Alta</button>
+<button class="fan-btn py-2 rounded-lg bg-primary text-on-primary text-[12px] font-bold shadow-sm active:scale-95">Auto</button>
+</div>
+</div>
+<!-- Comfort Extra Controls -->
+<div class="grid grid-cols-2 gap-2">
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-2 text-on-surface active:scale-95 transition-all shadow-sm border border-outline-variant/20" id="ac-swing-btn">
+<span class="material-symbols-outlined text-primary text-[20px]">sync_alt</span>
+<span class="text-body-sm text-[12px] font-semibold">Oscilación (Swing)</span>
+</button>
+<button class="h-12 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-2 text-on-surface active:scale-95 transition-all shadow-sm border border-outline-variant/20" id="ac-timer-btn">
+<span class="material-symbols-outlined text-tertiary text-[20px]">timer</span>
+<span class="text-body-sm text-[12px] font-semibold">Temporizador 1h</span>
+</button>
+</div>
+</div>
+<!-- ============================================== -->
+<!-- VIEW 3: TV INFRARROJO (Dormitorio)            -->
+<!-- ============================================== -->
+<div class="hidden flex-col gap-3 transition-opacity duration-200" id="view-basic-tv">
+<!-- Quick Top Bar: Source, Mute, Power -->
+<div class="grid grid-cols-3 gap-2">
+<button class="h-11 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-2 text-on-surface active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">input</span>
+<span class="text-[11px] font-semibold">AV / HDMI</span>
+</button>
+<button class="h-11 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-2 text-on-surface active:scale-95 transition-all shadow-sm" id="basic-mute-btn">
+<span class="material-symbols-outlined text-on-surface text-[18px]">volume_off</span>
+<span class="text-[11px] font-semibold">Silencio</span>
+</button>
+<button class="h-11 rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-center gap-2 text-on-surface active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">menu</span>
+<span class="text-[11px] font-semibold">Menú TV</span>
+</button>
+</div>
+<!-- Ergonomic Vol / Ch Dual Column for IR TV -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Volume Column -->
+<div class="p-3 rounded-2xl bg-surface-container-low border border-outline-variant/20 flex flex-col items-center shadow-md">
+<span class="text-body-sm text-[12px] font-bold text-on-surface-variant mb-2">VOLUMEN</span>
+<button class="w-full h-12 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all flex items-center justify-center shadow-sm" id="basic-vol-up">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+<div class="my-2">
+<span class="font-headline-sm text-[18px] text-primary font-bold" id="basic-vol-val">18</span>
+</div>
+<button class="w-full h-12 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all flex items-center justify-center shadow-sm" id="basic-vol-down">
+<span class="material-symbols-outlined text-[24px]">remove</span>
+</button>
+</div>
+<!-- Channel Column -->
+<div class="p-3 rounded-2xl bg-surface-container-low border border-outline-variant/20 flex flex-col items-center shadow-md">
+<span class="text-body-sm text-[12px] font-bold text-on-surface-variant mb-2">CANAL</span>
+<button class="w-full h-12 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface active:bg-secondary-container active:text-on-secondary-container active:scale-95 transition-all flex items-center justify-center shadow-sm" id="basic-ch-up">
+<span class="material-symbols-outlined text-[24px]">keyboard_arrow_up</span>
+</button>
+<div class="my-2">
+<span class="font-headline-sm text-[18px] text-secondary font-bold" id="basic-ch-val">07</span>
+</div>
+<button class="w-full h-12 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface active:bg-secondary-container active:text-on-secondary-container active:scale-95 transition-all flex items-center justify-center shadow-sm" id="basic-ch-down">
+<span class="material-symbols-outlined text-[24px]">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<!-- Large Classic Tactile Numeric Keypad -->
+<div class="p-3 rounded-2xl bg-surface-container-low border border-outline-variant/20 flex flex-col shadow-md">
+<div class="flex items-center justify-between mb-2 px-1">
+<span class="text-body-sm text-[12px] text-on-surface-variant font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[16px]">dialpad</span>
+        Teclado Numérico Directo
+      </span>
+<span class="font-label-code-sm text-[12px] text-primary font-bold" id="numpad-buffer">Canal: --</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">1</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">2</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">3</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">4</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">5</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">6</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">7</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">8</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">9</button>
+<button class="h-11 rounded-xl bg-surface-container hover:bg-surface-container-high text-body-sm font-bold text-on-surface-variant active:bg-error-container active:text-on-error-container shadow-sm flex items-center justify-center active:scale-95 transition-all" id="num-clear-btn">BORRAR</button>
+<button class="num-btn h-11 rounded-xl bg-surface-container hover:bg-surface-container-high font-headline-sm text-[18px] text-on-surface active:bg-primary-container active:text-on-primary-container shadow-sm flex items-center justify-center active:scale-95 transition-all">0</button>
+<button class="h-11 rounded-xl bg-primary text-on-primary text-body-sm font-bold shadow-md flex items-center justify-center active:scale-95 transition-all" id="num-enter-btn">IR</button>
+</div>
+</div>
+</div>
+<!-- Friendly Modal / Bottom Sheet for Device Switching -->
+<div class="hidden fixed inset-0 z-50 flex items-end justify-center bg-background/80 backdrop-blur-sm p-margin" id="device-modal">
+<div class="w-full max-w-sm rounded-2xl bg-surface-container-high border border-outline-variant p-4 flex flex-col gap-3 shadow-2xl mb-16">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">
+<span class="font-headline-sm text-[16px] text-on-surface font-semibold">Seleccionar Dispositivo</span>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant active:scale-95" id="modal-close-btn">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<button class="device-option-btn flex items-center gap-3 p-3 rounded-xl bg-surface-container hover:bg-surface-container-highest transition-all text-left border border-primary/40" data-device="smart-tv">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[22px]">tv</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-semibold text-on-surface text-[14px]">Smart TV (Salón)</span>
+<span class="text-[11px] text-on-surface-variant">Samsung Neo QLED 65" • Wi-Fi</span>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+</button>
+<button class="device-option-btn flex items-center gap-3 p-3 rounded-xl bg-surface-container hover:bg-surface-container-highest transition-all text-left border border-outline-variant/20" data-device="air-conditioner">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary-container shrink-0">
+<span class="material-symbols-outlined text-[22px]">ac_unit</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-semibold text-on-surface text-[14px]">Aire Acondicionado (Daikin)</span>
+<span class="text-[11px] text-on-surface-variant">Inverter Confort • Climatización</span>
+</div>
+</button>
+<button class="device-option-btn flex items-center gap-3 p-3 rounded-xl bg-surface-container hover:bg-surface-container-highest transition-all text-left border border-outline-variant/20" data-device="basic-tv">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[22px]">settings_remote</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-semibold text-on-surface text-[14px]">TV Infrarrojo (Dormitorio)</span>
+<span class="text-[11px] text-on-surface-variant">LG 32" • Puerto IR Directo</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Simple User-Friendly Status Bar (clean and reassuring) -->
+<div class="mt-3 flex items-center justify-between p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/20">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-[11px] text-on-surface-variant" id="friendly-status-text">Enlace inalámbrico óptimo</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 text-[11px] text-primary font-medium">
+<span class="material-symbols-outlined text-[14px]">vibration</span>
+<span>Háptica táctil activa</span>
+</span>
+</div>
+</div>
+<script>
+  (() => {
+    // Tactile Haptic Vibration Simulation
+    const triggerHaptic = (duration = 20) => {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(duration);
+      }
+    };
+
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('pointerdown', () => triggerHaptic(15));
+    });
+
+    // State Management for Devices & Tabs
+    const views = {
+      'smart-tv': document.getElementById('view-smart-tv'),
+      'air-conditioner': document.getElementById('view-air-conditioner'),
+      'basic-tv': document.getElementById('view-basic-tv')
+    };
+
+    const tabButtons = {
+      'smart-tv': document.getElementById('tab-tv'),
+      'air-conditioner': document.getElementById('tab-ac'),
+      'basic-tv': document.getElementById('tab-basic')
+    };
+
+    const deviceMeta = {
+      'smart-tv': {
+        name: 'Smart TV (Salón)',
+        subtitle: 'Samsung 65" • Listo para usar',
+        icon: 'tv'
+      },
+      'air-conditioner': {
+        name: 'Aire Acondicionado (Daikin)',
+        subtitle: 'Inverter • Modo Frío activo',
+        icon: 'ac_unit'
+      },
+      'basic-tv': {
+        name: 'TV Infrarrojo (Dormitorio)',
+        subtitle: 'LG 32" • Infrarrojo directo',
+        icon: 'settings_remote'
+      }
+    };
+
+    const deviceNameEl = document.getElementById('current-device-name');
+    const deviceSubEl = document.getElementById('current-device-subtitle');
+    const deviceIconEl = document.getElementById('current-device-icon');
+
+    function switchDevice(deviceKey) {
+      Object.keys(views).forEach(k => {
+        if (views[k]) {
+          if (k === deviceKey) {
+            views[k].classList.remove('hidden');
+            views[k].classList.add('flex');
+          } else {
+            views[k].classList.add('hidden');
+            views[k].classList.remove('flex');
+          }
+        }
+      });
+
+      Object.keys(tabButtons).forEach(k => {
+        const tab = tabButtons[k];
+        if (tab) {
+          if (k === deviceKey) {
+            tab.classList.add('bg-surface-container-high', 'text-primary', 'shadow-sm');
+            tab.classList.remove('text-on-surface-variant');
+          } else {
+            tab.classList.remove('bg-surface-container-high', 'text-primary', 'shadow-sm');
+            tab.classList.add('text-on-surface-variant');
+          }
+        }
+      });
+
+      const meta = deviceMeta[deviceKey];
+      if (meta) {
+        if (deviceNameEl) deviceNameEl.textContent = meta.name;
+        if (deviceSubEl) deviceSubEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>${meta.subtitle}</span>`;
+        if (deviceIconEl) deviceIconEl.textContent = meta.icon;
+      }
+      triggerHaptic(25);
+    }
+
+    tabButtons['smart-tv']?.addEventListener('click', () => switchDevice('smart-tv'));
+    tabButtons['air-conditioner']?.addEventListener('click', () => switchDevice('air-conditioner'));
+    tabButtons['basic-tv']?.addEventListener('click', () => switchDevice('basic-tv'));
+
+    // Modal Dropdown behavior
+    const modal = document.getElementById('device-modal');
+    const selectorBtn = document.getElementById('device-selector-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    selectorBtn?.addEventListener('click', () => {
+      modal?.classList.remove('hidden');
+      triggerHaptic(20);
+    });
+
+    modalCloseBtn?.addEventListener('click', () => {
+      modal?.classList.add('hidden');
+      triggerHaptic(15);
+    });
+
+    document.querySelectorAll('.device-option-btn').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const dev = opt.getAttribute('data-device');
+        if (dev) switchDevice(dev);
+        modal?.classList.add('hidden');
+      });
+    });
+
+    // Smart TV Volume & Channel logic
+    let smartVol = 24;
+    const smartVolVal = document.getElementById('smart-vol-val');
+    document.getElementById('smart-vol-up')?.addEventListener('click', () => {
+      if (smartVol < 100) smartVol++;
+      if (smartVolVal) smartVolVal.textContent = smartVol;
+      triggerHaptic(20);
+    });
+    document.getElementById('smart-vol-down')?.addEventListener('click', () => {
+      if (smartVol > 0) smartVol--;
+      if (smartVolVal) smartVolVal.textContent = smartVol;
+      triggerHaptic(20);
+    });
+
+    let smartCh = 12;
+    const smartChVal = document.getElementById('smart-ch-val');
+    document.getElementById('smart-ch-up')?.addEventListener('click', () => {
+      smartCh++;
+      if (smartChVal) smartChVal.textContent = smartCh;
+      triggerHaptic(25);
+    });
+    document.getElementById('smart-ch-down')?.addEventListener('click', () => {
+      if (smartCh > 1) smartCh--;
+      if (smartChVal) smartChVal.textContent = smartCh;
+      triggerHaptic(25);
+    });
+
+    // Air Conditioner Controls logic
+    let acTemp = 23;
+    const acTempVal = document.getElementById('ac-temp-val');
+    document.getElementById('ac-temp-up')?.addEventListener('click', () => {
+      if (acTemp < 32) acTemp++;
+      if (acTempVal) acTempVal.textContent = acTemp;
+      triggerHaptic(30);
+    });
+    document.getElementById('ac-temp-down')?.addEventListener('click', () => {
+      if (acTemp > 16) acTemp--;
+      if (acTempVal) acTempVal.textContent = acTemp;
+      triggerHaptic(30);
+    });
+
+    // AC Modes toggle
+    const acModeBtns = [document.getElementById('ac-mode-cool'), document.getElementById('ac-mode-heat'), document.getElementById('ac-mode-eco'), document.getElementById('ac-mode-fan')];
+    acModeBtns.forEach(btn => {
+      btn?.addEventListener('click', () => {
+        acModeBtns.forEach(b => {
+          b?.classList.remove('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+          b?.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        });
+        btn.classList.add('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+        btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+        triggerHaptic(25);
+      });
+    });
+
+    // Basic TV Controls & Keypad logic
+    let basicVol = 18;
+    const basicVolVal = document.getElementById('basic-vol-val');
+    document.getElementById('basic-vol-up')?.addEventListener('click', () => {
+      if (basicVol < 100) basicVol++;
+      if (basicVolVal) basicVolVal.textContent = basicVol;
+      triggerHaptic(20);
+    });
+    document.getElementById('basic-vol-down')?.addEventListener('click', () => {
+      if (basicVol > 0) basicVol--;
+      if (basicVolVal) basicVolVal.textContent = basicVol;
+      triggerHaptic(20);
+    });
+
+    let basicCh = 7;
+    const basicChVal = document.getElementById('basic-ch-val');
+    document.getElementById('basic-ch-up')?.addEventListener('click', () => {
+      basicCh++;
+      if (basicChVal) basicChVal.textContent = String(basicCh).padStart(2, '0');
+      triggerHaptic(25);
+    });
+    document.getElementById('basic-ch-down')?.addEventListener('click', () => {
+      if (basicCh > 1) basicCh--;
+      if (basicChVal) basicChVal.textContent = String(basicCh).padStart(2, '0');
+      triggerHaptic(25);
+    });
+
+    let numBuffer = '';
+    const numBufferEl = document.getElementById('numpad-buffer');
+    document.querySelectorAll('.num-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (numBuffer.length < 3) {
+          numBuffer += btn.textContent.trim();
+          if (numBufferEl) numBufferEl.textContent = 'Canal: ' + numBuffer;
+          triggerHaptic(18);
+        }
+      });
+    });
+
+    document.getElementById('num-clear-btn')?.addEventListener('click', () => {
+      numBuffer = '';
+      if (numBufferEl) numBufferEl.textContent = 'Canal: --';
+      triggerHaptic(20);
+    });
+
+    document.getElementById('num-enter-btn')?.addEventListener('click', () => {
+      if (numBuffer.length > 0) {
+        basicCh = parseInt(numBuffer, 10);
+        if (basicChVal) basicChVal.textContent = String(basicCh).padStart(2, '0');
+        numBuffer = '';
+        if (numBufferEl) numBufferEl.textContent = 'Canal: ' + String(basicCh).padStart(2, '0');
+        triggerHaptic(40);
+      }
+    });
+  })();
+</script></div>
+<script>
+  (() => {
+    // Hardware Haptic Feedback Simulation
+    const triggerHaptic = (ms = 18) => {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(ms);
+      }
+    };
+
+    // Global tactile feedback for buttons
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('pointerdown', () => triggerHaptic(12));
+    });
+
+    // Volume Rocker Behavior
+    let currentVol = 28;
+    const volDisplay = document.getElementById('vol-display');
+    const volUp = document.getElementById('vol-up');
+    const volDown = document.getElementById('vol-down');
+
+    volUp?.addEventListener('click', () => {
+      if (currentVol < 100) {
+        currentVol += 1;
+        volDisplay.textContent = currentVol;
+        triggerHaptic(25);
+      }
+    });
+
+    volDown?.addEventListener('click', () => {
+      if (currentVol > 0) {
+        currentVol -= 1;
+        volDisplay.textContent = currentVol;
+        triggerHaptic(25);
+      }
+    });
+
+    // Channel Rocker Behavior
+    let currentCh = 104;
+    const chDisplay = document.getElementById('ch-display');
+    const chUp = document.getElementById('ch-up');
+    const chDown = document.getElementById('ch-down');
+
+    chUp?.addEventListener('click', () => {
+      currentCh += 1;
+      chDisplay.textContent = currentCh;
+      triggerHaptic(30);
+    });
+
+    chDown?.addEventListener('click', () => {
+      if (currentCh > 1) {
+        currentCh -= 1;
+        chDisplay.textContent = currentCh;
+        triggerHaptic(30);
+      }
+    });
+
+    // WoL Direct Pulse
+    const wolBtn = document.getElementById('wol-btn');
+    wolBtn?.addEventListener('click', () => {
+      triggerHaptic(50);
+      wolBtn.classList.add('bg-tertiary-container', 'text-on-tertiary-container');
+      setTimeout(() => {
+        wolBtn.classList.remove('bg-tertiary-container', 'text-on-tertiary-container');
+      }, 600);
+    });
+
+    // Power Toggle Protection Alert
+    const powerBtn = document.getElementById('btn-power');
+    powerBtn?.addEventListener('click', () => {
+      triggerHaptic([60, 40, 80]);
+    });
+
+    // Collapsible Keypad Toggle
+    const toggleKeypad = document.getElementById('toggle-keypad');
+    const keypadPanel = document.getElementById('keypad-panel');
+    const keypadChevron = document.getElementById('keypad-chevron');
+
+    toggleKeypad?.addEventListener('click', () => {
+      const isHidden = keypadPanel.classList.contains('hidden');
+      if (isHidden) {
+        keypadPanel.classList.remove('hidden');
+        keypadPanel.classList.add('grid');
+        keypadChevron.style.transform = 'rotate(180deg)';
+      } else {
+        keypadPanel.classList.add('hidden');
+        keypadPanel.classList.remove('grid');
+        keypadChevron.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    // Control Mode Switcher Tabs
+    const modes = [
+      { id: 'mode-dpad', icon: 'gamepad', label: 'D-PAD' },
+      { id: 'mode-touch', icon: 'touch_app', label: 'TRACKPAD' },
+      { id: 'mode-keys', icon: 'keyboard', label: 'TECLADO' }
+    ];
+
+    modes.forEach(mode => {
+      const el = document.getElementById(mode.id);
+      el?.addEventListener('click', () => {
+        modes.forEach(m => {
+          const item = document.getElementById(m.id);
+          item?.classList.remove('bg-surface-container-high', 'text-primary', 'shadow-sm', 'font-semibold');
+          item?.classList.add('text-on-surface-variant');
+        });
+        el.classList.add('bg-surface-container-high', 'text-primary', 'shadow-sm', 'font-semibold');
+        el.classList.remove('text-on-surface-variant');
+        triggerHaptic(15);
+      });
+    });
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-primary font-semibold shadow-[0_0_16px_rgba(0,229,255,0.25)] bg-surface-container/70"><div class="flex justify-around items-center h-20 px-gutter-sm"><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="dispositivos" href="#"><span class="material-symbols-outlined text-[22px]">devices</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Equipos</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="emparejamiento" href="#"><span class="material-symbols-outlined text-[22px]">sync_alt</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Enlace</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl transition-all active:scale-95 text-primary font-semibold shadow-[0_0_16px_rgba(0,229,255,0.25)] bg-surface-container/70" data-path="mando-pro" href="#"><span class="material-symbols-outlined text-[24px]">gamepad</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Mando Pro</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="protocolos-&amp;-wol" href="#"><span class="material-symbols-outlined text-[22px]">terminal</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Protocolos</span></a></div></nav></body></html>

@@ -1,11 +1,6 @@
-# Respaldo y carpetas locales
-respaldo_telefono/
-UniversalRemote-apk/
-UniversalRemote/
-stitch_universal_smart_remote_control/
-app_logo.jpg
-app_logo.png
+# Binarios y compilaciones
 *.apk
+*.aab
 
 # Android / Gradle / IDE
 .gradle/
@@ -16,4 +11,13 @@ android/app/build/
 android/local.properties
 .idea/
 *.iml
+
+# iOS / Swift / Xcode
+ios/.build/
+ios/DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+
+# Sistema y temporales
 .DS_Store
+Thumbs.db

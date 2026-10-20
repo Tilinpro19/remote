@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0f131c;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-container": "#006645", "surface-container-high": "#262a33", "primary-fixed-dim": "#00daf3", "outline": "#849396", "surface-container-low": "#181c24", "on-primary-fixed": "#001f24", "tertiary-container": "#5be9ad", "on-secondary-fixed-variant": "#5516be", "on-tertiary-fixed-variant": "#005236", "on-surface-variant": "#bac9cc", "tertiary-fixed-dim": "#4edea3", "on-surface": "#dfe2ee", "primary-container": "#00e5ff", "surface-variant": "#31353e", "error-container": "#93000a", "on-primary": "#00363d", "secondary-fixed": "#e9ddff", "on-error": "#690005", "on-error-container": "#ffdad6", "surface-dim": "#0f131c", "on-secondary-container": "#c4abff", "inverse-primary": "#006875", "error": "#ffb4ab", "primary-fixed": "#9cf0ff", "background": "#0f131c", "on-primary-container": "#00626e", "surface": "#0f131c", "on-tertiary": "#003824", "outline-variant": "#3b494c", "inverse-on-surface": "#2c3039", "surface-container-lowest": "#0a0e16", "tertiary": "#a8ffd2", "secondary-fixed-dim": "#d0bcff", "on-background": "#dfe2ee", "surface-container": "#1c2028", "surface-container-highest": "#31353e", "surface-bright": "#353942", "tertiary-fixed": "#6ffbbe", "surface-tint": "#00daf3", "on-secondary": "#3c0091", "secondary": "#d0bcff", "secondary-container": "#571bc1", "primary": "#c3f5ff", "inverse-surface": "#dfe2ee", "on-primary-fixed-variant": "#004f58", "on-tertiary-fixed": "#002113", "on-secondary-fixed": "#23005c" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-sm": "0.5rem", "gutter-sm": "0.5rem", "space-lg": "1.25rem", "margin-tablet": "1.5rem", "space-xs": "0.25rem", "margin": "1rem", "space-xl": "2rem", "space-md": "0.75rem" }, fontFamily: { "label-code-sm": ["JetBrains Mono"], "body-sm": ["Inter"], "body-lg": ["Inter"], "display-lg-mobile": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "label-code-lg": ["JetBrains Mono"], "headline-sm": ["Space Grotesk"], "display-lg": ["Space Grotesk"], "body-md": ["Inter"] }, fontSize: { "label-code-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "display-lg-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-code-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }</script></head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)] pt-safe"><div class="h-28 px-margin flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="OmniRemote Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChoaJ8rTcsBD8NCebuR0OxzHLgM9g3xAu8tY6tuHmc4wW8zLQKbZNjURZapZDuKogjvqVjqLME3TibY_i4D7Yh6nyZT1Kr6sr5N6s--ecc98mUIwv4U8oBtzYQwbnqddltMUyYDet8LIGqJJ_L2kyQbVtRuHWnLswJtU11QSiJWacLfvFfes9itR7tJjHAvXDSiCtL2jkDy-oiFDZeF7ZGJFo-qbcfoIO0mRk8d6WJFWGddcBl4kCS"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none uppercase">OmniRemote</span><span class="font-label-code-sm text-label-code-sm text-on-surface-variant leading-none mt-space-xs tracking-wider uppercase">Protocolos &amp; Wol</span></div></div><div class="flex items-center gap-space-sm"><button aria-label="Transmisión Rápida IR" class="w-11 h-11 rounded-lg bg-surface-container-high hover:bg-surface-variant active:scale-95 transition-all flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[20px]">sensors</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div><div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-space-xs"><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span><span class="font-label-code-sm text-label-code-sm text-on-surface">IR READY</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span><span class="font-label-code-sm text-label-code-sm text-on-surface">M-CAST LOCK</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="material-symbols-outlined text-primary-fixed-dim text-[12px]">wifi</span><span class="font-label-code-sm text-label-code-sm text-primary-fixed-dim">5GHz</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="material-symbols-outlined text-secondary-fixed text-[12px]">bluetooth</span><span class="font-label-code-sm text-label-code-sm text-secondary-fixed">BLE 5.2</span></div><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high/90 shrink-0"><span class="font-label-code-sm text-label-code-sm text-tertiary">4ms</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-28 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full px-margin pb-space-xl gap-space-lg">
+<!-- HUD Quick Telemetry Strip -->
+<section class="grid grid-cols-3 gap-space-xs w-full">
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high shadow-md">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+        NET PING
+      </span>
+<span class="font-headline-sm text-headline-sm text-tertiary mt-0.5" id="telemetry-ping">3.4ms</span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">JITTER ±0.2ms</span>
+</div>
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high shadow-md">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+        PACKETS
+      </span>
+<span class="font-headline-sm text-headline-sm text-primary mt-0.5">0.00%</span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">DROP RATE</span>
+</div>
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high shadow-md">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+        SOCKETS
+      </span>
+<span class="font-headline-sm text-headline-sm text-secondary mt-0.5">4 LIVE</span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">UDP/WS/RAW</span>
+</div>
+</section>
+<!-- SECCIÓN 1: Wake-on-LAN (WoL) Subsystem -->
+<section class="flex flex-col rounded-xl bg-surface-container-low p-space-md shadow-xl gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Wake-on-LAN (Magic Packet)</h2>
+<span class="font-label-code-sm text-label-code-sm text-tertiary-fixed-dim">IEEE 802.3 PHY INJECTION</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-container/30 text-tertiary font-label-code-sm text-label-code-sm">
+        PORT 9 / UDP
+      </span>
+</div>
+<!-- WoL Input Deck -->
+<div class="grid grid-cols-1 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-code-sm text-label-code-sm text-on-surface-variant flex justify-between">
+<span>TARGET BROADCAST IP</span>
+<span class="text-primary-fixed-dim">SUBNET /24</span>
+</label>
+<div class="flex items-center px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface">
+<span class="material-symbols-outlined text-outline text-[16px] mr-2">router</span>
+<input class="bg-transparent font-label-code-lg text-label-code-lg text-primary outline-none w-full" id="wol-ip" spellcheck="false" type="text" value="192.168.1.255"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-code-sm text-label-code-sm text-on-surface-variant flex justify-between">
+<span>PAYLOAD PHYSICAL MAC (HEX)</span>
+<span class="text-tertiary">SYNC 6x0xFF + 16xMAC</span>
+</label>
+<div class="flex items-center px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface">
+<span class="material-symbols-outlined text-outline text-[16px] mr-2">fingerprint</span>
+<input class="bg-transparent font-label-code-lg text-label-code-lg text-on-surface outline-none w-full font-bold" id="wol-mac" spellcheck="false" type="text" value="74:D2:1D:A9:3F:82"/>
+</div>
+</div>
+</div>
+<!-- Packet Trigger Button -->
+<button class="flex items-center justify-center gap-space-sm py-space-md px-space-lg rounded-xl bg-primary hover:bg-primary-container text-on-primary font-headline-sm text-headline-sm transition-all duration-150 active:scale-[0.98] shadow-lg shadow-primary-container/20" id="btn-fire-wol">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">cell_tower</span>
+<span>DISPARAR PAQUETE WOL</span>
+</button>
+<!-- ARP & Ping Monitor Feedback Deck -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-lowest gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">SONDA ARP DE ESCUCHA</span>
+<div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high" id="arp-status-pill">
+<span class="w-2 h-2 rounded-full bg-outline" id="arp-led"></span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface" id="arp-text">EN ESPERA</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-0 transition-all duration-500" id="arp-progress"></div>
+</div>
+<p class="font-label-code-sm text-label-code-sm text-on-surface-variant truncate" id="arp-detail">NIC Estado: Sin resolver broadcast previo.</p>
+</div>
+</section>
+<!-- SECCIÓN 2: Base de Datos IR & Generador Pronto/ConsumerIr -->
+<section class="flex flex-col rounded-xl bg-surface-container-low p-space-md shadow-xl gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]">infrared</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Explorador IRDB / LIRC</h2>
+<span class="font-label-code-sm text-label-code-sm text-primary-fixed-dim">CARRIER MODULATION &amp; HEX STRIP</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface-variant font-label-code-sm text-label-code-sm">
+        RAW CCF
+      </span>
+</div>
+<!-- Selectores de Equipo -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-code-sm text-label-code-sm text-on-surface-variant">FABRICANTE</label>
+<div class="relative">
+<select class="w-full appearance-none px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-code-lg text-label-code-lg outline-none pr-8 cursor-pointer" id="ir-brand-select">
+<option value="samsung">Samsung Electronics</option>
+<option value="lg">LG Electronics</option>
+<option value="sony">Sony Bravia IR</option>
+<option value="philips">Philips RC-5/6</option>
+<option value="daikin">Daikin Inverter</option>
+<option value="pioneer">Pioneer Elite Audio</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-outline text-[18px]">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-code-sm text-label-code-sm text-on-surface-variant">TIPO DE CHIP/EQUIPO</label>
+<div class="relative">
+<select class="w-full appearance-none px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-code-lg text-label-code-lg outline-none pr-8 cursor-pointer" id="ir-type-select">
+<option value="tv">Televisor Smart</option>
+<option value="audio">Receptor AV Hi-Fi</option>
+<option value="projector">Proyector Óptico</option>
+<option value="ac">Climatización / HVAC</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-outline text-[18px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Carrier Specs Banner -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-high">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">graphic_eq</span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface">FRECUENCIA: <span class="text-secondary font-bold" id="carrier-freq">38.0 kHz</span></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">DUTY:</span>
+<span class="font-label-code-sm text-label-code-sm text-primary">33.3% PWM</span>
+</div>
+</div>
+<!-- Pronto Hex Visualizer -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">PAYLOAD RAW PRONTO HEX</span>
+<button class="flex items-center gap-1 text-primary hover:text-primary-container font-label-code-sm text-label-code-sm active:scale-95 transition-all" id="copy-hex-btn">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span id="copy-label">COPIAR HEX</span>
+</button>
+</div>
+<div class="relative rounded-lg bg-surface-container-lowest p-space-sm max-h-24 overflow-y-auto no-scrollbar font-label-code-sm text-label-code-sm text-primary-fixed-dim leading-relaxed break-all select-all shadow-inner">
+<code id="pronto-hex-output">0000 006D 0022 0000 0156 00AB 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0040 0015 0015 0015 0040 0015 0605</code>
+</div>
+</div>
+<!-- ConsumerIrManager int[] Pattern -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">CONSUMER-IR ARREGLO MICROSEGUNDOS (int[])</span>
+<span class="font-label-code-sm text-label-code-sm text-tertiary">ANDROID NATIVE</span>
+</div>
+<div class="rounded-lg bg-surface-container-lowest p-space-sm max-h-20 overflow-y-auto no-scrollbar font-label-code-sm text-label-code-sm text-tertiary-fixed leading-relaxed break-all shadow-inner">
+<code id="android-pattern-output">int[] pattern = { 9000, 4500, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690 };</code>
+</div>
+</div>
+<!-- IR Blaster Test Pulse Button -->
+<button class="flex items-center justify-center gap-space-sm py-space-sm px-space-md rounded-xl bg-surface-container-high hover:bg-surface-variant active:scale-[0.98] transition-all text-on-surface font-headline-sm text-headline-sm shadow-md" id="btn-fire-ir">
+<span class="material-symbols-outlined text-[18px] text-error" id="ir-blast-icon">sensors</span>
+<span>EMITIR DESTELLO IR DE PRUEBA</span>
+<span class="w-2 h-2 rounded-full bg-error ml-1" id="ir-blast-dot"></span>
+</button>
+</section>
+<!-- SECCIÓN 3: Adapter Pattern Strategy Preview -->
+<section class="flex flex-col rounded-xl bg-surface-container-low p-space-md shadow-xl gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Adapter Command Translator</h2>
+<span class="font-label-code-sm text-label-code-sm text-secondary">POLYMORPHIC PROTOCOL PIPELINE</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-primary font-label-code-sm text-label-code-sm">
+        CMD_VOL_UP
+      </span>
+</div>
+<!-- Adapter Cards Horizontal / Vertical Selector -->
+<div class="flex flex-col gap-space-sm">
+<!-- Strategy: Samsung Tizen -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">tv</span> TIZEN OS ADAPTER (SEC WS)
+          </span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">PORT 8002</span>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded font-label-code-sm text-label-code-sm text-on-surface-variant truncate">
+<span class="text-tertiary">wss://192.168.1.140:8002/api/v2/channels/</span>
+</div>
+<div class="font-label-code-sm text-label-code-sm text-primary-fixed-dim">
+          Payload: <span class="text-on-surface">{"method":"ms.remote.control","params":{"Cmd":"Click","DataOfCmd":"KEY_VOLUP"}}</span>
+</div>
+</div>
+<!-- Strategy: LG webOS -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">cast</span> LG webOS SSAP ADAPTER
+          </span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">PORT 3000</span>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded font-label-code-sm text-label-code-sm text-on-surface-variant truncate">
+<span class="text-secondary">ssap://audio/volumeUp</span>
+</div>
+<div class="font-label-code-sm text-label-code-sm text-secondary-fixed">
+          Call: <span class="text-on-surface">client.request('ssap://audio/volumeUp', null, callback)</span>
+</div>
+</div>
+<!-- Strategy: Roku ECP -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-tertiary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">smart_display</span> ROKU REST ECP ADAPTER
+          </span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">PORT 8060</span>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded font-label-code-sm text-label-code-sm text-on-surface-variant truncate">
+<span class="text-primary-fixed-dim">POST http://192.168.1.189:8060/keypress/VolumeUp</span>
+</div>
+<div class="font-label-code-sm text-label-code-sm text-tertiary">
+          Status: <span class="text-on-surface">HTTP/1.1 200 OK (Content-Length: 0)</span>
+</div>
+</div>
+<!-- Strategy: Hardware IR Consumer -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-high gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code-sm text-label-code-sm text-error flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">settings_remote</span> NATIVE IR BLASTER ADAPTER
+          </span>
+<span class="font-label-code-sm text-label-code-sm text-on-surface-variant">HAL GPIO</span>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded font-label-code-sm text-label-code-sm text-on-surface-variant truncate">
+<span class="text-error">ConsumerIrManager.transmit(38000, pattern_vol_up);</span>
+</div>
+<div class="font-label-code-sm text-label-code-sm text-outline">
+          Hardware: <span class="text-on-surface">PWM Driver locked to carrier 38.0kHz</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECCIÓN 4: Consola Telemetría Hacker en Tiempo Real -->
+<section class="flex flex-col rounded-xl bg-surface-container-low p-space-md shadow-xl gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Consola de Telemetría RAW</h2>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-0.5 rounded bg-surface-container-highest hover:bg-surface-bright text-on-surface-variant text-label-code-sm font-label-code-sm transition-all active:scale-95" id="clear-log-btn">
+          LIMPIAR
+        </button>
+<button class="px-space-sm py-0.5 rounded bg-surface-container-highest hover:bg-surface-bright text-primary text-label-code-sm font-label-code-sm transition-all active:scale-95" id="pause-log-btn">
+          ACTIVO
+        </button>
+</div>
+</div>
+<!-- Terminal Window -->
+<div class="w-full h-56 rounded-lg bg-surface-container-lowest p-space-sm overflow-y-auto no-scrollbar font-label-code-sm text-label-code-sm leading-relaxed flex flex-col gap-1 shadow-inner select-text" id="terminal-screen">
+<div class="text-outline-variant">[00:00.12] INICIALIZANDO SUBSISTEMA OMNIREMOTE CORE V3.4.1...</div>
+<div class="text-tertiary">[00:00.28] SSDP &gt;&gt; M-SEARCH * HTTP/1.1 ST:urn:schemas-upnp-org:device:MediaRenderer:1 MAN:"ssdp:discover" MX:2</div>
+<div class="text-primary">[00:00.65] SSDP &lt;&lt; HTTP/1.1 200 OK | USN: uuid:4c3d2e1a | Location: http://192.168.1.140:9197/dmr</div>
+<div class="text-secondary">[00:01.04] MULTICAST_LOCK adquirido por Android WifiManager (flags: WAKE_LOCK_UDP)</div>
+<div class="text-on-surface-variant">[00:01.89] SEC_WS &gt;&gt; Conectando a wss://192.168.1.140:8002/api/v2/channels/samsung.remote.control</div>
+<div class="text-tertiary-fixed">[00:02.15] SEC_WS &lt;&lt; Handshake completado. Token verificado. Session: #9941</div>
+<div class="text-on-surface-variant">[00:03.42] ARP_POLL &gt;&gt; IP: 192.168.1.140 MAC: 74:D2:1D:A9:3F:82 [TTL=64 Estado=ALIVE]</div>
+<div class="text-primary-fixed-dim">[00:04.10] SYS &gt;&gt; Latencia promedio verificada: 3.42ms en 32 muestras icmp</div>
+</div>
+<div class="flex items-center justify-between text-label-code-sm font-label-code-sm text-on-surface-variant px-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-tertiary">check_circle</span>
+        MulticastLock Retenido
+      </span>
+<span class="text-primary-fixed-dim">BUFFER: 128 / 512 LINES</span>
+</div>
+</section>
+</div>
+<script>
+  (function() {
+    // 1. Manejo del Disparo de Paquete WoL
+    const btnWol = document.getElementById('btn-fire-wol');
+    const arpStatusPill = document.getElementById('arp-status-pill');
+    const arpLed = document.getElementById('arp-led');
+    const arpText = document.getElementById('arp-text');
+    const arpDetail = document.getElementById('arp-detail');
+    const arpProgress = document.getElementById('arp-progress');
+    const terminal = document.getElementById('terminal-screen');
+    const wolMac = document.getElementById('wol-mac');
+    const wolIp = document.getElementById('wol-ip');
+
+    function logToTerminal(msg, colorClass = 'text-primary') {
+      if (!terminal) return;
+      const row = document.createElement('div');
+      row.className = colorClass + ' truncate';
+      const now = new Date();
+      const timeStr = `[${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0')}]`;
+      row.textContent = `${timeStr} ${msg}`;
+      terminal.appendChild(row);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    if (btnWol) {
+      btnWol.addEventListener('click', () => {
+        const mac = wolMac.value.trim() || '74:D2:1D:A9:3F:82';
+        const ip = wolIp.value.trim() || '192.168.1.255';
+
+        btnWol.disabled = true;
+        btnWol.classList.add('opacity-75');
+        
+        logToTerminal(`WoL >> Inyectando Magic Packet hacia ${ip}:9 (${mac})`, 'text-tertiary');
+        logToTerminal(`WoL >> Creado frame raw: 6 bytes FF + 16 duplicados MAC`, 'text-on-surface-variant');
+
+        arpLed.className = 'w-2 h-2 rounded-full bg-error animate-ping';
+        arpText.textContent = 'TRANSMITIENDO...';
+        arpDetail.textContent = `Enviando datagrama broadcast a ${ip}...`;
+        arpProgress.style.width = '30%';
+
+        setTimeout(() => {
+          arpLed.className = 'w-2 h-2 rounded-full bg-primary-container animate-pulse';
+          arpText.textContent = 'ESPERANDO ARP';
+          arpDetail.textContent = 'Enviando ARP Request icmp para despertar NIC objetivo...';
+          arpProgress.style.width = '70%';
+          logToTerminal(`ARP >> Who has ${ip}? Tell OmniRemote Client`, 'text-secondary');
+        }, 600);
+
+        setTimeout(() => {
+          arpLed.className = 'w-2 h-2 rounded-full bg-tertiary';
+          arpText.textContent = 'EN LÍNEA (200 OK)';
+          arpDetail.textContent = `Confirmado por ARP: NIC ${mac} encendida. Ping: 2.1ms`;
+          arpProgress.style.width = '100%';
+          logToTerminal(`ARP &lt;&lt; Reply: ${mac} está vivo en 192.168.1.140 [0% DROP]`, 'text-tertiary-fixed');
+          btnWol.disabled = false;
+          btnWol.classList.remove('opacity-75');
+        }, 1400);
+      });
+    }
+
+    // 2. Base de Datos IR Dinámica & Generación de Pulsos
+    const irDB = {
+      samsung: {
+        freq: '37.9 kHz',
+        pronto: '0000 006D 0022 0000 0156 00AB 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0040 0015 0015 0015 0040 0015 0605',
+        pattern: 'int[] pattern = { 9000, 4500, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690 };'
+      },
+      lg: {
+        freq: '38.0 kHz',
+        pronto: '0000 006C 0022 0002 015B 00AD 0016 0016 0016 0040 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0040 0016 0040 0016 0040 0016 0016 0016 0040 0016 0040 0016 0040 0016 0040 0016 0016 0016 0016 0016 0016 0016 0040 0016 0016 0016 0016 0016 0040 0016 0040 0016 0040 0016 0040 0016 0016 0016 0016 0016 0040 0016 06AB',
+        pattern: 'int[] pattern = { 8900, 4400, 550, 550, 550, 1650, 550, 550, 550, 550, 550, 1650, 550, 1650, 550, 550, 550, 550, 550, 1650, 550, 1650, 550, 550, 550, 1650 };'
+      },
+      sony: {
+        freq: '40.0 kHz',
+        pronto: '0000 0068 000C 0000 0060 0018 0018 0018 0030 0018 0018 0018 0030 0018 0018 0018 0018 0018 0030 0018 0018 0018 0018 0018 0018 0018 0018 03F0',
+        pattern: 'int[] pattern = { 2400, 600, 1200, 600, 600, 600, 1200, 600, 600, 600, 1200, 600, 600, 600, 600, 600, 1200, 600 };'
+      },
+      philips: {
+        freq: '36.0 kHz',
+        pronto: '0000 0073 0000 000C 0020 0020 0040 0020 0020 0040 0040 0020 0020 0020 0020 0040 0020 0020 0040 0020 0020 0020 0020 0020 0020 0CA8',
+        pattern: 'int[] pattern = { 889, 889, 1778, 889, 889, 1778, 1778, 889, 889, 889, 889, 1778, 889, 889, 1778 };'
+      },
+      daikin: {
+        freq: '38.0 kHz',
+        pronto: '0000 006D 0038 0000 0160 00B0 0016 0016 0016 0042 0016 0042 0016 0016 0016 0016 0016 0016 0016 0042 0016 0016 0016 0042 0016 0042 0016 0016 0016 0042 0016 0042 0016 0016 0016 0042 0016 0016 0016 0042 0016 0016 0016 0016 0016 0042 0016 0042 0016 0016 0016 0016 0016 0042 0016 0680',
+        pattern: 'int[] pattern = { 3400, 1750, 440, 440, 440, 1300, 440, 1300, 440, 440, 440, 440, 440, 1300, 440, 440, 440, 1300 };'
+      },
+      pioneer: {
+        freq: '40.0 kHz',
+        pronto: '0000 0068 001A 0000 01A0 00D0 0018 0040 0018 0018 0018 0040 0018 0018 0018 0040 0018 0018 0018 0040 0018 0040 0018 0018 0018 0040 0018 0018 0018 0040 0018 0018 0018 0040 0018 0040 0018 0580',
+        pattern: 'int[] pattern = { 8500, 4200, 500, 1500, 500, 500, 500, 1500, 500, 500, 500, 1500, 500, 500, 500, 1500, 500, 1500 };'
+      }
+    };
+
+    const brandSelect = document.getElementById('ir-brand-select');
+    const prontoHexOutput = document.getElementById('pronto-hex-output');
+    const androidPatternOutput = document.getElementById('android-pattern-output');
+    const carrierFreq = document.getElementById('carrier-freq');
+
+    if (brandSelect) {
+      brandSelect.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const entry = irDB[val] || irDB.samsung;
+        prontoHexOutput.textContent = entry.pronto;
+        androidPatternOutput.textContent = entry.pattern;
+        carrierFreq.textContent = entry.freq;
+        logToTerminal(`IRDB >> Perfil cargado: ${val.toUpperCase()} | Portadora: ${entry.freq}`, 'text-secondary');
+      });
+    }
+
+    // Copiar Pronto Hex
+    const copyBtn = document.getElementById('copy-hex-btn');
+    const copyLabel = document.getElementById('copy-label');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const code = prontoHexOutput.textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          copyLabel.textContent = '¡COPIADO!';
+          setTimeout(() => { copyLabel.textContent = 'COPIAR HEX'; }, 1800);
+          logToTerminal(`CLIPBOARD >> Pronto Hex copiado al portapapeles.`, 'text-on-surface-variant');
+        });
+      });
+    }
+
+    // Destello de Prueba IR
+    const btnFireIr = document.getElementById('btn-fire-ir');
+    const irBlastIcon = document.getElementById('ir-blast-icon');
+    const irBlastDot = document.getElementById('ir-blast-dot');
+
+    if (btnFireIr) {
+      btnFireIr.addEventListener('click', () => {
+        irBlastIcon.classList.add('scale-125');
+        irBlastDot.classList.add('animate-ping');
+        logToTerminal(`HAL_IR >> ConsumerIrManager.transmit(${carrierFreq.textContent.replace(' kHz', '000')}, pattern)`, 'text-error');
+
+        setTimeout(() => {
+          irBlastIcon.classList.remove('scale-125');
+          irBlastDot.classList.remove('animate-ping');
+          logToTerminal(`HAL_IR << Pulso emitido por LED Infrarrojo con éxito.`, 'text-tertiary');
+        }, 350);
+      });
+    }
+
+    // Limpiar terminal
+    const clearLogBtn = document.getElementById('clear-log-btn');
+    if (clearLogBtn) {
+      clearLogBtn.addEventListener('click', () => {
+        if (terminal) {
+          terminal.innerHTML = '<div class="text-outline-variant">[00:00.00] TERMINAL BUFFER REINICIADO.</div>';
+        }
+      });
+    }
+
+    // Pausar / Reanudar Stream de Logs
+    let loggingPaused = false;
+    const pauseLogBtn = document.getElementById('pause-log-btn');
+    if (pauseLogBtn) {
+      pauseLogBtn.addEventListener('click', () => {
+        loggingPaused = !loggingPaused;
+        pauseLogBtn.textContent = loggingPaused ? 'PAUSADO' : 'ACTIVO';
+        pauseLogBtn.className = loggingPaused 
+          ? 'px-space-sm py-0.5 rounded bg-surface-container-highest text-error text-label-code-sm font-label-code-sm transition-all active:scale-95'
+          : 'px-space-sm py-0.5 rounded bg-surface-container-highest text-primary text-label-code-sm font-label-code-sm transition-all active:scale-95';
+      });
+    }
+
+    // Simular Latencia y Logs en Segundo Plano
+    const telemetryPing = document.getElementById('telemetry-ping');
+    setInterval(() => {
+      if (telemetryPing) {
+        const jitter = (3.2 + Math.random() * 0.5).toFixed(1);
+        telemetryPing.textContent = `${jitter}ms`;
+      }
+    }, 2500);
+
+    const randomEvents = [
+      { text: "HEARTBEAT >> M-CAST Lock verificado (OK)", color: "text-tertiary" },
+      { text: "WS_PING >> 192.168.1.140 RTT: 3.38ms", color: "text-primary-fixed-dim" },
+      { text: "MDNS >> Respuesta recibida desde _airplay._tcp.local", color: "text-on-surface-variant" },
+      { text: "BUFFER >> Sockets UDP limpios. Descarte: 0 paquetes", color: "text-secondary" }
+    ];
+
+    setInterval(() => {
+      if (!loggingPaused) {
+        const randItem = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+        logToTerminal(randItem.text, randItem.color);
+      }
+    }, 6000);
+
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-primary font-semibold shadow-[0_0_16px_rgba(0,229,255,0.25)] bg-surface-container/70"><div class="flex justify-around items-center h-20 px-gutter-sm"><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="dispositivos" href="#"><span class="material-symbols-outlined text-[22px]">devices</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Equipos</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="emparejamiento" href="#"><span class="material-symbols-outlined text-[22px]">sync_alt</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Enlace</span></a><a class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="mando-pro" href="#"><span class="material-symbols-outlined text-[24px]">gamepad</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Mando Pro</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl transition-all active:scale-95 text-primary font-semibold shadow-[0_0_16px_rgba(0,229,255,0.25)] bg-surface-container/70" data-path="protocolos-&amp;-wol" href="#"><span class="material-symbols-outlined text-[22px]">terminal</span><span class="font-label-code-sm text-label-code-sm tracking-tight text-center leading-none">Protocolos</span></a></div></nav></body></html>
