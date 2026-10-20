@@ -3,6 +3,8 @@ package com.universalremote.presentation.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.universalremote.domain.model.KeyColor
+import com.universalremote.domain.model.Favorite
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.domain.model.StreamingApp
 import com.universalremote.presentation.RemoteUiState
@@ -58,6 +61,9 @@ fun AppsAndChannelsScreen(
     onSendCommand: (RemoteCommand) -> Unit,
     onTuneChannel: (String) -> Unit,
     isSupported: (RemoteCommand) -> Boolean,
+    favorites: List<Favorite>,
+    onToggleFavorite: (label: String, target: Favorite.Target) -> Unit,
+    onRemoveFavorite: (Favorite) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var channelBuffer by remember { mutableStateOf("") }
@@ -78,10 +84,31 @@ fun AppsAndChannelsScreen(
                 color = CyberColors.OnSurface,
             )
             Text(
-                text = "Accede a tus plataformas de streaming y sintoniza canales en un toque",
+                text = "Mantén pulsada una app o «Ir al canal» para guardarla en favoritos",
                 style = MaterialTheme.typography.bodySmall,
                 color = CyberColors.OnSurfaceVariant,
             )
+        }
+
+        // 1b. Favoritos: toque para abrir, mantener pulsado para quitar.
+        if (state.activeDevice != null && favorites.isNotEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                favorites.forEach { favorite ->
+                    FavoriteChip(
+                        favorite = favorite,
+                        onClick = {
+                            when (val target = favorite.target) {
+                                is Favorite.Target.App -> onSendCommand(RemoteCommand.LaunchApp(target.app))
+                                is Favorite.Target.Channel -> onTuneChannel(target.number)
+                            }
+                        },
+                        onLongClick = { onRemoveFavorite(favorite) },
+                    )
+                }
+            }
         }
 
         // 2. Botones de color de Smart TV (Rojo, Verde, Amarillo, Azul)
@@ -147,6 +174,7 @@ fun AppsAndChannelsScreen(
                 row.forEach { item ->
                     AppLaunchCard(
                         item = item,
+                        onLongClick = { onToggleFavorite(item.title, Favorite.Target.App(item.app)) },
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -257,10 +285,18 @@ fun AppsAndChannelsScreen(
                             .height(46.dp)
                             .clip(RoundedCornerShape(10.dp))
                             .background(CyberColors.PrimaryContainer)
-                            .clickable {
-                                onTuneChannel(channelBuffer)
-                                channelBuffer = ""
-                            },
+                            .combinedClickable(
+                                onClick = {
+                                    onTuneChannel(channelBuffer)
+                                    channelBuffer = ""
+                                },
+                                onLongClick = {
+                                    if (channelBuffer.isNotEmpty()) {
+                                        onToggleFavorite("Canal $channelBuffer", Favorite.Target.Channel(channelBuffer))
+                                        channelBuffer = ""
+                                    }
+                                },
+                            ),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text("Ir al canal", color = CyberColors.OnPrimaryContainer, fontWeight = FontWeight.Bold)
@@ -340,6 +376,7 @@ private class AppCardItem(
 @Composable
 private fun AppLaunchCard(
     item: AppCardItem,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -348,7 +385,7 @@ private fun AppLaunchCard(
         modifier = modifier
             .height(72.dp)
             .border(1.dp, item.brandColor.copy(alpha = 0.25f), RoundedCornerShape(14.dp))
-            .clickable { item.onClick() },
+            .combinedClickable(onClick = item.onClick, onLongClick = onLongClick),
     ) {
         Row(
             modifier = Modifier
@@ -415,5 +452,21 @@ private fun ColorKeyButton(
                 color = color,
             )
         }
+    }
+}
+
+@Composable
+private fun FavoriteChip(favorite: Favorite, onClick: () -> Unit, onLongClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .height(40.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(CyberColors.SurfaceContainerHigh)
+            .border(1.dp, CyberColors.LaserCyan.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text("★ ${favorite.label}", color = CyberColors.OnSurface, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
     }
 }

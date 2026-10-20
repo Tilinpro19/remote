@@ -35,6 +35,20 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `migracion 2 a 3 crea la tabla de favoritos`() {
+        helper.createDatabase(DB, 2).use { db ->
+            db.execSQL(
+                "INSERT INTO devices (id, name, kind, transport_type, created_at) " +
+                    "VALUES ('tv1', 'Salón', 'ROKU', 'LAN', 0)",
+            )
+        }
+
+        helper.runMigrationsAndValidate(DB, 3, true, AppDatabase.MIGRATION_2_3).use { db ->
+            db.execSQL("INSERT INTO favorites (device_id, label, type, payload, position) VALUES ('tv1', '7', 'CHANNEL', '7', 0)")
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.PairingRequest
 import com.universalremote.domain.model.RemoteCommand
+import com.universalremote.presentation.FavoritesViewModel
 import com.universalremote.presentation.MacrosViewModel
 import com.universalremote.presentation.RemoteUiEvent
 import com.universalremote.presentation.RemoteUiState
@@ -161,12 +162,17 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                         )
                     }
                     CyberTab.APPS -> {
+                        val favoritesVm: FavoritesViewModel = hiltViewModel()
+                        val favorites by favoritesVm.favorites.collectAsStateWithLifecycle()
                         AppsAndChannelsScreen(
                             state = state,
                             onSendCommand = { vm.onCommandTriggered(it) },
                             onTuneChannel = vm::tuneChannel,
                             // Sin TV activo se muestra todo: al pulsar, el aviso guía a elegir uno.
                             isSupported = { state.activeDevice == null || vm.isSupported(it) },
+                            favorites = favorites,
+                            onToggleFavorite = favoritesVm::toggle,
+                            onRemoveFavorite = favoritesVm::remove,
                         )
                     }
                     CyberTab.MACROS -> {

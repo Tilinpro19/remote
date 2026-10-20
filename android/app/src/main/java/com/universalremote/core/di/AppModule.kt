@@ -9,14 +9,17 @@ import androidx.room.Room
 import com.universalremote.adapters.DefaultRemoteAdapterFactory
 import com.universalremote.data.local.AppDatabase
 import com.universalremote.data.local.DeviceDao
+import com.universalremote.data.local.FavoriteDao
 import com.universalremote.data.local.IrCodeDao
 import com.universalremote.data.local.MacroDao
 import com.universalremote.data.preferences.DataStoreSessionPreferences
 import com.universalremote.data.repository.DeviceRepositoryImpl
+import com.universalremote.data.repository.FavoriteRepositoryImpl
 import com.universalremote.data.repository.IrCodeRepositoryImpl
 import com.universalremote.data.repository.MacroRepositoryImpl
 import com.universalremote.domain.adapter.RemoteAdapterFactory
 import com.universalremote.domain.repository.DeviceRepository
+import com.universalremote.domain.repository.FavoriteRepository
 import com.universalremote.domain.repository.IrCodeRepository
 import com.universalremote.domain.repository.MacroRepository
 import com.universalremote.domain.repository.SessionPreferences
@@ -68,7 +71,7 @@ object AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
-            .addMigrations(AppDatabase.MIGRATION_1_2)
+            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3)
             .build()
 
     @Provides
@@ -79,6 +82,9 @@ object AppModule {
 
     @Provides
     fun provideMacroDao(db: AppDatabase): MacroDao = db.macroDao()
+
+    @Provides
+    fun provideFavoriteDao(db: AppDatabase): FavoriteDao = db.favoriteDao()
 
     @Provides
     @Singleton
@@ -94,6 +100,9 @@ abstract class BindingsModule {
 
     @Binds
     abstract fun bindIrCodeRepository(impl: IrCodeRepositoryImpl): IrCodeRepository
+
+    @Binds
+    abstract fun bindFavoriteRepository(impl: FavoriteRepositoryImpl): FavoriteRepository
 
     @Binds
     abstract fun bindMacroRepository(impl: MacroRepositoryImpl): MacroRepository

@@ -1,6 +1,7 @@
 package com.universalremote.domain.repository
 
 import com.universalremote.domain.model.DeviceProfile
+import com.universalremote.domain.model.Favorite
 import com.universalremote.domain.model.IrCode
 import com.universalremote.domain.model.IrCodeset
 import com.universalremote.domain.model.IrDeviceCategory
@@ -18,6 +19,14 @@ interface MacroRepository {
     fun observeForDevice(deviceId: String): Flow<List<Macro>>
     suspend fun save(macro: Macro)
     suspend fun delete(id: String)
+}
+
+interface FavoriteRepository {
+    fun observeForDevice(deviceId: String): Flow<List<Favorite>>
+
+    /** Añade al final; si ya existe no hace nada. */
+    suspend fun add(deviceId: String, label: String, target: Favorite.Target)
+    suspend fun remove(id: Long)
 }
 
 /** Preferencias de sesión (DataStore). */

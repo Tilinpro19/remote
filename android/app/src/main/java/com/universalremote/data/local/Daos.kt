@@ -84,3 +84,24 @@ interface MacroDao {
     @Query("DELETE FROM macros WHERE id = :id")
     suspend fun delete(id: String)
 }
+
+@Dao
+interface FavoriteDao {
+    @Query("SELECT * FROM favorites WHERE device_id = :deviceId ORDER BY position ASC")
+    fun observeForDevice(deviceId: String): Flow<List<FavoriteEntity>>
+
+    @Query("SELECT MAX(position) FROM favorites WHERE device_id = :deviceId")
+    suspend fun maxPosition(deviceId: String): Int?
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(favorite: FavoriteEntity)
+
+    /** Añade al final de la lista; si ya existe no hace nada. */
+    @Transaction
+    suspend fun add(favorite: FavoriteEntity) {
+        insert(favorite.copy(id = 0, position = (maxPosition(favorite.deviceId) ?: -1) + 1))
+    }
+
+    @Query("DELETE FROM favorites WHERE id = :id")
+    suspend fun delete(id: Long)
+}

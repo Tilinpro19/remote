@@ -93,3 +93,25 @@ data class MacroEntity(
     @ColumnInfo(name = "steps_json") val stepsJson: String,
     @ColumnInfo(name = "created_at") val createdAt: Long,
 )
+
+@Entity(
+    tableName = "favorites",
+    foreignKeys = [
+        ForeignKey(
+            entity = DeviceEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["device_id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [Index(value = ["device_id", "type", "payload"], unique = true)],
+)
+data class FavoriteEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @ColumnInfo(name = "device_id") val deviceId: String,
+    val label: String,
+    /** `APP` (payload = [com.universalremote.domain.model.StreamingApp]) o `CHANNEL` (payload = número). */
+    val type: String,
+    val payload: String,
+    val position: Int,
+)
