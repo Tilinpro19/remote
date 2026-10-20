@@ -32,6 +32,15 @@ enum class DeviceKind(
 
     /** SOAP `X_SendKey` en HTTP 55000; los modelos cifrados (2018+) no están soportados. */
     PANASONIC_VIERA(55000),
+
+    /** Yamaha Extended Control: REST (GET) en HTTP 80, sin emparejamiento. */
+    YAMAHA_MUSICCAST(80),
+
+    /** Protocolo de texto Denon/Marantz en TCP 23 (no es HEOS, que usa 1255). */
+    DENON_AVR(23),
+
+    /** JSON-RPC sobre HTTP; usuario y contraseña opcionales en `pairingToken` (`usuario:clave`). */
+    KODI(8080),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }

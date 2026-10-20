@@ -376,6 +376,9 @@ class LanDiscoveryManager @Inject constructor(
         DeviceKind.FIRE_TV -> "Fire TV ($host)"
         DeviceKind.HISENSE_VIDAA -> "Hisense ($host)"
         DeviceKind.PANASONIC_VIERA -> "Panasonic ($host)"
+        DeviceKind.YAMAHA_MUSICCAST -> "Yamaha ($host)"
+        DeviceKind.DENON_AVR -> "Denon/Marantz ($host)"
+        DeviceKind.KODI -> "Kodi ($host)"
         DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> host
     }
 
@@ -396,6 +399,7 @@ class LanDiscoveryManager @Inject constructor(
             "_googlecast._tcp." to null,
             "_webostv._tcp." to DeviceKind.LG_WEBOS,
             "_amzn-wplay._tcp." to DeviceKind.FIRE_TV,
+            "_xbmc-jsonrpc-h._tcp." to DeviceKind.KODI,
         )
     }
 }

@@ -1,14 +1,17 @@
 package com.universalremote.adapters
 
 import com.universalremote.adapters.androidtv.AndroidTvAdapter
+import com.universalremote.adapters.denon.DenonAdapter
 import com.universalremote.adapters.firetv.FireTvAdapter
 import com.universalremote.adapters.ir.IrRemoteAdapter
+import com.universalremote.adapters.kodi.KodiAdapter
 import com.universalremote.adapters.panasonic.VieraAdapter
 import com.universalremote.adapters.philips.PhilipsJointSpaceAdapter
 import com.universalremote.adapters.roku.RokuEcpAdapter
 import com.universalremote.adapters.sony.SonyBraviaAdapter
 import com.universalremote.adapters.tizen.TizenAdapter
 import com.universalremote.adapters.vidaa.VidaaAdapter
+import com.universalremote.adapters.yamaha.YamahaAdapter
 import com.universalremote.adapters.vizio.VizioAdapter
 import com.universalremote.adapters.webos.WebOsAdapter
 import com.universalremote.domain.adapter.RemoteAdapter
@@ -33,6 +36,9 @@ class DefaultRemoteAdapterFactory @Inject constructor(
     private val fireTvFactory: FireTvAdapter.Factory,
     private val vidaaFactory: VidaaAdapter.Factory,
     private val vieraFactory: VieraAdapter.Factory,
+    private val yamahaFactory: YamahaAdapter.Factory,
+    private val denonFactory: DenonAdapter.Factory,
+    private val kodiFactory: KodiAdapter.Factory,
 ) : RemoteAdapterFactory {
 
     override fun create(profile: DeviceProfile): RemoteAdapter = when (profile.kind) {
@@ -47,6 +53,9 @@ class DefaultRemoteAdapterFactory @Inject constructor(
         DeviceKind.FIRE_TV -> fireTvFactory.create(profile)
         DeviceKind.HISENSE_VIDAA -> vidaaFactory.create(profile)
         DeviceKind.PANASONIC_VIERA -> vieraFactory.create(profile)
+        DeviceKind.YAMAHA_MUSICCAST -> yamahaFactory.create(profile)
+        DeviceKind.DENON_AVR -> denonFactory.create(profile)
+        DeviceKind.KODI -> kodiFactory.create(profile)
         DeviceKind.BLUETOOTH_HID -> throw RemoteError.UnsupportedDevice(profile.kind.name)
     }
 }

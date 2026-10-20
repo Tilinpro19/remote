@@ -409,6 +409,9 @@ class RemoteViewModel @Inject constructor(
         DeviceKind.FIRE_TV -> "Fire TV"
         DeviceKind.HISENSE_VIDAA -> "Hisense"
         DeviceKind.PANASONIC_VIERA -> "Panasonic"
+        DeviceKind.YAMAHA_MUSICCAST -> "Yamaha"
+        DeviceKind.DENON_AVR -> "Denon"
+        DeviceKind.KODI -> "Kodi"
         DeviceKind.INFRARED -> "IR"
         DeviceKind.BLUETOOTH_HID -> "Bluetooth"
     }
