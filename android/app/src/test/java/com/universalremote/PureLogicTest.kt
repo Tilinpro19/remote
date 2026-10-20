@@ -10,7 +10,12 @@ import com.universalremote.domain.model.KeyColor
 import com.universalremote.domain.model.MacAddress
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.domain.model.StreamingApp
+import com.universalremote.domain.model.DiscoveredDevice
 import com.universalremote.network.discovery.Ssdp
+import com.universalremote.network.discovery.mergeWith
+import com.universalremote.presentation.PairingHint
+import com.universalremote.presentation.manualAddKinds
+import com.universalremote.presentation.pairingHint
 import com.universalremote.network.wol.WakeOnLanSender
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -128,5 +133,42 @@ class PointerAndRokuTest {
         assertEquals("Lit_%20", RokuKey.literal(' '.code).path)
         assertNull(RokuKey.raw("../reboot"))
         assertEquals("Lit_4", RokuKey.of(RemoteCommand.Digit(4))?.path)
+    }
+}
+
+class DiscoveryClassificationTest {
+
+    private fun ssdp(st: String, server: String, usn: String = "uuid:x") =
+        Ssdp.parse("HTTP/1.1 200 OK\r\nST: $st\r\nSERVER: $server\r\nLocation: http://192.168.1.60:80/\r\nUSN: $usn\r\n\r\n", "192.168.1.60")!!
+
+    @Test
+    fun `cada marca nueva se reconoce por su respuesta SSDP`() {
+        assertEquals(DeviceKind.SONY_BRAVIA, ssdp("urn:schemas-sony-com:service:ScalarWebAPI:1", "Linux/2.6 UPnP/1.0 KDL-55W800C").classify())
+        assertEquals(DeviceKind.PANASONIC_VIERA, ssdp("urn:panasonic-com:device:p00RemoteController:1", "Linux/4.0 UPnP/1.0 Panasonic-UPnP-MW/1.0").classify())
+        assertEquals(DeviceKind.VIZIO, ssdp("urn:dial-multiscreen-org:service:dial:1", "Linux/3.10 UPnP/1.0 Vizio/1.0").classify())
+        assertEquals(DeviceKind.PHILIPS_JOINTSPACE, ssdp("urn:dial-multiscreen-org:service:dial:1", "Linux/4.9 UPnP/1.0 Philips/TPVision").classify())
+        assertEquals(DeviceKind.HISENSE_VIDAA, ssdp("urn:dial-multiscreen-org:service:dial:1", "Linux UPnP/1.0 Hisense/VIDAA").classify())
+        assertNull(ssdp("urn:dial-multiscreen-org:service:dial:1", "Linux UPnP/1.0 Generic/1.0").classify())
+    }
+
+    @Test
+    fun `dos anuncios del mismo host se fusionan en una entrada`() {
+        val ssdp = DiscoveredDevice("192.168.1.60", "192.168.1.60", DeviceKind.SONY_BRAVIA, 80, sources = setOf(DiscoveredDevice.Source.SSDP))
+        val mdns = DiscoveredDevice("192.168.1.60", "Salón", DeviceKind.ANDROID_TV, 6466, sources = setOf(DiscoveredDevice.Source.MDNS))
+        assertEquals(ssdp.key, mdns.key)
+        val merged = ssdp.mergeWith(mdns)
+        assertEquals(DeviceKind.ANDROID_TV, merged.kind)
+        assertEquals(6466, merged.port)
+        assertEquals("Salón", merged.name)
+        assertEquals(2, merged.sources.size)
+    }
+
+    @Test
+    fun `el alta manual ofrece todas las marcas de red y ninguna sin red`() {
+        assertTrue(DeviceKind.KODI in manualAddKinds && DeviceKind.PANASONIC_VIERA in manualAddKinds)
+        assertTrue(DeviceKind.INFRARED !in manualAddKinds && DeviceKind.BLUETOOTH_HID !in manualAddKinds)
+        assertEquals(PairingHint.PASSPHRASE, DeviceKind.SONY_BRAVIA.pairingHint())
+        assertEquals(PairingHint.PIN, DeviceKind.VIZIO.pairingHint())
+        assertEquals(PairingHint.NONE, DeviceKind.ROKU.pairingHint())
     }
 }

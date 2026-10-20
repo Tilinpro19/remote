@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,6 +67,9 @@ import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.DiscoveredDevice
 import com.universalremote.domain.model.RemoteError
 import com.universalremote.presentation.RemoteUiState
+import com.universalremote.presentation.displayName
+import com.universalremote.presentation.manualAddKinds
+import com.universalremote.presentation.pairingHint
 import com.universalremote.presentation.theme.CyberColors
 
 @Composable
@@ -426,20 +430,17 @@ fun DevicesScreen(
                             color = CyberColors.OnSurface,
                         )
 
+                        // Generada desde DeviceKind: una marca nueva aparece aquí sin tocar la pantalla.
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            listOf(
-                                DeviceKind.ANDROID_TV to "Google TV",
-                                DeviceKind.SAMSUNG_TIZEN to "Samsung",
-                                DeviceKind.LG_WEBOS to "LG",
-                                DeviceKind.ROKU to "Roku",
-                            ).forEach { (kind, label) ->
+                            manualAddKinds.forEach { kind ->
                                 val isSelected = kind == selectedBrand
                                 Box(
                                     modifier = Modifier
-                                        .weight(1f)
                                         .clip(RoundedCornerShape(8.dp))
                                         .background(
                                             if (isSelected) CyberColors.LaserCyan.copy(alpha = 0.2f)
@@ -451,11 +452,11 @@ fun DevicesScreen(
                                             shape = RoundedCornerShape(8.dp),
                                         )
                                         .clickable { selectedBrand = kind }
-                                        .padding(vertical = 8.dp),
+                                        .padding(vertical = 8.dp, horizontal = 12.dp),
                                     contentAlignment = Alignment.Center,
                                 ) {
                                     Text(
-                                        text = label,
+                                        text = kind.displayName(),
                                         fontFamily = FontFamily.SansSerif,
                                         fontSize = 10.sp,
                                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
@@ -464,6 +465,12 @@ fun DevicesScreen(
                                 }
                             }
                         }
+
+                        Text(
+                            text = selectedBrand.pairingHint().description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = CyberColors.OnSurfaceVariant,
+                        )
 
                         Button(
                             onClick = {
@@ -514,20 +521,3 @@ private fun ConnectionState.statusLabel(): String = when (this) {
     is ConnectionState.Failed -> error.message ?: "No se pudo conectar"
 }
 
-private fun DeviceKind.displayName(): String = when (this) {
-    DeviceKind.ROKU -> "Roku"
-    DeviceKind.ANDROID_TV -> "Android / Google TV"
-    DeviceKind.LG_WEBOS -> "LG webOS"
-    DeviceKind.SAMSUNG_TIZEN -> "Samsung Smart TV"
-    DeviceKind.SONY_BRAVIA -> "Sony Bravia"
-    DeviceKind.VIZIO -> "Vizio SmartCast"
-    DeviceKind.PHILIPS_JOINTSPACE -> "Philips"
-    DeviceKind.FIRE_TV -> "Amazon Fire TV"
-    DeviceKind.HISENSE_VIDAA -> "Hisense VIDAA"
-    DeviceKind.PANASONIC_VIERA -> "Panasonic Viera"
-    DeviceKind.YAMAHA_MUSICCAST -> "Yamaha MusicCast"
-    DeviceKind.DENON_AVR -> "Denon / Marantz"
-    DeviceKind.KODI -> "Kodi"
-    DeviceKind.INFRARED -> "Televisor Clásico (IR)"
-    DeviceKind.BLUETOOTH_HID -> "Bluetooth"
-}

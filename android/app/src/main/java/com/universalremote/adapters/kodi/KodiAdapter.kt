@@ -7,6 +7,7 @@ import com.universalremote.domain.adapter.RemoteAdapter
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.DeviceTransport
+import com.universalremote.domain.model.PairingRequest
 import com.universalremote.domain.model.RemoteCapability
 import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.domain.model.RemoteError
@@ -15,6 +16,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,7 +34,7 @@ import org.json.JSONObject
  * Kodi: JSON-RPC 2.0 sobre HTTP (`POST /jsonrpc`, puerto 8080 por defecto).
  *
  * Requiere activar "Permitir control remoto por HTTP" en Kodi. Si el servidor web pide usuario,
- * [DeviceProfile.pairingToken] guarda `usuario:contraseña` y se envía como Basic auth.
+ * el diálogo de vinculación los pide y [DeviceProfile.pairingToken] guarda `usuario:contraseña` (Basic auth).
  */
 class KodiAdapter @AssistedInject constructor(
     @Assisted initialProfile: DeviceProfile,
@@ -45,17 +47,14 @@ class KodiAdapter @AssistedInject constructor(
 
     private val url = "http://${lan.host}:${lan.port}/jsonrpc"
 
-    override val profile: DeviceProfile = initialProfile
-
-    private val headers: Map<String, String> = profile.pairingToken
-        ?.takeIf { it.contains(':') }
-        ?.let { mapOf("Authorization" to Credentials.basic(it.substringBefore(':'), it.substringAfter(':'))) }
-        .orEmpty()
+    @Volatile
+    override var profile: DeviceProfile = initialProfile
+        private set
 
     private val _state = MutableStateFlow<ConnectionState>(ConnectionState.Idle)
     override val state: StateFlow<ConnectionState> = _state.asStateFlow()
 
-    private val _events = MutableSharedFlow<AdapterEvent>()
+    private val _events = MutableSharedFlow<AdapterEvent>(extraBufferCapacity = 4, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val events: SharedFlow<AdapterEvent> = _events.asSharedFlow()
 
     private val mutex = Mutex()
@@ -68,16 +67,34 @@ class KodiAdapter @AssistedInject constructor(
         command.capability in capabilities && KodiKeys.callFor(command) != null
 
     override suspend fun connect() = mutex.withLock {
-        if (_state.value == ConnectionState.Connected) return@withLock
+        val current = _state.value
+        if (current == ConnectionState.Connected || current is ConnectionState.AwaitingPairing) return@withLock
         _state.value = ConnectionState.Connecting
         try {
-            call(KodiKeys.Call("JSONRPC.Ping"))
+            call(PING, profile.pairingToken)
             _state.value = ConnectionState.Connected
+        } catch (e: RemoteError.PairingRejected) {
+            // El servidor web de Kodi exige usuario y contraseña (o los guardados ya no valen).
+            awaitCredentials()
         } catch (t: Throwable) {
-            val error = RemoteError.from(t, lan.host)
-            _state.value = ConnectionState.Failed(error)
-            throw error
+            throw fail(t)
         }
+    }
+
+    override suspend fun submitPairingCode(code: String) = mutex.withLock {
+        val credentials = code.trim()
+        if (!credentials.contains(':')) throw RemoteError.InvalidCode("Escribe usuario:contraseña (p. ej. kodi:1234)")
+        try {
+            call(PING, credentials)
+        } catch (e: RemoteError.PairingRejected) {
+            awaitCredentials()
+            throw e
+        } catch (t: Throwable) {
+            throw fail(t)
+        }
+        profile = profile.copy(pairingToken = credentials)
+        _events.tryEmit(AdapterEvent.ProfileUpdated(profile))
+        _state.value = ConnectionState.Connected
     }
 
     override suspend fun disconnect() = mutex.withLock {
@@ -95,7 +112,7 @@ class KodiAdapter @AssistedInject constructor(
         }
         val call = KodiKeys.callFor(command) ?: throw RemoteError.UnsupportedCommand(command.wireName)
         try {
-            call(call)
+            call(call, profile.pairingToken)
         } catch (e: CancellationException) {
             throw e
         } catch (t: Throwable) {
@@ -106,7 +123,25 @@ class KodiAdapter @AssistedInject constructor(
         Unit
     }
 
-    private suspend fun call(call: KodiKeys.Call) {
+    private fun awaitCredentials() {
+        _state.value = ConnectionState.AwaitingPairing(
+            PairingRequest(
+                PairingRequest.Method.Passphrase,
+                "Kodi pide usuario y contraseña (Ajustes › Servicios › Control). Escríbelos como usuario:contraseña",
+            ),
+        )
+    }
+
+    private fun fail(t: Throwable): RemoteError {
+        val error = RemoteError.from(t, lan.host)
+        _state.value = ConnectionState.Failed(error)
+        return error
+    }
+
+    private suspend fun call(call: KodiKeys.Call, credentials: String?) {
+        val headers = credentials?.takeIf { it.contains(':') }
+            ?.let { mapOf("Authorization" to Credentials.basic(it.substringBefore(':'), it.substringAfter(':'))) }
+            .orEmpty()
         val request = JSONObject().put("jsonrpc", "2.0").put("id", 1).put("method", call.method)
         call.params?.let { request.put("params", it) }
         val text = client.postBody(url, request.toString(), headers, contentType = "application/json")
@@ -123,5 +158,9 @@ class KodiAdapter @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(profile: DeviceProfile): KodiAdapter
+    }
+
+    private companion object {
+        val PING = KodiKeys.Call("JSONRPC.Ping")
     }
 }

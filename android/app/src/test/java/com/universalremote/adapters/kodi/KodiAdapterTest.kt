@@ -2,6 +2,7 @@ package com.universalremote.adapters.kodi
 
 import android.content.ContextWrapper
 import com.universalremote.adapters.TestAdapters
+import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceKind
 import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.DeviceTransport
@@ -16,6 +17,7 @@ import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
@@ -87,6 +89,22 @@ class KodiAdapterTest {
         } catch (e: RemoteError.Protocol) {
             // esperado
         }
+    }
+
+    @Test
+    fun `un 401 pide credenciales y submitPairingCode las guarda`() = runTest {
+        server.enqueue(MockResponse().setResponseCode(401))
+        server.enqueue(MockResponse().setBody("""{"result":"pong"}"""))
+        val kodi = adapter()
+        kodi.connect()
+        assertTrue(kodi.state.value is ConnectionState.AwaitingPairing)
+
+        kodi.submitPairingCode("kodi:1234")
+
+        assertEquals(ConnectionState.Connected, kodi.state.value)
+        assertEquals("kodi:1234", kodi.profile.pairingToken)
+        server.takeRequest()
+        assertEquals(okhttp3.Credentials.basic("kodi", "1234"), server.takeRequest().getHeader("Authorization"))
     }
 
     @Test

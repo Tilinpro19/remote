@@ -398,24 +398,6 @@ class RemoteViewModel @Inject constructor(
         IrDeviceCategory.OTHER -> "IR"
     }
 
-    private fun DeviceKind.displayName(): String = when (this) {
-        DeviceKind.ROKU -> "Roku"
-        DeviceKind.ANDROID_TV -> "Android TV"
-        DeviceKind.LG_WEBOS -> "LG webOS"
-        DeviceKind.SAMSUNG_TIZEN -> "Samsung"
-        DeviceKind.SONY_BRAVIA -> "Sony"
-        DeviceKind.VIZIO -> "Vizio"
-        DeviceKind.PHILIPS_JOINTSPACE -> "Philips"
-        DeviceKind.FIRE_TV -> "Fire TV"
-        DeviceKind.HISENSE_VIDAA -> "Hisense"
-        DeviceKind.PANASONIC_VIERA -> "Panasonic"
-        DeviceKind.YAMAHA_MUSICCAST -> "Yamaha"
-        DeviceKind.DENON_AVR -> "Denon"
-        DeviceKind.KODI -> "Kodi"
-        DeviceKind.INFRARED -> "IR"
-        DeviceKind.BLUETOOTH_HID -> "Bluetooth"
-    }
-
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L
         const val TRIAL_PROFILE_ID = "ir-trial"
