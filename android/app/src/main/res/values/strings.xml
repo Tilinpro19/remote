@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_description">Encendido, volumen y silencio del TV seleccionado</string>
+    <string name="widget_power">Encender o apagar</string>
+    <string name="widget_vol_down">Bajar volumen</string>
+    <string name="widget_vol_up">Subir volumen</string>
+    <string name="widget_mute">Silenciar</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E60F131C"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <Button
+        android:id="@+id/widget_power"
+        style="@style/RemoteWidgetButton"
+        android:contentDescription="@string/widget_power"
+        android:text="⏻"
+        android:textColor="#FF5252" />
+
+    <Button
+        android:id="@+id/widget_vol_down"
+        style="@style/RemoteWidgetButton"
+        android:contentDescription="@string/widget_vol_down"
+        android:text="VOL −" />
+
+    <Button
+        android:id="@+id/widget_vol_up"
+        style="@style/RemoteWidgetButton"
+        android:contentDescription="@string/widget_vol_up"
+        android:text="VOL +" />
+
+    <Button
+        android:id="@+id/widget_mute"
+        style="@style/RemoteWidgetButton"
+        android:contentDescription="@string/widget_mute"
+        android:text="MUTE" />
+</LinearLayout>
