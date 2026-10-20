@@ -406,6 +406,7 @@ class RemoteViewModel @Inject constructor(
         DeviceKind.SONY_BRAVIA -> "Sony"
         DeviceKind.VIZIO -> "Vizio"
         DeviceKind.PHILIPS_JOINTSPACE -> "Philips"
+        DeviceKind.FIRE_TV -> "Fire TV"
         DeviceKind.INFRARED -> "IR"
         DeviceKind.BLUETOOTH_HID -> "Bluetooth"
     }

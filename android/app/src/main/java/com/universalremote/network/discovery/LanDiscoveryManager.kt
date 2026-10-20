@@ -373,6 +373,7 @@ class LanDiscoveryManager @Inject constructor(
         DeviceKind.SONY_BRAVIA -> "Sony Bravia ($host)"
         DeviceKind.VIZIO -> "Vizio ($host)"
         DeviceKind.PHILIPS_JOINTSPACE -> "Philips ($host)"
+        DeviceKind.FIRE_TV -> "Fire TV ($host)"
         DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> host
     }
 
@@ -392,6 +393,7 @@ class LanDiscoveryManager @Inject constructor(
             "_androidtvremote2._tcp." to DeviceKind.ANDROID_TV,
             "_googlecast._tcp." to null,
             "_webostv._tcp." to DeviceKind.LG_WEBOS,
+            "_amzn-wplay._tcp." to DeviceKind.FIRE_TV,
         )
     }
 }

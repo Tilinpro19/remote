@@ -23,6 +23,9 @@ enum class DeviceKind(
 
     /** JointSpace API v6 (Saphi/Linux): HTTPS autofirmado en 1926 con Digest y PIN de 4 dígitos. */
     PHILIPS_JOINTSPACE(1926),
+
+    /** Fire OS por ADB en red; exige activar "Depuración ADB" en el Fire TV. */
+    FIRE_TV(5555),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }
