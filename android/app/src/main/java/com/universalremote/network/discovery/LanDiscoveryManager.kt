@@ -371,6 +371,7 @@ class LanDiscoveryManager @Inject constructor(
         DeviceKind.SAMSUNG_TIZEN -> "Samsung ($host)"
         DeviceKind.ANDROID_TV -> "Android TV ($host)"
         DeviceKind.SONY_BRAVIA -> "Sony Bravia ($host)"
+        DeviceKind.VIZIO -> "Vizio ($host)"
         DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> host
     }
 

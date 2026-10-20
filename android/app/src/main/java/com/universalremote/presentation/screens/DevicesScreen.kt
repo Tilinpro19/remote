@@ -520,6 +520,7 @@ private fun DeviceKind.displayName(): String = when (this) {
     DeviceKind.LG_WEBOS -> "LG webOS"
     DeviceKind.SAMSUNG_TIZEN -> "Samsung Smart TV"
     DeviceKind.SONY_BRAVIA -> "Sony Bravia"
+    DeviceKind.VIZIO -> "Vizio SmartCast"
     DeviceKind.INFRARED -> "Televisor Clásico (IR)"
     DeviceKind.BLUETOOTH_HID -> "Bluetooth"
 }

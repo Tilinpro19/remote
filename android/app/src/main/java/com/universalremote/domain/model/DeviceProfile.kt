@@ -17,6 +17,9 @@ enum class DeviceKind(
 
     /** IRCC-IP (SOAP) + API REST en HTTP 80, autenticación por Pre-Shared Key. */
     SONY_BRAVIA(80),
+
+    /** SmartCast: REST sobre HTTPS autofirmado en 7345 (9000 en firmwares antiguos), PIN de 4 dígitos. */
+    VIZIO(7345),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }
