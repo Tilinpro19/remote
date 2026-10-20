@@ -69,6 +69,9 @@ sealed class RemoteCommand(val wireName: String) {
     data class LaunchApp(val app: StreamingApp) : RemoteCommand("$APP_PREFIX${app.name}")
 
     /** Tecla específica del dispositivo (p. ej. `InputHDMI1` en Roku o una función IR no estándar). */
+    /** Abre un vídeo de YouTube en el TV (contenido compartido desde el teléfono). */
+    data class PlayYouTube(val videoId: String) : RemoteCommand("CMD_PLAY_YOUTUBE")
+
     data class Raw(val key: String) : RemoteCommand("CMD_RAW_$key") {
         init {
             require(key.isNotBlank()) { "Raw vacío" }
@@ -86,6 +89,7 @@ sealed class RemoteCommand(val wireName: String) {
             PlayPause, Play, Pause, Stop, Rewind, FastForward, Next, Previous -> RemoteCapability.MEDIA
             is TouchDelta, TouchTap, is Scroll -> RemoteCapability.POINTER
             is Text, Backspace, Enter -> RemoteCapability.KEYBOARD
+            is PlayYouTube -> RemoteCapability.DEEP_LINK
         }
 
     val hapticWeight: HapticWeight
@@ -95,7 +99,7 @@ sealed class RemoteCommand(val wireName: String) {
             VolumeUp, VolumeDown, ChannelUp, ChannelDown, is Digit,
             DpadUp, DpadDown, DpadLeft, DpadRight,
             PlayPause, Play, Pause, Stop, Rewind, FastForward, Next, Previous -> HapticWeight.LIGHT
-            Menu, Info, Search, Backspace, is Text, is Raw, is ColorKey, is LaunchApp -> HapticWeight.SELECTION
+            Menu, Info, Search, Backspace, is Text, is Raw, is ColorKey, is LaunchApp, is PlayYouTube -> HapticWeight.SELECTION
             is TouchDelta, is Scroll -> HapticWeight.NONE
         }
 
@@ -153,7 +157,12 @@ enum class KeyColor { RED, GREEN, YELLOW, BLUE }
 enum class StreamingApp { NETFLIX, YOUTUBE, PRIME_VIDEO, DISNEY_PLUS, SPOTIFY, APPLE_TV, BROWSER, ROKU_CHANNEL, SAMSUNG_TV_PLUS, LG_CHANNELS }
 
 /** Familia funcional de un comando; los adaptadores la declaran como capacidad. */
-enum class RemoteCapability { POWER, VOLUME, CHANNELS, DIGITS, NAVIGATION, MEDIA, POINTER, KEYBOARD }
+enum class RemoteCapability {
+    POWER, VOLUME, CHANNELS, DIGITS, NAVIGATION, MEDIA, POINTER, KEYBOARD,
+
+    /** Abrir contenido concreto (vídeo compartido) dentro de una app del TV. */
+    DEEP_LINK,
+}
 
 /** Intensidad háptica según la criticidad del botón. */
 enum class HapticWeight { NONE, SELECTION, LIGHT, MEDIUM, HEAVY }

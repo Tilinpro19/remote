@@ -1,16 +1,26 @@
 package com.universalremote
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.view.KeyEvent
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -279,6 +289,13 @@ private fun PairingDialog(request: PairingRequest, onSubmit: (String) -> Unit, o
 @Composable
 private fun TextInputDialog(initial: String, onDismiss: () -> Unit, onSend: (String) -> Unit) {
     var text by remember { mutableStateOf(initial) }
+    val context = LocalContext.current
+    // Dictado con el reconocedor del sistema: no requiere permiso de micrófono propio.
+    val voice = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+            ?.takeIf { it.isNotBlank() }
+            ?.let(onSend)
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Escribir en el televisor") },
@@ -287,6 +304,22 @@ private fun TextInputDialog(initial: String, onDismiss: () -> Unit, onSend: (Str
                 value = text,
                 onValueChange = { text = it },
                 singleLine = true,
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                                .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                                .putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla para escribir en el TV")
+                            try {
+                                voice.launch(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                Toast.makeText(context, "Este teléfono no tiene reconocimiento de voz", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                    ) {
+                        Icon(Icons.Default.Mic, contentDescription = "Dictar por voz")
+                    }
+                },
             )
         },
         confirmButton = {

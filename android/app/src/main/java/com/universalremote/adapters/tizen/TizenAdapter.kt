@@ -67,7 +67,7 @@ class TizenAdapter @AssistedInject constructor(
     private val _events = MutableSharedFlow<AdapterEvent>(extraBufferCapacity = 4, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val events: SharedFlow<AdapterEvent> = _events.asSharedFlow()
 
-    override val capabilities: Set<RemoteCapability> = RemoteCapability.entries.toSet()
+    override val capabilities: Set<RemoteCapability> = RemoteCapability.entries.toSet() - RemoteCapability.DEEP_LINK
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutex = Mutex()

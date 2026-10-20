@@ -85,7 +85,7 @@ value class RokuKey private constructor(val path: String) {
             RemoteCommand.Enter -> ENTER
             is RemoteCommand.Raw -> raw(command.key)
             RemoteCommand.Stop, is RemoteCommand.TouchDelta, is RemoteCommand.Scroll, is RemoteCommand.Text,
-            is RemoteCommand.ColorKey, is RemoteCommand.LaunchApp -> null
+            is RemoteCommand.ColorKey, is RemoteCommand.LaunchApp, is RemoteCommand.PlayYouTube -> null
         }
     }
 }

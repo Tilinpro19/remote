@@ -58,6 +58,21 @@
             </intent-filter>
         </activity>
 
+        <!-- "Compartir" desde YouTube u otras apps: abre el vídeo en el TV sin mostrar pantalla. -->
+        <activity
+            android:name=".ShareReceiverActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="Ver en el TV"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".widget.RemoteWidget"
             android:exported="true"

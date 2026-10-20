@@ -76,6 +76,7 @@ class RokuEcpAdapter @AssistedInject constructor(
     override fun supports(command: RemoteCommand): Boolean = when (command) {
         is RemoteCommand.TouchDelta, is RemoteCommand.Scroll, is RemoteCommand.Text -> true
         is RemoteCommand.LaunchApp -> RokuApps.id(command.app) != null
+        is RemoteCommand.PlayYouTube -> true
         else -> command.capability in capabilities && RokuKey.of(command) != null
     }
 
@@ -109,6 +110,8 @@ class RokuEcpAdapter @AssistedInject constructor(
                 pointer.accumulate(0f, command.dy).forEach { keypress(RokuKey.of(it)) }
             is RemoteCommand.LaunchApp ->
                 post("launch", RokuApps.id(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName))
+            // 837 = canal de YouTube en Roku; contentId abre el vídeo directamente.
+            is RemoteCommand.PlayYouTube -> post("launch", YOUTUBE_CHANNEL_ID, "contentId" to command.videoId)
             else -> keypress(RokuKey.of(command) ?: throw RemoteError.UnsupportedCommand(command.wireName))
         }
     }
@@ -207,10 +210,11 @@ class RokuEcpAdapter @AssistedInject constructor(
 
     private suspend fun keypress(key: RokuKey) = post("keypress", key.path)
 
-    private suspend fun post(action: String, encodedPath: String) {
+    private suspend fun post(action: String, encodedPath: String, query: Pair<String, String>? = null) {
         val url = baseUrl.newBuilder()
             .addPathSegment(action)
             .addEncodedPathSegment(encodedPath)
+            .apply { query?.let { (name, value) -> addQueryParameter(name, value) } }
             .build()
         val request = Request.Builder().url(url).post(EMPTY_BODY).build()
         try {
@@ -243,6 +247,7 @@ class RokuEcpAdapter @AssistedInject constructor(
 
     private companion object {
         val EMPTY_BODY = ByteArray(0).toRequestBody(null)
+        const val YOUTUBE_CHANNEL_ID = "837"
         const val WAKE_POLL_ATTEMPTS = 20
         const val WAKE_POLL_INTERVAL_MS = 1_000L
     }

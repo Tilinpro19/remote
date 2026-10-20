@@ -94,6 +94,7 @@ class AndroidTvAdapter @AssistedInject constructor(
 
     override fun supports(command: RemoteCommand): Boolean = when (command) {
         is RemoteCommand.LaunchApp -> AndroidTvApps.link(command.app) != null
+        is RemoteCommand.PlayYouTube -> true
         is RemoteCommand.Text -> AndroidTvKeys.text(command.text).isNotEmpty()
         is RemoteCommand.TouchDelta, is RemoteCommand.Scroll -> true
         else -> AndroidTvKeys.of(command) != null
@@ -129,6 +130,9 @@ class AndroidTvAdapter @AssistedInject constructor(
         val frames: List<ByteArray> = when (command) {
             is RemoteCommand.LaunchApp ->
                 listOf(AndroidTvProtocol.appLinkLaunch(AndroidTvApps.link(command.app) ?: throw RemoteError.UnsupportedCommand(command.wireName)))
+            // El TV resuelve el enlace a la app de YouTube instalada.
+            is RemoteCommand.PlayYouTube ->
+                listOf(AndroidTvProtocol.appLinkLaunch("https://www.youtube.com/watch?v=${command.videoId}"))
             is RemoteCommand.Text ->
                 AndroidTvKeys.text(command.text).map(AndroidTvProtocol::keyInject)
             is RemoteCommand.TouchDelta ->
