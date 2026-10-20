@@ -14,6 +14,9 @@ enum class DeviceKind(
     /** SSAP sobre WSS (3001); 3000 sólo en firmwares antiguos sin TLS. */
     LG_WEBOS(3001),
     SAMSUNG_TIZEN(8002),
+
+    /** IRCC-IP (SOAP) + API REST en HTTP 80, autenticación por Pre-Shared Key. */
+    SONY_BRAVIA(80),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }

@@ -172,6 +172,7 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
 private fun PairingDialog(request: PairingRequest, onSubmit: (String) -> Unit, onDismiss: () -> Unit) {
     var code by remember { mutableStateOf("") }
     val pin = request.method as? PairingRequest.Method.Pin
+    val passphrase = request.method == PairingRequest.Method.Passphrase
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Vincular con tu televisor") },
@@ -186,11 +187,19 @@ private fun PairingDialog(request: PairingRequest, onSubmit: (String) -> Unit, o
                         singleLine = true,
                     )
                 }
+                if (passphrase) {
+                    OutlinedTextField(
+                        value = code,
+                        onValueChange = { code = it.take(MAX_PASSPHRASE) },
+                        label = { Text("Clave del TV") },
+                        singleLine = true,
+                    )
+                }
             }
         },
         confirmButton = {
-            if (pin != null) {
-                TextButton(onClick = { onSubmit(code) }, enabled = code.length == pin.length) {
+            if (pin != null || passphrase) {
+                TextButton(onClick = { onSubmit(code) }, enabled = if (pin != null) code.length == pin.length else code.isNotBlank()) {
                     Text("Conectar")
                 }
             }
@@ -222,3 +231,5 @@ private fun TextInputDialog(initial: String, onDismiss: () -> Unit, onSend: (Str
         },
     )
 }
+
+private const val MAX_PASSPHRASE = 64

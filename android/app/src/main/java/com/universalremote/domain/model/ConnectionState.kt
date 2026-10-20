@@ -5,6 +5,9 @@ data class PairingRequest(val method: Method, val message: String) {
         /** El TV muestra un PIN que el usuario introduce en el móvil. */
         data class Pin(val length: Int) : Method
 
+        /** Clave libre que el usuario configuró en el TV (p. ej. PSK de Sony); distingue mayúsculas. */
+        data object Passphrase : Method
+
         /** El usuario acepta un diálogo en el TV. */
         data object ConfirmOnScreen : Method
     }

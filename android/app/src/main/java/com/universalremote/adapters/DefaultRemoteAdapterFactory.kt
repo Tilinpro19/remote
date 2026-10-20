@@ -3,6 +3,7 @@ package com.universalremote.adapters
 import com.universalremote.adapters.androidtv.AndroidTvAdapter
 import com.universalremote.adapters.ir.IrRemoteAdapter
 import com.universalremote.adapters.roku.RokuEcpAdapter
+import com.universalremote.adapters.sony.SonyBraviaAdapter
 import com.universalremote.adapters.tizen.TizenAdapter
 import com.universalremote.adapters.webos.WebOsAdapter
 import com.universalremote.domain.adapter.RemoteAdapter
@@ -21,6 +22,7 @@ class DefaultRemoteAdapterFactory @Inject constructor(
     private val androidTvFactory: AndroidTvAdapter.Factory,
     private val webOsFactory: WebOsAdapter.Factory,
     private val tizenFactory: TizenAdapter.Factory,
+    private val sonyFactory: SonyBraviaAdapter.Factory,
 ) : RemoteAdapterFactory {
 
     override fun create(profile: DeviceProfile): RemoteAdapter = when (profile.kind) {
@@ -29,6 +31,7 @@ class DefaultRemoteAdapterFactory @Inject constructor(
         DeviceKind.ANDROID_TV -> androidTvFactory.create(profile)
         DeviceKind.LG_WEBOS -> webOsFactory.create(profile)
         DeviceKind.SAMSUNG_TIZEN -> tizenFactory.create(profile)
+        DeviceKind.SONY_BRAVIA -> sonyFactory.create(profile)
         DeviceKind.BLUETOOTH_HID -> throw RemoteError.UnsupportedDevice(profile.kind.name)
     }
 }

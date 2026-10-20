@@ -403,6 +403,7 @@ class RemoteViewModel @Inject constructor(
         DeviceKind.ANDROID_TV -> "Android TV"
         DeviceKind.LG_WEBOS -> "LG webOS"
         DeviceKind.SAMSUNG_TIZEN -> "Samsung"
+        DeviceKind.SONY_BRAVIA -> "Sony"
         DeviceKind.INFRARED -> "IR"
         DeviceKind.BLUETOOTH_HID -> "Bluetooth"
     }

@@ -102,7 +102,7 @@ fun RemoteProScreen(
                 DeviceKind.SAMSUNG_TIZEN -> RemoteSkin.SAMSUNG
                 DeviceKind.LG_WEBOS -> RemoteSkin.LG
                 DeviceKind.ROKU -> RemoteSkin.ROKU
-                DeviceKind.ANDROID_TV -> RemoteSkin.GOOGLE_TV
+                DeviceKind.ANDROID_TV, DeviceKind.SONY_BRAVIA -> RemoteSkin.GOOGLE_TV
                 // Marcas sin skin propia usan el mando clásico completo (genérico).
                 DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> RemoteSkin.CLASSIC
             }

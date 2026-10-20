@@ -25,6 +25,7 @@ data class SsdpResponse(
         return when {
             st == "roku:ecp" || id.contains("roku:ecp") || srv.contains("roku") -> DeviceKind.ROKU
             st.contains("lge-com") || srv.contains("webos") -> DeviceKind.LG_WEBOS
+            st.contains("sony-com") || srv.contains("bravia") -> DeviceKind.SONY_BRAVIA
             st.contains("samsung.com") || srv.contains("samsung") || srv.contains("tizen") -> DeviceKind.SAMSUNG_TIZEN
             else -> null
         }
@@ -40,6 +41,7 @@ object Ssdp {
         "roku:ecp",
         "urn:lge-com:service:webos-second-screen:1",
         "urn:samsung.com:device:RemoteControlReceiver:1",
+        "urn:schemas-sony-com:service:ScalarWebAPI:1",
         "urn:dial-multiscreen-org:service:dial:1",
     )
 
