@@ -103,8 +103,8 @@ fun RemoteProScreen(
                 DeviceKind.LG_WEBOS -> RemoteSkin.LG
                 DeviceKind.ROKU -> RemoteSkin.ROKU
                 DeviceKind.ANDROID_TV -> RemoteSkin.GOOGLE_TV
-                DeviceKind.INFRARED -> RemoteSkin.CLASSIC
-                else -> RemoteSkin.SAMSUNG
+                // Marcas sin skin propia usan el mando clásico completo (genérico).
+                DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> RemoteSkin.CLASSIC
             }
         }
     }
