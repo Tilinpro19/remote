@@ -20,6 +20,9 @@ enum class DeviceKind(
 
     /** SmartCast: REST sobre HTTPS autofirmado en 7345 (9000 en firmwares antiguos), PIN de 4 dígitos. */
     VIZIO(7345),
+
+    /** JointSpace API v6 (Saphi/Linux): HTTPS autofirmado en 1926 con Digest y PIN de 4 dígitos. */
+    PHILIPS_JOINTSPACE(1926),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }

@@ -372,6 +372,7 @@ class LanDiscoveryManager @Inject constructor(
         DeviceKind.ANDROID_TV -> "Android TV ($host)"
         DeviceKind.SONY_BRAVIA -> "Sony Bravia ($host)"
         DeviceKind.VIZIO -> "Vizio ($host)"
+        DeviceKind.PHILIPS_JOINTSPACE -> "Philips ($host)"
         DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> host
     }
 
@@ -398,13 +399,21 @@ class LanDiscoveryManager @Inject constructor(
 /** Fusiona anuncios del mismo host: conserva el dato más específico de cada fuente. */
 internal fun DiscoveredDevice.mergeWith(other: DiscoveredDevice): DiscoveredDevice {
     val genericName = name == host || name.endsWith("($host)")
-    val mergedKind = kind ?: other.kind
+    // Un mismo TV puede anunciar dos protocolos (p. ej. Sony o Philips con Android TV): gana el más completo.
+    val mergedKind = if (other.kind.precedence() > kind.precedence()) other.kind else kind
     return copy(
         name = if (genericName && !(other.name == host || other.name.endsWith("($host)"))) other.name else name,
         kind = mergedKind,
-        port = if (kind == null && other.kind != null) other.port ?: port else port ?: other.port,
+        port = if (mergedKind != kind) other.port ?: port else port ?: other.port,
         model = model ?: other.model,
         serviceIds = serviceIds + other.serviceIds,
         sources = sources + other.sources,
     )
+}
+
+/** Android TV Remote v2 admite teclado y puntero: se prefiere a IRCC (Sony) y JointSpace (Philips). */
+private fun DeviceKind?.precedence(): Int = when (this) {
+    null -> 0
+    DeviceKind.ANDROID_TV -> 2
+    else -> 1
 }

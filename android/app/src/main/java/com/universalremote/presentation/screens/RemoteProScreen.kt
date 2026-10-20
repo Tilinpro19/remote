@@ -104,7 +104,7 @@ fun RemoteProScreen(
                 DeviceKind.ROKU -> RemoteSkin.ROKU
                 DeviceKind.ANDROID_TV, DeviceKind.SONY_BRAVIA -> RemoteSkin.GOOGLE_TV
                 // Marcas sin skin propia usan el mando clásico completo (genérico).
-                DeviceKind.VIZIO -> RemoteSkin.GOOGLE_TV
+                DeviceKind.VIZIO, DeviceKind.PHILIPS_JOINTSPACE -> RemoteSkin.GOOGLE_TV
                 DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> RemoteSkin.CLASSIC
             }
         }
