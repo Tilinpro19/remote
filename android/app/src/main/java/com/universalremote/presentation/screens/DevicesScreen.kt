@@ -524,6 +524,7 @@ private fun DeviceKind.displayName(): String = when (this) {
     DeviceKind.PHILIPS_JOINTSPACE -> "Philips"
     DeviceKind.FIRE_TV -> "Amazon Fire TV"
     DeviceKind.HISENSE_VIDAA -> "Hisense VIDAA"
+    DeviceKind.PANASONIC_VIERA -> "Panasonic Viera"
     DeviceKind.INFRARED -> "Televisor Clásico (IR)"
     DeviceKind.BLUETOOTH_HID -> "Bluetooth"
 }

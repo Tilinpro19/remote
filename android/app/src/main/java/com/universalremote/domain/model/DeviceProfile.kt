@@ -29,6 +29,9 @@ enum class DeviceKind(
 
     /** Broker MQTT sobre TLS del propio TV; código de 4 dígitos en pantalla. */
     HISENSE_VIDAA(36669),
+
+    /** SOAP `X_SendKey` en HTTP 55000; los modelos cifrados (2018+) no están soportados. */
+    PANASONIC_VIERA(55000),
     INFRARED(null),
     BLUETOOTH_HID(null),
 }

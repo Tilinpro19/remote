@@ -25,6 +25,7 @@ data class SsdpResponse(
         return when {
             st == "roku:ecp" || id.contains("roku:ecp") || srv.contains("roku") -> DeviceKind.ROKU
             st.contains("lge-com") || srv.contains("webos") -> DeviceKind.LG_WEBOS
+            st.contains("panasonic-com") || srv.contains("panasonic") -> DeviceKind.PANASONIC_VIERA
             srv.contains("hisense") || srv.contains("vidaa") -> DeviceKind.HISENSE_VIDAA
             srv.contains("philips") -> DeviceKind.PHILIPS_JOINTSPACE
             srv.contains("vizio") || id.contains("vizio") -> DeviceKind.VIZIO
@@ -45,6 +46,7 @@ object Ssdp {
         "urn:lge-com:service:webos-second-screen:1",
         "urn:samsung.com:device:RemoteControlReceiver:1",
         "urn:schemas-sony-com:service:ScalarWebAPI:1",
+        "urn:panasonic-com:device:p00RemoteController:1",
         "urn:dial-multiscreen-org:service:dial:1",
     )
 

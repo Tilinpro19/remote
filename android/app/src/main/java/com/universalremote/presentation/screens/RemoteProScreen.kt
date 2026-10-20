@@ -106,7 +106,7 @@ fun RemoteProScreen(
                 // Marcas sin skin propia usan el mando clásico completo (genérico).
                 DeviceKind.VIZIO, DeviceKind.PHILIPS_JOINTSPACE, DeviceKind.FIRE_TV,
                 DeviceKind.HISENSE_VIDAA -> RemoteSkin.GOOGLE_TV
-                DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> RemoteSkin.CLASSIC
+                DeviceKind.PANASONIC_VIERA, DeviceKind.INFRARED, DeviceKind.BLUETOOTH_HID, null -> RemoteSkin.CLASSIC
             }
         }
     }

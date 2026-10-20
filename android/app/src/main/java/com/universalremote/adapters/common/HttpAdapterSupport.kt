@@ -24,6 +24,9 @@ suspend fun OkHttpClient.getJson(url: String, headers: Map<String, String> = emp
     }
 }
 
+suspend fun OkHttpClient.getText(url: String, headers: Map<String, String> = emptyMap()): String =
+    execute(url, "GET", null, headers)
+
 suspend fun OkHttpClient.postBody(
     url: String,
     body: String,
