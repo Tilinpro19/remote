@@ -23,6 +23,10 @@ data class RemoteUiState(
     val hapticsEnabled: Boolean = true,
     /** Las teclas de volumen del teléfono controlan el TV (sólo en la pestaña del mando). */
     val volumeKeysEnabled: Boolean = false,
+    /** Encender el TV al abrir la app si está en reposo (requiere MAC aprendida). */
+    val autoWakeEnabled: Boolean = false,
+    /** Encendido según el propio equipo; `null` si la marca no lo informa. */
+    val poweredOn: Boolean? = null,
     /** Minutos programados del temporizador de apagado; `null` si no hay ninguno activo. */
     val sleepTimerMinutes: Int? = null,
 )

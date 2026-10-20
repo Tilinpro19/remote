@@ -42,10 +42,22 @@ interface RemoteAdapter {
     }
 
     suspend fun close() = disconnect()
+
+    /** `true` encendido, `false` en reposo, `null` si la marca no lo informa o no respondió. */
+    suspend fun isPoweredOn(): Boolean? = null
 }
 
 /** Construye el adaptador adecuado para un perfil. */
 fun interface RemoteAdapterFactory {
     /** @throws RemoteError.UnsupportedDevice si no hay adaptador para [DeviceProfile.kind]. */
     fun create(profile: DeviceProfile): RemoteAdapter
+}
+
+/** Para consultas de estado: cualquier fallo (salvo cancelación) significa "desconocido". */
+suspend fun <T> nullOnFailure(block: suspend () -> T): T? = try {
+    block()
+} catch (e: kotlin.coroutines.cancellation.CancellationException) {
+    throw e
+} catch (t: Throwable) {
+    null
 }

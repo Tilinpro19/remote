@@ -58,6 +58,7 @@ fun SettingsScreen(
     onSendCommand: (RemoteCommand) -> Unit,
     onHapticsChange: (Boolean) -> Unit,
     onVolumeKeysChange: (Boolean) -> Unit,
+    onAutoWakeChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showAdvancedTools by remember { mutableStateOf(false) }
@@ -91,6 +92,14 @@ fun SettingsScreen(
             subtitle = "Controlan el volumen del TV mientras ves el mando",
             checked = state.volumeKeysEnabled,
             onCheckedChange = onVolumeKeysChange,
+        )
+
+        SettingToggleCard(
+            icon = Icons.Default.Bolt,
+            title = "Encender el TV al abrir la app",
+            subtitle = "Si el TV informa que está en reposo y conocemos su MAC (Roku, Sony, LG, Philips, Vizio)",
+            checked = state.autoWakeEnabled,
+            onCheckedChange = onAutoWakeChange,
         )
 
         // 2. Encendido Remoto de Emergencia (Wake-on-LAN)

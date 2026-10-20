@@ -73,11 +73,11 @@ class RemoteViewModel @Inject constructor(
 
     val uiState: StateFlow<RemoteUiState> = combine(
         combine(deviceRepository.observeDevices(), manager.activeDevice, manager.connectionState, ::Triple),
-        discoveryState,
+        combine(discoveryState, manager.poweredOn, ::Pair),
         irSetupState,
-        combine(preferences.hapticsEnabled, preferences.volumeKeysEnabled, ::Pair),
+        combine(preferences.hapticsEnabled, preferences.volumeKeysEnabled, preferences.autoWakeEnabled, ::Triple),
         sleepTimer,
-    ) { (devices, active, connection), discovered, irSetup, (hapticsOn, volumeKeysOn), sleepMinutes ->
+    ) { (devices, active, connection), (discovered, powered), irSetup, (hapticsOn, volumeKeysOn, autoWakeOn), sleepMinutes ->
         RemoteUiState(
             devices = devices,
             activeDevice = active,
@@ -88,6 +88,8 @@ class RemoteViewModel @Inject constructor(
             hasIrEmitter = hasIrEmitter,
             hapticsEnabled = hapticsOn,
             volumeKeysEnabled = volumeKeysOn,
+            autoWakeEnabled = autoWakeOn,
+            poweredOn = powered,
             sleepTimerMinutes = sleepMinutes,
         )
     }
@@ -152,6 +154,8 @@ class RemoteViewModel @Inject constructor(
     fun setHapticsEnabled(enabled: Boolean) = launchCatching { preferences.setHapticsEnabled(enabled) }
 
     fun setVolumeKeysEnabled(enabled: Boolean) = launchCatching { preferences.setVolumeKeysEnabled(enabled) }
+
+    fun setAutoWakeEnabled(enabled: Boolean) = launchCatching { preferences.setAutoWakeEnabled(enabled) }
 
     // ------------------------------------------------------------------ temporizador de apagado
 

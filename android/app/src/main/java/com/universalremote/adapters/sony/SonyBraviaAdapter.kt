@@ -136,7 +136,7 @@ class SonyBraviaAdapter @AssistedInject constructor(
     }
 
     /** `true` encendido, `false` en reposo; `null` si no se pudo consultar. */
-    suspend fun isPoweredOn(): Boolean? {
+    override suspend fun isPoweredOn(): Boolean? {
         val psk = profile.pairingToken ?: return null
         return runCatching { powerStatus(psk) }.onFailure { if (it is CancellationException) throw it }.getOrNull()
     }

@@ -5,6 +5,7 @@ import com.universalremote.adapters.common.TofuTrustManager
 import com.universalremote.core.di.LanHttpClient
 import com.universalremote.domain.adapter.AdapterEvent
 import com.universalremote.domain.adapter.RemoteAdapter
+import com.universalremote.domain.adapter.nullOnFailure
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.DeviceTransport
@@ -97,6 +98,15 @@ class WebOsAdapter @AssistedInject constructor(
     override suspend fun close() {
         disconnect()
         scope.cancel()
+    }
+
+    /** Sólo responde con la sesión abierta; "Active Standby" es reposo con la red despierta. */
+    override suspend fun isPoweredOn(): Boolean? = nullOnFailure {
+        when (request("ssap://com.webos.service.tvpower/power/getPowerState").optString("state")) {
+            "Active", "Screen Off" -> true
+            "Active Standby", "Suspend" -> false
+            else -> null
+        }
     }
 
     override suspend fun send(command: RemoteCommand) = mutex.withLock {

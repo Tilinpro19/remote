@@ -87,6 +87,11 @@ class RemoteControllerManager @Inject constructor(
 
     val events = _events.asSharedFlow()
 
+    private val _poweredOn = MutableStateFlow<Boolean?>(null)
+
+    /** Último estado de encendido informado por el equipo; `null` si se desconoce. */
+    val poweredOn: StateFlow<Boolean?> = _poweredOn.asStateFlow()
+
     init {
         scope.launch { processQueue() }
         scope.launch { restoreLastDevice() }
@@ -161,7 +166,7 @@ class RemoteControllerManager @Inject constructor(
 
     fun onForeground() {
         isForeground = true
-        activeAdapter.value?.let(::connectInBackground)
+        activeAdapter.value?.let { connectInBackground(it, autoWake = true) }
     }
 
     fun onBackground() {
@@ -188,6 +193,7 @@ class RemoteControllerManager @Inject constructor(
         val adapter = adapterFactory.create(profile)
         activeAdapter.value = adapter
         _activeDevice.value = profile
+        _poweredOn.value = null
         preferences.setActiveDeviceId(profile.id)
         adapterJobs = observe(adapter)
         if (isForeground) connectInBackground(adapter)
@@ -228,17 +234,33 @@ class RemoteControllerManager @Inject constructor(
         _activeDevice.value = profile
     }
 
-    private fun connectInBackground(adapter: RemoteAdapter) {
+    private fun connectInBackground(adapter: RemoteAdapter, autoWake: Boolean = false) {
         scope.launch {
-            try {
-                withTimeout(CONNECT_TIMEOUT_MS) { adapter.connect() }
-            } catch (e: CancellationException) {
-                // Un timeout propio es fallo de conexión; una cancelación externa se propaga.
-                if (e !is kotlinx.coroutines.TimeoutCancellationException) throw e
-                _events.emit(ControllerEvent.ConnectionFailed(adapter.profile, RemoteError.Timeout(e)))
-            } catch (t: Throwable) {
-                _events.emit(ControllerEvent.ConnectionFailed(adapter.profile, RemoteError.from(t, adapter.profile.lanHost)))
-            }
+            connectReporting(adapter)
+            refreshPower(adapter, autoWake)
+        }
+    }
+
+    /** Consulta el estado de encendido y, al volver a la app, despierta el TV si el usuario lo pidió. */
+    private suspend fun refreshPower(adapter: RemoteAdapter, autoWake: Boolean) {
+        val powered = adapter.isPoweredOn()
+        if (activeAdapter.value !== adapter) return
+        _poweredOn.value = powered
+        if (autoWake && shouldAutoWake(preferences.autoWakeEnabled.first(), adapter.profile.macAddress != null, powered)) {
+            _poweredOn.value = null
+            dispatch(RemoteCommand.PowerOn)
+        }
+    }
+
+    private suspend fun connectReporting(adapter: RemoteAdapter) {
+        try {
+            withTimeout(CONNECT_TIMEOUT_MS) { adapter.connect() }
+        } catch (e: CancellationException) {
+            // Un timeout propio es fallo de conexión; una cancelación externa se propaga.
+            if (e !is kotlinx.coroutines.TimeoutCancellationException) throw e
+            _events.emit(ControllerEvent.ConnectionFailed(adapter.profile, RemoteError.Timeout(e)))
+        } catch (t: Throwable) {
+            _events.emit(ControllerEvent.ConnectionFailed(adapter.profile, RemoteError.from(t, adapter.profile.lanHost)))
         }
     }
 
@@ -285,6 +307,8 @@ class RemoteControllerManager @Inject constructor(
             }
             // Encender puede incluir Wake-on-LAN y sondeo: no se le aplica el límite corto.
             if (command.canWakeDevice) adapter.send(command) else withTimeout(COMMAND_TIMEOUT_MS) { adapter.send(command) }
+            // Tras encender/apagar el estado anterior ya no vale; se vuelve a saber en la próxima consulta.
+            if (command.capability == RemoteCapability.POWER) _poweredOn.value = null
         } catch (e: CancellationException) {
             if (e !is kotlinx.coroutines.TimeoutCancellationException) throw e
             throw RemoteError.Timeout(e)

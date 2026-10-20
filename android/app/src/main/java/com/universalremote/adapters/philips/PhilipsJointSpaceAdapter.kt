@@ -171,7 +171,7 @@ class PhilipsJointSpaceAdapter @AssistedInject constructor(
     }
 
     /** `true` encendido, `false` en reposo; `null` si no se pudo consultar. */
-    suspend fun isPoweredOn(): Boolean? {
+    override suspend fun isPoweredOn(): Boolean? {
         val key = profile.pairingToken ?: return null
         return runCatching { powerState(key) }.onFailure { if (it is CancellationException) throw it }.getOrNull()
     }

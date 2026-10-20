@@ -4,6 +4,7 @@ import com.universalremote.adapters.common.PointerAccumulator
 import com.universalremote.core.di.LanHttpClient
 import com.universalremote.domain.adapter.AdapterEvent
 import com.universalremote.domain.adapter.RemoteAdapter
+import com.universalremote.domain.adapter.nullOnFailure
 import com.universalremote.domain.model.ConnectionState
 import com.universalremote.domain.model.DeviceProfile
 import com.universalremote.domain.model.DeviceTransport
@@ -84,6 +85,9 @@ class RokuEcpAdapter @AssistedInject constructor(
         pointer.reset()
         _state.value = ConnectionState.Idle
     }
+
+    /** Un Roku TV en reposo sigue respondiendo a ECP con `power-mode` distinto de `PowerOn`. */
+    override suspend fun isPoweredOn(): Boolean? = nullOnFailure { fetchDeviceInfo().isDisplayOn }
 
     override suspend fun send(command: RemoteCommand) = mutex.withLock {
         if (command.canWakeDevice && _state.value != ConnectionState.Connected) {

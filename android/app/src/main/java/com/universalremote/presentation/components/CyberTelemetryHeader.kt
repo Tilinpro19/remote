@@ -54,6 +54,7 @@ fun CyberTelemetryHeader(
     subtitle: String,
     activeDevice: DeviceProfile?,
     connectionState: ConnectionState,
+    poweredOn: Boolean? = null,
     onDeviceClick: () -> Unit = {},
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
@@ -77,6 +78,7 @@ fun CyberTelemetryHeader(
     }
 
     val statusText = when {
+        isConnected && poweredOn == false -> "En reposo"
         isConnected -> "Conectado"
         isConnecting -> "Conectando…"
         activeDevice != null -> "Listo"

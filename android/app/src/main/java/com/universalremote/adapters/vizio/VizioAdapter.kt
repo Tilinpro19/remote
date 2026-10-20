@@ -143,7 +143,7 @@ class VizioAdapter @AssistedInject constructor(
     }
 
     /** `true` encendido, `false` en reposo; `null` si no se pudo consultar. */
-    suspend fun isPoweredOn(): Boolean? {
+    override suspend fun isPoweredOn(): Boolean? {
         val token = profile.pairingToken ?: return null
         return runCatching { powerMode(token) }.onFailure { if (it is CancellationException) throw it }.getOrNull()
     }

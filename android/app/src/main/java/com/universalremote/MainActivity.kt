@@ -130,6 +130,7 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                 subtitle = subtitle,
                 activeDevice = state.activeDevice,
                 connectionState = state.connection,
+                poweredOn = state.poweredOn,
                 onDeviceClick = {
                     currentTab = CyberTab.DEVICES
                 },
@@ -208,6 +209,7 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                             onSendCommand = { vm.onCommandTriggered(it) },
                             onHapticsChange = { vm.setHapticsEnabled(it) },
                             onVolumeKeysChange = { vm.setVolumeKeysEnabled(it) },
+                            onAutoWakeChange = { vm.setAutoWakeEnabled(it) },
                         )
                     }
                 }
