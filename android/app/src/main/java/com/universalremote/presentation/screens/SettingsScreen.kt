@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -56,6 +57,7 @@ fun SettingsScreen(
     state: RemoteUiState,
     onSendCommand: (RemoteCommand) -> Unit,
     onHapticsChange: (Boolean) -> Unit,
+    onVolumeKeysChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showAdvancedTools by remember { mutableStateOf(false) }
@@ -75,64 +77,21 @@ fun SettingsScreen(
         )
 
         // 1. Ajuste de Respuesta Háptica
-        Surface(
-            color = CyberColors.SurfaceContainerLow,
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(42.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(CyberColors.SurfaceContainerHigh),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Vibration,
-                            contentDescription = null,
-                            tint = CyberColors.LaserCyan,
-                            modifier = Modifier.size(22.dp),
-                        )
-                    }
+        SettingToggleCard(
+            icon = Icons.Default.Vibration,
+            title = "Vibración al pulsar",
+            subtitle = "Sensación táctil al tocar los botones",
+            checked = state.hapticsEnabled,
+            onCheckedChange = onHapticsChange,
+        )
 
-                    Column {
-                        Text(
-                            text = "Vibración al pulsar",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = CyberColors.OnSurface,
-                        )
-                        Text(
-                            text = "Sensación táctil al tocar los botones",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = CyberColors.OnSurfaceVariant,
-                        )
-                    }
-                }
-
-                Switch(
-                    checked = state.hapticsEnabled,
-                    onCheckedChange = onHapticsChange,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = CyberColors.OnPrimaryContainer,
-                        checkedTrackColor = CyberColors.PrimaryContainer,
-                        uncheckedThumbColor = CyberColors.OnSurfaceVariant,
-                        uncheckedTrackColor = CyberColors.SurfaceContainerHigh,
-                    ),
-                )
-            }
-        }
+        SettingToggleCard(
+            icon = Icons.AutoMirrored.Filled.VolumeUp,
+            title = "Botones de volumen del teléfono",
+            subtitle = "Controlan el volumen del TV mientras ves el mando",
+            checked = state.volumeKeysEnabled,
+            onCheckedChange = onVolumeKeysChange,
+        )
 
         // 2. Encendido Remoto de Emergencia (Wake-on-LAN)
         Surface(
@@ -355,6 +314,74 @@ private fun HardwareStatusItem(
                 fontFamily = FontFamily.SansSerif,
                 fontSize = 11.sp,
                 color = CyberColors.OnSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingToggleCard(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Surface(
+        color = CyberColors.SurfaceContainerLow,
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.weight(1f),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(CyberColors.SurfaceContainerHigh),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = CyberColors.LaserCyan,
+                        modifier = Modifier.size(22.dp),
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = CyberColors.OnSurface,
+                    )
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = CyberColors.OnSurfaceVariant,
+                    )
+                }
+            }
+
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = CyberColors.OnPrimaryContainer,
+                    checkedTrackColor = CyberColors.PrimaryContainer,
+                    uncheckedThumbColor = CyberColors.OnSurfaceVariant,
+                    uncheckedTrackColor = CyberColors.SurfaceContainerHigh,
+                ),
             )
         }
     }

@@ -40,8 +40,18 @@ class DataStoreSessionPreferences @Inject constructor(
         dataStore.edit { it[HAPTICS_ENABLED] = enabled }
     }
 
+    override val volumeKeysEnabled: Flow<Boolean> = dataStore.data
+        .catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }
+        .map { it[VOLUME_KEYS_ENABLED] ?: false }
+        .distinctUntilChanged()
+
+    override suspend fun setVolumeKeysEnabled(enabled: Boolean) {
+        dataStore.edit { it[VOLUME_KEYS_ENABLED] = enabled }
+    }
+
     private companion object {
         val ACTIVE_DEVICE_ID = stringPreferencesKey("active_device_id")
         val HAPTICS_ENABLED = booleanPreferencesKey("haptics_enabled")
+        val VOLUME_KEYS_ENABLED = booleanPreferencesKey("volume_keys_enabled")
     }
 }

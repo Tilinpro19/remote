@@ -21,6 +21,8 @@ data class RemoteUiState(
     val irSetup: IrSetupState = IrSetupState.Idle,
     val hasIrEmitter: Boolean = false,
     val hapticsEnabled: Boolean = true,
+    /** Las teclas de volumen del teléfono controlan el TV (sólo en la pestaña del mando). */
+    val volumeKeysEnabled: Boolean = false,
     /** Minutos programados del temporizador de apagado; `null` si no hay ninguno activo. */
     val sleepTimerMinutes: Int? = null,
 )

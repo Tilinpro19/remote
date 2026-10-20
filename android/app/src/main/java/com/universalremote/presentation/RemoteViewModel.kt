@@ -73,9 +73,9 @@ class RemoteViewModel @Inject constructor(
         combine(deviceRepository.observeDevices(), manager.activeDevice, manager.connectionState, ::Triple),
         discoveryState,
         irSetupState,
-        preferences.hapticsEnabled,
+        combine(preferences.hapticsEnabled, preferences.volumeKeysEnabled, ::Pair),
         sleepTimer,
-    ) { (devices, active, connection), discovered, irSetup, hapticsOn, sleepMinutes ->
+    ) { (devices, active, connection), discovered, irSetup, (hapticsOn, volumeKeysOn), sleepMinutes ->
         RemoteUiState(
             devices = devices,
             activeDevice = active,
@@ -85,6 +85,7 @@ class RemoteViewModel @Inject constructor(
             irSetup = irSetup,
             hasIrEmitter = hasIrEmitter,
             hapticsEnabled = hapticsOn,
+            volumeKeysEnabled = volumeKeysOn,
             sleepTimerMinutes = sleepMinutes,
         )
     }
@@ -146,6 +147,8 @@ class RemoteViewModel @Inject constructor(
     }
 
     fun setHapticsEnabled(enabled: Boolean) = launchCatching { preferences.setHapticsEnabled(enabled) }
+
+    fun setVolumeKeysEnabled(enabled: Boolean) = launchCatching { preferences.setVolumeKeysEnabled(enabled) }
 
     // ------------------------------------------------------------------ temporizador de apagado
 

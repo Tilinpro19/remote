@@ -19,6 +19,8 @@ interface SessionPreferences {
     suspend fun setActiveDeviceId(id: String?)
     val hapticsEnabled: Flow<Boolean>
     suspend fun setHapticsEnabled(enabled: Boolean)
+    val volumeKeysEnabled: Flow<Boolean>
+    suspend fun setVolumeKeysEnabled(enabled: Boolean)
 }
 
 data class BrandPopularity(val brand: String, val popularity: Int)

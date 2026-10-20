@@ -1,6 +1,7 @@
 package com.universalremote
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +18,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.universalremote.domain.model.ConnectionState
@@ -32,6 +35,7 @@ import com.universalremote.domain.model.RemoteCommand
 import com.universalremote.presentation.RemoteUiEvent
 import com.universalremote.presentation.RemoteUiState
 import com.universalremote.presentation.RemoteViewModel
+import com.universalremote.presentation.shouldInterceptVolumeKeys
 import com.universalremote.presentation.components.CyberBottomNav
 import com.universalremote.presentation.components.CyberTab
 import com.universalremote.presentation.components.CyberTelemetryHeader
@@ -44,6 +48,30 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    /** Lo fija la UI cuando las teclas de volumen deben ir al TV; `null` = volumen normal del teléfono. */
+    var volumeKeyHandler: ((RemoteCommand) -> Unit)? = null
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        val command = volumeCommandFor(keyCode)
+        val handler = volumeKeyHandler
+        if (command == null || handler == null) return super.onKeyDown(keyCode, event)
+        // Mantener pulsado genera onKeyDown repetidos (repeatCount > 0): cada uno sube o baja un paso.
+        handler(command)
+        return true
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        if (volumeCommandFor(keyCode) != null && volumeKeyHandler != null) return true
+        return super.onKeyUp(keyCode, event)
+    }
+
+    private fun volumeCommandFor(keyCode: Int): RemoteCommand? = when (keyCode) {
+        KeyEvent.KEYCODE_VOLUME_UP -> RemoteCommand.VolumeUp
+        KeyEvent.KEYCODE_VOLUME_DOWN -> RemoteCommand.VolumeDown
+        else -> null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,6 +90,17 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
     // rememberSaveable: sin esto, girar el teléfono devolvía la app a la pestaña Remoto.
     var currentTab by rememberSaveable { mutableStateOf(CyberTab.REMOTE) }
     var keyboardText by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val activity = LocalContext.current as? MainActivity
+    val interceptVolume = shouldInterceptVolumeKeys(
+        enabled = state.volumeKeysEnabled,
+        onRemoteScreen = currentTab == CyberTab.REMOTE,
+        connected = state.connection == ConnectionState.Connected,
+    )
+    DisposableEffect(activity, interceptVolume) {
+        activity?.volumeKeyHandler = if (interceptVolume) vm::onCommandTriggered else null
+        onDispose { activity?.volumeKeyHandler = null }
+    }
 
     LaunchedEffect(Unit) {
         vm.events.collect { event ->
@@ -146,6 +185,7 @@ private fun RemoteAppRoot(vm: RemoteViewModel = hiltViewModel()) {
                             state = state,
                             onSendCommand = { vm.onCommandTriggered(it) },
                             onHapticsChange = { vm.setHapticsEnabled(it) },
+                            onVolumeKeysChange = { vm.setVolumeKeysEnabled(it) },
                         )
                     }
                 }
